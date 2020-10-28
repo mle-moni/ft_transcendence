@@ -1,0 +1,12 @@
+<h1>Index du site</h1>
+
+<p>
+	<% if user_signed_in? %>
+		<%= link_to "Sign out", destroy_user_session_path, :method => :delete %>
+		<p> 
+		Connected as <%= current_user.nickname %>, your email is <%= current_user.email %>
+		</p>
+	<% else %>
+		<%= link_to "Sign in with 42", user_marvin_omniauth_authorize_path %>
+	<% end %>
+</p>
