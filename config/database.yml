@@ -1,15 +1,32 @@
-development:
+# development:
+#   adapter: postgresql
+#   encoding: unicode
+#   database: recipes_development
+#   pool: 5
+#   username: postgres
+#   password:
+
+# test:
+#   adapter: postgresql
+#   encoding: unicode
+#   database: recipes_test
+#   pool: 5
+#   username: postgres
+#   password:
+
+default: &default
   adapter: postgresql
   encoding: unicode
-  database: recipes_development
-  pool: 5
+  host: db
   username: postgres
-  password:
+  password: <%= ENV['PG_PASSWORD'] %> # to change password go to docker-compose.yml
+  pool: 5
+
+development:
+  <<: *default
+  database: app_development
+
 
 test:
-  adapter: postgresql
-  encoding: unicode
-  database: recipes_test
-  pool: 5
-  username: postgres
-  password:
+  <<: *default
+  database: app_test

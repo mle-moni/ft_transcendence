@@ -1,24 +1,30 @@
-# README
+# ft_transcendence
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## HOW TO GET THE APPLICATION RUNNING ON LINUX:
 
-Things you may want to cover:
+### install docker-compose:
 
-* Ruby version
+arch: `sudo pacman -S docker-compose`
 
-* System dependencies
+debian/ubuntu/etc..: `sudo apt-get install docker-compose` (not tested yet) 
 
-* Configuration
+### launch app: 
+- `git clone https://github.com/mle-moni/ft_transcendence.git`
+- `cd ft_transcendence`
+- `sudo docker-compose up --build`
 
-* Database creation
+build without launch: `sudo docker-compose build`
 
-* Database initialization
+launch without rebuilding: `sudo docker-compose up`
 
-* How to run the test suite
+## RUN COMMANDS IN THE CONTAINER
 
-* Services (job queues, cache servers, search engines, etc.)
+`sudo docker-compose run web bash`
 
-* Deployment instructions
+usefull to `bundle install`, `yarn add`, `rails db:migrate`, `rails g ...`, and so on
 
-* ...
+## HOW TO DEV ON THE PROJECT:
+
+the folder that you created with git clone is mounted into the rails container, so you can work on the project by just editing files on your machine
+
+if you need to reload the rails server, just `CTRL + c` to stop and `sudo docker-compose up` to get it working again
