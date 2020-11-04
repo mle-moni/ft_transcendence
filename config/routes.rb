@@ -1,6 +1,5 @@
 Rails.application.routes.draw do
-
-  get 'home/index'
+  # home page
   root "home#index"
 
   # sign in route:
@@ -11,6 +10,5 @@ Rails.application.routes.draw do
     delete 'sign_out', :to => 'devise/sessions#destroy', :as => :destroy_user_session_path
   end
 
-  resources :posts
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end
