@@ -1,7 +1,7 @@
 # development:
 #   adapter: postgresql
 #   encoding: unicode
-#   database: recipes_development
+#   database: app_development
 #   pool: 5
 #   username: postgres
 #   password:
@@ -9,7 +9,7 @@
 # test:
 #   adapter: postgresql
 #   encoding: unicode
-#   database: recipes_test
+#   database: app_test
 #   pool: 5
 #   username: postgres
 #   password:
