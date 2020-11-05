@@ -1,12 +1,36 @@
-<h1>Index du site</h1>
 
-<p>
+<div id="login-logout"></div>
+<div id="app"></div>
+<script type="text/javascript">
+	App.toast = siiimpleToast;
+	App.toastStyle = {
+		"fontSize": "20px"
+	};
+
+	function initApp() {
+		App.templates = HandlebarsTemplates;
+		App.routers.main = new AppClasses.Routers.Main();
+		if(!Backbone.History.started)  {
+			console.log("Backbone history started")
+			Backbone.history.start(); // using anchor for routing
+		}
+	};
+	const loginLogout = $("#login-logout");
 	<% if user_signed_in? %>
-		<%= link_to "Sign out", destroy_user_session_path, :method => :delete %>
-		<p> 
-		Connected as <%= current_user.nickname %>, your email is <%= current_user.email %>
-		</p>
+		// providing data to instantiate our user model
+		App.data.user = {
+			nickname: <%= current_user.nickname.to_json.html_safe %>,
+			email: <%= current_user.email.to_json.html_safe %>
+		}
+		loginLogout.html(`<a rel="nofollow" data-method="delete" href="/users/sign_out">Sign out</a>`)
+		initApp(); // init backbone only for connected users
 	<% else %>
-		<%= link_to "Sign in with 42", user_marvin_omniauth_authorize_path %>
+		loginLogout.html(`<a href="/users/auth/marvin">Sign in with 42</a>`)
 	<% end %>
-</p>
+	if ($(".notice").text() !== "") {
+		App.toast.success($(".notice").text(), { duration: 3500, style: App.toastStyle });
+	}
+	if ($(".alert").text() !== "") {
+		App.toast.error($(".alert").text(), { duration: 10000, style: App.toastStyle });
+	}
+</script>
