@@ -1,8 +1,8 @@
-AppClasses.Views.Index = class extends Backbone.View {
+AppClasses.Views.Home = class extends Backbone.View {
 	constructor(opts) {
 		super(opts);
 		this.tagName = "div";
-		this.template = App.templates["index"];
+		this.template = App.templates["home/index"];
 		this.user = new AppClasses.Views.ConnectionInfos({
 			model: App.models.user
 		});

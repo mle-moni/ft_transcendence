@@ -17,10 +17,10 @@ AppClasses.Routers.Main = class extends Backbone.Router {
 		this.models.user = new AppClasses.Models.User(App.data.user);
 	}
 	index() {
-		if (!this.views.index) {
-			this.views.index = new AppClasses.Views.Index();
+		if (!this.views.home) {
+			this.views.home = new AppClasses.Views.Home();
 		}
-		this.mainDiv.html(this.views.index.render().el);
+		this.mainDiv.html(this.views.home.render().el);
 	}
 	salut(name) {
 		this.mainDiv.html(`salut ${name}`);

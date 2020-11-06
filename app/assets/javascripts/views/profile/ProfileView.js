@@ -2,7 +2,7 @@ AppClasses.Views.Profile = class extends Backbone.View {
 	constructor(opts) {
 		super(opts);
 		this.tagName = "div";
-		this.template = App.templates["profile"];
+		this.template = App.templates["profile/index"];
 		this.updateRender(); // render the template only one time, unless model changed
 		this.listenTo(this.model, "change", this.updateRender);
 	}
