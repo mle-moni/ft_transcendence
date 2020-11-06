@@ -1,4 +1,4 @@
-AppClasses.Views.ProfileView = class extends Backbone.View {
+AppClasses.Views.Profile = class extends Backbone.View {
 	constructor(opts) {
 		super(opts);
 		this.tagName = "div";

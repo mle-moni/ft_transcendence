@@ -1,4 +1,4 @@
-AppClasses.Views.ConnectionInfosView = class extends Backbone.View {
+AppClasses.Views.ConnectionInfos = class extends Backbone.View {
 	constructor(opts) {
 		super(opts);
 		this.tagName = "div";

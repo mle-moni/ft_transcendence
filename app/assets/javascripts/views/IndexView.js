@@ -3,7 +3,7 @@ AppClasses.Views.Index = class extends Backbone.View {
 		super(opts);
 		this.tagName = "div";
 		this.template = App.templates["index"];
-		this.user = new AppClasses.Views.ConnectionInfosView({
+		this.user = new AppClasses.Views.ConnectionInfos({
 			model: App.models.user
 		});
 		this.updateRender();

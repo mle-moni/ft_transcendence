@@ -6,9 +6,10 @@ AppClasses.Routers.Main = class extends Backbone.Router {
 		// routes
 		this.route("*path", "default"); // default route (404)
 		this.route("", "index");
-		this.route("profile", "profile");
-		this.route("test", "test");
 		this.route("salut/:name", "salut");
+
+		// #profile routes
+		App.routers.profile = new AppClasses.Routers.Profile();
 
 		this.mainDiv = $("#app");
 
@@ -21,19 +22,8 @@ AppClasses.Routers.Main = class extends Backbone.Router {
 		}
 		this.mainDiv.html(this.views.index.render().el);
 	}
-	test() {
-		this.mainDiv.html("test");
-	}
 	salut(name) {
 		this.mainDiv.html(`salut ${name}`);
-	}
-	profile() {
-		if (!this.views.profile) {
-			this.views.profile = new AppClasses.Views.ProfileView({
-				model: this.models.user
-			});
-		}
-		this.mainDiv.html(this.views.profile.render().el);
 	}
 	default() {
 		this.mainDiv.html(`Page not found, <a href="#">return to home page</a>`)
