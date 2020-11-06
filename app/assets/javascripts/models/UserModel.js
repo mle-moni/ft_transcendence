@@ -1,5 +1,6 @@
 AppClasses.Models.User = Backbone.Model.extend({
 	defaults: {
+		id: -1,
 		nickname: "",
 		email: "",
 		image: ""

@@ -25,7 +25,6 @@ gem 'jbuilder', '~> 2.7'
 gem 'devise'
 gem 'omniauth-marvin', '~> 1.0.2'
 
-# gem 'handlebars-source', '~> 4.7', '>= 4.7.6'
 gem 'handlebars_assets'
 
 # Use Active Storage variant

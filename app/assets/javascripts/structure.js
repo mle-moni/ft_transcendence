@@ -3,6 +3,7 @@
 //= require_tree ./views
 //= require_tree ./routers
 //= require_tree ./templates
+//= require_tree ./utils
 
 window.AppClasses = {
 	Models: {},
@@ -17,5 +18,6 @@ window.App = {
 	views: {},
 	routers: {},
 	templates: {},
-	data: {}
+	data: {},
+	utils: {}
 };

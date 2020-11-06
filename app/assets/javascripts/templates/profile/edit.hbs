@@ -1,15 +1,24 @@
-<form class="edit_user" id="edit_user" action="/users" 
+<form class="edit_user" id="edit_user" action="/profile/edit" 
 	accept-charset="UTF-8" method="post"><input type="hidden" 
 	name="_method" value="put">
+	<input type="hidden" 
+	name="authenticity_token" 
+	value="{{token}}">
+
+  <input type="hidden" name="id" value="{{user.id}}">
+
+  <div class="field">
+    <label for="user_nickname">Nickname</label><br>
+    <input autocomplete="nickname" type="text" value="{{user.nickname}}" name="nickname" id="user_nickname">
+  </div>
 
   <div class="field">
     <label for="user_email">Email</label><br>
-    <input autocomplete="email" type="email" value="mle-moni@student.42.fr" name="user[email]" id="user_email">
+    <input autocomplete="email" type="email" value="{{user.email}}" name="email" id="user_email">
   </div>
 
   <div class="actions">
     <input type="submit" name="commit" value="Update" data-disable-with="Update">
   </div>
 </form>
-
 <a href="javascript:history.back()">Back</a>
