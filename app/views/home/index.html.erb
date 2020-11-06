@@ -1,5 +1,3 @@
-
-<div id="login-logout"></div>
 <div id="app"></div>
 <script type="text/javascript">
 	App.toast = siiimpleToast;
@@ -15,18 +13,28 @@
 			Backbone.history.start(); // using anchor for routing
 		}
 	};
-	const loginLogout = $("#login-logout");
+	
+	<% signinLink = link_to "Sign in with 42", user_marvin_omniauth_authorize_path %>
+	<% signoutLink = link_to "Sign out", destroy_user_session_path, :method => :delete %>
+
 	<% if user_signed_in? %>
 		// providing data to instantiate our user model
 		App.data.user = {
 			nickname: <%= current_user.nickname.to_json.html_safe %>,
-			email: <%= current_user.email.to_json.html_safe %>
-		}
-		loginLogout.html(`<a rel="nofollow" data-method="delete" href="/users/sign_out">Sign out</a>`)
+			email: <%= current_user.email.to_json.html_safe %>,
+			image: <%= current_user.image.to_json.html_safe %>
+		};
+		App.data.links = {
+			signin: `<%= signinLink %>`,
+			signout: `<%= signoutLink %>`
+		};
 		initApp(); // init backbone only for connected users
 	<% else %>
-		loginLogout.html(`<a href="/users/auth/marvin">Sign in with 42</a>`)
+		// if user is not connected, just display a signin button
+		$("#loginButton").html(`<%= signinLink %>`)
 	<% end %>
+
+	// if there are notices or alerts, display them
 	if ($(".notice").text() !== "") {
 		App.toast.success($(".notice").text(), { duration: 3500, style: App.toastStyle });
 	}
