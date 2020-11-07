@@ -11,18 +11,20 @@ AppClasses.Views.ProfileEdit = class extends Backbone.View {
 
 	}
 	submit(e) {
-		App.utils.formAjax("/profile/edit.json", "#edit_user", "PUT")
+		e.preventDefault();
+		App.utils.formAjax("/profile/edit.json", "#edit_user")
 		.done((jsonObject) => {
 			App.toast.success("success", { duration: 2000, style: App.toastStyle });
-			console.log(jsonObject)
 			this.model.set(jsonObject);
 			window.location.hash = "#profile";
 		})
 		.fail((e) => {
-			console.log(e)
-			App.toast.alert("error", { duration: 2000, style: App.toastStyle });
+			let errorMsg = "error"
+			if (e && e.hasOwnProperty("responseJSON") && e.responseJSON.hasOwnProperty("alert")) {
+				errorMsg += `: ${e.responseJSON.alert}`
+			}
+			App.toast.alert(errorMsg, { duration: 2000, style: App.toastStyle });
 		});
-		e.preventDefault();
 		return (false);
 	}
 	updateRender() {
@@ -33,6 +35,7 @@ AppClasses.Views.ProfileEdit = class extends Backbone.View {
 		return (this);
 	}
 	render() {
+		this.delegateEvents();
 		return (this);
 	}
 }

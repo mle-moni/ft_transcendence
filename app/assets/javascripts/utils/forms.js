@@ -1,13 +1,13 @@
 // this function is used to upload the data of a form
-// exemple: formAjax("/your/url.json", "#my_form", "POST")
+// exemple: formAjax("/your/url.json", "#my_form")
 
 // You can assign callbacks to the request, see at the bottom of this page
 
-App.utils.formAjax = function(targetUrl, formStrQuery, reqType, progressStrQuery = null) {
+App.utils.formAjax = function(targetUrl, formStrQuery, progressStrQuery = null) {
 	const req = $.ajax({
 		// Your server script to process the upload
 		url: targetUrl,
-		type: reqType,
+		type: $(formStrQuery).attr("method") || "GET",
 	
 		// Form data
 		data: new FormData($(formStrQuery)[0]),
@@ -50,3 +50,19 @@ App.utils.formAjax = function(targetUrl, formStrQuery, reqType, progressStrQuery
 // .always(function() {
 // 	console.log( "complete" );
 // });
+
+App.utils.changeImg = (input, imgID) => {
+	if (input.files && input.files[0]) {
+		const reader = new FileReader();
+
+		reader.onload = function (e) {
+			const img = document.getElementById(imgID);
+			if (!img) {
+				console.error("no such element: #" + "projectImg");
+			}
+			img.src = e.target.result;
+			img.style.display = "block";
+		};
+		reader.readAsDataURL(input.files[0]);
+	}
+}
