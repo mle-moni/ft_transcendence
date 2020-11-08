@@ -3,7 +3,8 @@ AppClasses.Models.User = Backbone.Model.extend({
 		id: -1,
 		nickname: "",
 		email: "",
-		image: ""
+		image: "",
+		two_factor: false
 	}
 });
 

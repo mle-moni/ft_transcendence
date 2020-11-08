@@ -6,6 +6,7 @@ AppClasses.Routers.Profile = class extends Backbone.Router {
 		// routes
 		this.route("profile", "profile");
 		this.route("profile/edit", "edit");
+		this.route("profile/auth", "authInfos");
 
 		this.mainDiv = $("#app");
 	}
@@ -24,5 +25,13 @@ AppClasses.Routers.Profile = class extends Backbone.Router {
 			});
 		}
 		this.mainDiv.html(this.views.profileEdit.render().el);
+	}
+	authInfos() {
+		if (!this.views.authInfos) {
+			this.views.authInfos = new AppClasses.Views.AuthInfos({
+				model: this.models.user
+			});
+		}
+		this.mainDiv.html(this.views.authInfos.render().el);
 	}
 }

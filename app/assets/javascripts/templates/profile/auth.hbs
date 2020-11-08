@@ -1,0 +1,42 @@
+<form id="edit_pwd" action="/profile/password" accept-charset="UTF-8" method="POST">
+	<input type="hidden" name="authenticity_token" value="{{token}}">
+
+	<input type="hidden" name="id" value="{{user.id}}">
+	
+	<div class="field">
+		<label for="password1">Password</label>
+		<em>(6 characters minimum)</em>
+		<br>
+		<input type="password" name="password" id="password1">
+	</div>
+
+	<div class="field">
+		<label for="password2">Retype password</label><br>
+		<input type="password" id="password2">
+	</div>
+
+	<div class="actions">
+		<input type="submit" name="commit" value="Change password">
+	</div>
+</form>
+
+<br>
+
+{{#if user.two_factor}}
+	<form id="disable2fa" method="POST" action="{{links.disable2fa}}">
+		<input type="hidden" name="authenticity_token" value="{{token}}">	
+		<input type="submit" value="Disable two factor auth">
+	</form>
+{{else}}
+	<form id="enable2fa" method="POST" action="{{links.enable2fa}}">
+		<input type="hidden" name="authenticity_token" value="{{token}}">	
+		<input type="submit" value="Enable two factor auth">
+	</form>
+{{/if}}
+<br>
+{{#if user.two_factor}}
+<p>Scan this QR code with your authenticator app</p>
+<img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data={{links.authenticator}}">
+{{/if}}
+<br>
+<a href="javascript:history.back()">Back</a>

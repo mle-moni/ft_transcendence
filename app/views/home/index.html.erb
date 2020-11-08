@@ -23,16 +23,20 @@
 			nickname: <%= current_user.nickname.to_json.html_safe %>,
 			email: <%= current_user.email.to_json.html_safe %>,
 			image: <%= current_user.image.to_json.html_safe %>,
-			id: <%= current_user.id.to_json.html_safe %>
+			id: <%= current_user.id.to_json.html_safe %>,
+			two_factor: <%= current_user.otp_required_for_login %>
 		};
 		App.data.links = {
 			signin: `<%= signinLink %>`,
-			signout: `<%= signoutLink %>`
+			signout: `<%= signoutLink %>`,
+			enable2fa: `<%= profile_enable_otp_path %>`,
+			disable2fa: `<%= profile_disable_otp_path %>`,
+			authenticator: `<%= current_user.otp_provisioning_uri(current_user.email, issuer: "ft_transcendence") %>`
 		};
 		initApp(); // init backbone only for connected users
 	<% else %>
-		// if user is not connected, just display a signin button
-		$("#loginButton").html(`<%= signinLink %>`)
+		// if user is not connected, just display a signin form
+		$("#app").html(`<%= render 'signin' %>`)
 	<% end %>
 
 	// if there are notices or alerts, display them

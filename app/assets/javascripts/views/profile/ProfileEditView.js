@@ -32,10 +32,10 @@ AppClasses.Views.ProfileEdit = class extends Backbone.View {
 			user: this.model.attributes,
 			token: $('meta[name="csrf-token"]').attr('content')
 		}));
+		this.delegateEvents();
 		return (this);
 	}
 	render() {
-		this.delegateEvents();
 		return (this);
 	}
 }

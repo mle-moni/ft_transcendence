@@ -1,22 +1,58 @@
 require 'fileutils'
 
 class ProfileController < ApplicationController
+	before_action :connect_user
+
+	def disable_otp
+		current_user.otp_required_for_login = false
+		current_user.save!
+		
+		respond_to do |format|
+			format.html { redirect_to "/#profile", notice: 'Two factor auth disabled' }
+			format.json { render json: {msg: "Two factor auth successfully disabled"}, status: :ok }
+		end
+	end
+	def enable_otp
+		if current_user.provider == "marvin" && !current_user.has_set_pwd
+			update_error("You need to set a password first")
+			return
+		end
+		current_user.otp_secret = User.generate_otp_secret
+		current_user.otp_required_for_login = true
+		current_user.save!
+		uri = current_user.otp_provisioning_uri(current_user.email, issuer: "ft_transcendence")
+		respond_to do |format|
+			format.html { redirect_to "/#profile", notice: 'Two factor auth enabled' }
+			format.json { render json: {msg: uri}, status: :ok }
+		end
+	end
+
+	def change_password
+		unless params[:id] && params[:password]
+			update_error("Some fields are missing from your request")
+		end
+		_change_pwd(params[:password])
+		respond_to do |format|
+			format.html { redirect_to "/#profile", notice: 'Password updated' }
+			format.json { render json: user_cleaned(current_user), status: :ok }
+		end
+	end
 
 	def update
 		if lack_parameter
-			update_error
+			update_error("Some fields are missing in your request")
 			return
 		end
 		@user = User.find(params[:id]) # get user by his unique ID
 		
 		# if the user connected is not the same as @user, the request is a forgery
-		if !@user || !user_signed_in? || current_user.id != @user.id
-			update_error
+		if !@user || current_user.id != @user.id
+			update_error("UserIDs does not match")
 			return
 		end
 
 		if save_image # error
-			update_error
+			update_error("Could not update image (only .jpg and .png accepted)")
 			return
 		end
 		
@@ -25,14 +61,14 @@ class ProfileController < ApplicationController
 
 	private
 
-	def user_cleaned
-		new_user = {id: @user.id, nickname: @user.nickname, email: @user.email, image: @user.image}
+	def user_cleaned(usr)
+		new_user = {id: usr.id, nickname: usr.nickname, email: usr.email, image: usr.image, two_factor: usr.otp_required_for_login}
 	end
 
-	def update_error
+	def update_error(msg)
 		respond_to do |format|
-			format.html { redirect_to "/#profile", alert: 'Could not update profile.' }
-			format.json { render json: {alert: "Could not update profile"}, status: :unprocessable_entity }
+			format.html { redirect_to "/#profile", alert: "#{msg}" }
+			format.json { render json: {alert: "#{msg}"}, status: :unprocessable_entity }
 		end
 	end
 
@@ -50,10 +86,10 @@ class ProfileController < ApplicationController
 			# redirect_to "/#profile", notice: 'Profile was successfully updated.'
 			respond_to do |format|
 				format.html { redirect_to "/#profile", notice: 'Profile was successfully updated.' }
-				format.json { render json: user_cleaned, status: :ok }
+				format.json { render json: user_cleaned(@user), status: :ok }
 			end
 		else
-			update_error
+			update_error("Could not save profile")
 		end
 	end
 
@@ -77,5 +113,20 @@ class ProfileController < ApplicationController
 		return false
 	end
 
+	def _change_pwd(pwd)
+		new_hashed_password = User.new(:password => pwd).encrypted_password
+		current_user.encrypted_password = new_hashed_password
+		current_user.has_set_pwd = true
+		current_user.save!
+	end
+
+	def connect_user
+		unless user_signed_in?
+			respond_to do |format|
+				format.html { redirect_to "/", alert: "You need to be connected for this action" }
+				format.json { render json: {alert: "You need to be connected for this action"}, status: :unprocessable_entity }
+			end
+		end
+	end
 end
   

@@ -3,6 +3,10 @@ Rails.application.routes.draw do
   root "home#index"
 
   post '/profile/edit', to: 'profile#update'
+  post '/profile/password', to: 'profile#change_password'
+
+  post 'profile/enable_otp'
+  post 'profile/disable_otp'
 
   # sign in route:
   devise_for :users, controllers: { omniauth_callbacks: "users/omniauth_callbacks" }

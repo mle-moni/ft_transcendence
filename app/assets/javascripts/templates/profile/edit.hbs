@@ -2,26 +2,28 @@
 	accept-charset="UTF-8" method="POST" enctype="multipart/form-data">
 	<input type="hidden" name="authenticity_token" value="{{token}}">
 
-  <input type="hidden" name="id" value="{{user.id}}">
+	<input type="hidden" name="id" value="{{user.id}}">
 
-  <div class="field">
-    <label for="user_nickname">Nickname</label><br>
-    <input autocomplete="nickname" type="text" value="{{user.nickname}}" name="nickname" id="user_nickname">
-  </div>
+	<div class="field">
+		<label for="user_nickname">Nickname</label><br>
+		<input autocomplete="nickname" type="text" value="{{user.nickname}}" name="nickname" id="user_nickname">
+	</div>
 
-  <div class="field">
-    <label for="user_email">Email</label><br>
-    <input autocomplete="email" type="email" value="{{user.email}}" name="email" id="user_email">
-  </div>
+	<div class="field">
+		<label for="user_email">Email</label><br>
+		<input autocomplete="email" type="email" value="{{user.email}}" name="email" id="user_email">
+	</div>
 
-  <img height="100px" src="{{user.image}}" id="userImageEdit">
-  <div class="field">
-    <label for="user_image">Image</label><br>
-    <input type="file" name="image" id="user_image" onchange="App.utils.changeImg(this, 'userImageEdit')">
-  </div>
-  
-  <div class="actions">
-    <input type="submit" name="commit" value="Update" data-disable-with="Update">
-  </div>
+	<img height="100px" src="{{user.image}}" id="userImageEdit">
+	<div class="field">
+		<label for="user_image">Image</label><br>
+		<input type="file" name="image" id="user_image" onchange="App.utils.changeImg(this, 'userImageEdit')">
+	</div>
+	
+	<div class="actions">
+		<input type="submit" name="commit" value="Update">
+	</div>
 </form>
+<a href="#profile/auth">Change authentication settings</a>
+<br>
 <a href="javascript:history.back()">Back</a>

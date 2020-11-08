@@ -18,3 +18,4 @@ services:
       - db
     environment:
       PG_PASSWORD: password
+      ENCRYPTION_KEY: 2F413F4428472B4B6150645367566B59

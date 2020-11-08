@@ -22,9 +22,10 @@ gem 'jbuilder', '~> 2.7'
 # Use Active Model has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
-# for connections
+# for auth
 gem 'devise'
 gem 'omniauth-marvin', '~> 1.0.2'
+gem 'devise-two-factor'
 
 # for client side templates
 gem 'handlebars_assets'

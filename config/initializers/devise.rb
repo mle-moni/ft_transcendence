@@ -10,6 +10,12 @@
 # Many of these configuration options can be set straight in your model.
 Devise.setup do |config|
 
+  # 2fa config
+  config.warden do |manager|
+    manager.default_strategies(:scope => :user).unshift :two_factor_authenticatable
+    manager.failure_app = CustomFailure
+  end
+
   config.omniauth :marvin, "a074401fc092d7dbe5492a4bd2b3db2c39dea879419ae30e2dff94f6ad2a1a63",
    "74f0b58878e29e59fba12cbd01140ae0f99b62ee8f1dc9451eb3f1628858762d"
 
