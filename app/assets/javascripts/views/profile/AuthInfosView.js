@@ -59,7 +59,14 @@ AppClasses.Views.AuthInfos = class extends Backbone.View {
 		.done((jsonObject) => {
 			App.toast.success("Password updated !", { duration: 2000, style: App.toastStyle });
 			this.model.set(jsonObject);
-			window.location.hash = "#profile/edit";
+			if (this.model.two_factor) {
+				location.reload();	
+			} else {
+				$("#autoRecoPwd")[0].value = $("#password1")[0].value;
+				$("#password1")[0].value = "";
+				$("#password2")[0].value = "";
+				this.automaticReconnection();
+			}
 		})
 		.fail((e) => {
 			let errorMsg = "error"
@@ -69,6 +76,28 @@ AppClasses.Views.AuthInfos = class extends Backbone.View {
 			App.toast.alert(errorMsg, { duration: 2000, style: App.toastStyle });
 		});
 		return (false);
+	}
+	automaticReconnection() {
+		App.utils.formAjax("/users/sign_in", "#automaticReconnection")
+		.done((htmlResponse) => {
+			App.toast.success("Reconnection after password change success !", { duration: 2000, style: App.toastStyle });
+			// we need to extract the new CSRF token
+			// I kept the regex simple to keep it working on all browsers
+			// (look ahead and look behinds are not always implemented)
+			let match = htmlResponse.match(/csrf-token".*content=".*"/gm)[0];
+			let token = match.split("content=\"")[1];
+			token = token.substr(0, token.length - 1);
+			// then we update the value of the csrf-token meta tag, it will be there when we need it :)
+			$('meta[name="csrf-token"]').attr('content', token);
+			this.updateRender();
+		})
+		.fail((e) => {
+			let msg = "Manual reconnection required";
+			App.toast.message(msg, { duration: 3000, style: App.toastStyle });
+			setTimeout(() => {
+				location.reload();
+			}, 3000);
+		});
 	}
 	updateRender() {
 		this.$el.html(this.template({

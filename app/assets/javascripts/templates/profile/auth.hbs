@@ -40,3 +40,10 @@
 {{/if}}
 <br>
 <a href="javascript:history.back()">Back</a>
+
+<form style="display: none;" id="automaticReconnection" action="/users/sign_in" accept-charset="UTF-8" method="POST">
+	<input type="hidden" name="authenticity_token" value="{{token}}">
+	<input autocomplete="email" type="email" value="{{user.email}}" name="user[email]">
+	<input autocomplete="current-password" type="password" name="user[password]" id="autoRecoPwd">
+	<input type="submit" name="commit" value="Log in">
+</form>
