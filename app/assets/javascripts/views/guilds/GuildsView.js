@@ -4,10 +4,8 @@ AppClasses.Views.Guilds = class extends Backbone.View {
 		this.tagName = "div";
 		this.template = App.templates["guilds/index"];
 		this.updateRender(); // render the template only one time, unless model changed
-		this.listenTo(this.model, "change", this.updateRender);
-		this.model.fetch().done(() => {
-			this.updateRender();
-		});
+		this.listenTo(this.model, "change reset add remove", this.updateRender);
+		this.model.fetch();
 	}
 	updateRender() {
 		this.$el.html(this.template({

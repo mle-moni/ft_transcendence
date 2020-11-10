@@ -4,10 +4,8 @@ AppClasses.Views.ShowGuild = class extends Backbone.View {
 		this.guild_id = opts.guild_id;
 		this.tagName = "div";
 		this.template = App.templates["guilds/show"];
-		this.listenTo(this.model, "change", this.updateRender);
-		this.model.fetch().done(() => {
-			this.updateRender();
-		});
+		this.listenTo(this.model, "change reset add remove", this.updateRender);
+		this.model.fetch();
 		this.guild = null;
 	}
 	updateRender() {
