@@ -65,6 +65,7 @@ class ProfileController < ApplicationController
 		new_user = {id: usr.id, nickname: usr.nickname, email: usr.email, image: usr.image, two_factor: usr.otp_required_for_login}
 	end
 
+	# TODO better HTTP codes: https://gist.github.com/mlanett/a31c340b132ddefa9cca
 	def update_error(msg)
 		respond_to do |format|
 			format.html { redirect_to "/#profile", alert: "#{msg}" }

@@ -21,11 +21,7 @@ AppClasses.Views.AuthInfos = class extends Backbone.View {
 			this.model.set("two_factor", true);
 		})
 		.fail((e) => {
-			let errorMsg = "error"
-			if (e && e.hasOwnProperty("responseJSON") && e.responseJSON.hasOwnProperty("alert")) {
-				errorMsg += `: ${e.responseJSON.alert}`
-			}
-			App.toast.alert(errorMsg, { duration: 2000, style: App.toastStyle });
+			App.utils.toastError(e);
 		});
 		return (false);
 	}
@@ -37,11 +33,7 @@ AppClasses.Views.AuthInfos = class extends Backbone.View {
 			this.model.set("two_factor", false);
 		})
 		.fail((e) => {
-			let errorMsg = "error"
-			if (e && e.hasOwnProperty("responseJSON") && e.responseJSON.hasOwnProperty("alert")) {
-				errorMsg += `: ${e.responseJSON.alert}`
-			}
-			App.toast.alert(errorMsg, { duration: 2000, style: App.toastStyle });
+			App.utils.toastError(e);
 		});
 		return (false);
 	}
@@ -69,11 +61,7 @@ AppClasses.Views.AuthInfos = class extends Backbone.View {
 			}
 		})
 		.fail((e) => {
-			let errorMsg = "error"
-			if (e && e.hasOwnProperty("responseJSON") && e.responseJSON.hasOwnProperty("alert")) {
-				errorMsg += `: ${e.responseJSON.alert}`
-			}
-			App.toast.alert(errorMsg, { duration: 2000, style: App.toastStyle });
+			App.utils.toastError(e);
 		});
 		return (false);
 	}

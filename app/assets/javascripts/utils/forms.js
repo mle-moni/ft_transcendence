@@ -66,3 +66,11 @@ App.utils.changeImg = (input, imgID) => {
 		reader.readAsDataURL(input.files[0]);
 	}
 }
+
+App.utils.toastError = (e) => {
+	let errorMsg = "error"
+	if (e && e.hasOwnProperty("responseJSON") && e.responseJSON.hasOwnProperty("alert")) {
+		errorMsg += `: ${e.responseJSON.alert}`
+	}
+	App.toast.alert(errorMsg, { duration: 2000, style: App.toastStyle });
+}

@@ -1,4 +1,8 @@
 class User < ApplicationRecord
+
+  # "required: false" because the user may have a null guild_id
+  belongs_to :guild, required: false
+
   devise :two_factor_authenticatable,
          :otp_secret_encryption_key => ENV['ENCRYPTION_KEY']
 

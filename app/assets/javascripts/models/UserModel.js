@@ -1,17 +1,9 @@
 AppClasses.Models.User = Backbone.Model.extend({
 	defaults: {
-		id: -1,
 		nickname: "",
 		email: "",
 		image: "",
-		two_factor: false
+		two_factor: false,
+		guild_id: null
 	}
 });
-
-// we do not need a user collection for now
-// class UserCollection extends Backbone.Collection {
-// 	constructor(opts) {
-// 		super(opts);
-// 		this.model = AppClasses.Models.User;
-// 	}
-// }

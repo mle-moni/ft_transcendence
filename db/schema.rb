@@ -10,10 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_07_235723) do
+ActiveRecord::Schema.define(version: 2020_11_09_194334) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "guilds", force: :cascade do |t|
+    t.string "name"
+    t.string "anagram"
+    t.integer "points", default: 0
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
@@ -33,10 +41,15 @@ ActiveRecord::Schema.define(version: 2020_11_07_235723) do
     t.integer "consumed_timestep"
     t.boolean "otp_required_for_login", default: false
     t.boolean "has_set_pwd", default: false
+    t.bigint "guild_id"
+    t.boolean "guild_owner", default: false
+    t.boolean "guild_officer", default: false
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["guild_id"], name: "index_users_on_guild_id"
     t.index ["provider"], name: "index_users_on_provider"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["uid"], name: "index_users_on_uid"
   end
 
+  add_foreign_key "users", "guilds"
 end

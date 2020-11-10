@@ -19,11 +19,7 @@ AppClasses.Views.ProfileEdit = class extends Backbone.View {
 			window.location.hash = "#profile";
 		})
 		.fail((e) => {
-			let errorMsg = "error"
-			if (e && e.hasOwnProperty("responseJSON") && e.responseJSON.hasOwnProperty("alert")) {
-				errorMsg += `: ${e.responseJSON.alert}`
-			}
-			App.toast.alert(errorMsg, { duration: 2000, style: App.toastStyle });
+			App.utils.toastError(e);
 		});
 		return (false);
 	}

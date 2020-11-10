@@ -1,37 +1,18 @@
-AppClasses.Routers.Profile = class extends Backbone.Router {
+AppClasses.Routers.Profile = class extends AppClasses.Routers.AbstractRouter {
 	constructor(options) {
 		super(options);
-		this.views = App.views;
-		this.models = App.models;
 		// routes
 		this.route("profile", "profile");
 		this.route("profile/edit", "edit");
 		this.route("profile/auth", "authInfos");
-
-		this.mainDiv = $("#app");
 	}
 	profile() {
-		if (!this.views.profile) {
-			this.views.profile = new AppClasses.Views.Profile({
-				model: this.models.user
-			});
-		}
-		this.mainDiv.html(this.views.profile.render().el);
+		this.basicView("profile", "Profile", {model: this.models.user});
 	}
 	edit() {
-		if (!this.views.profileEdit) {
-			this.views.profileEdit = new AppClasses.Views.ProfileEdit({
-				model: this.models.user
-			});
-		}
-		this.mainDiv.html(this.views.profileEdit.render().el);
+		this.basicView("profileEdit", "ProfileEdit", {model: this.models.user});
 	}
 	authInfos() {
-		if (!this.views.authInfos) {
-			this.views.authInfos = new AppClasses.Views.AuthInfos({
-				model: this.models.user
-			});
-		}
-		this.mainDiv.html(this.views.authInfos.render().el);
+		this.basicView("authInfos", "AuthInfos", {model: this.models.user});
 	}
 }

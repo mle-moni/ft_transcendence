@@ -1,6 +1,9 @@
 Rails.application.routes.draw do
   # home page
   root "home#index"
+  scope "api" do
+    resources :guilds
+  end
 
   post '/profile/edit', to: 'profile#update'
   post '/profile/password', to: 'profile#change_password'

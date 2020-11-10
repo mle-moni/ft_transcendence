@@ -1,0 +1,17 @@
+{{#if guild }}
+<h2>name: {{guild.name}}</h2>
+<h3>anagram: {{guild.anagram}}</h3>
+<h3>points: {{guild.points}}</h3>
+{{else}}
+<h1>This guild does not seem to exist</h1>
+<br>
+{{/if}}
+
+{{#if edit }}
+<a href="#guilds/edit">Edit</a>
+<br>
+{{/if}}
+
+<a href="#guilds">Guilds list</a>
+<br>
+<a href="#">Home</a>
