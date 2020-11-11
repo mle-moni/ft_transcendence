@@ -3,10 +3,14 @@ AppClasses.Routers.GameRouter = class extends AppClasses.Routers.AbstractRouter 
 		super(options);
 		// routes
 		this.route("game", "index");
+		this.route("game/:room_id", "show");
 		this.collections.guilds = new AppClasses.Collections.Guild();
 	}
 	index() {
 		this.basicView("game", "Game");
-		this.views.game.initGame();
+	}
+	show(room_id) {
+		this.viewWithRenderParam("gamePlay", "GamePlay", room_id, { room_id })
+		console.log(room_id);
 	}
 }

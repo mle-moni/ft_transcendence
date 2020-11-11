@@ -1,5 +1,9 @@
-version: "3.8"
+version: "3.5"
 services:
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
   db:
     image: postgres:12.1
     volumes:
@@ -16,6 +20,10 @@ services:
       - "3000:3000"
     depends_on:
       - db
+      - redis
     environment:
       PG_PASSWORD: password
       ENCRYPTION_KEY: 2F413F4428472B4B6150645367566B59
+      REDIS_DB: 0
+      REDIS_URL: redis://redis
+      REDIS_PORT: 6379
