@@ -2,6 +2,7 @@ class User < ApplicationRecord
 
   # "required: false" because the user may have a null guild_id
   belongs_to :guild, required: false
+  validates :nickname, uniqueness: true
 
   devise :two_factor_authenticatable,
          :otp_secret_encryption_key => ENV['ENCRYPTION_KEY']
@@ -21,5 +22,17 @@ class User < ApplicationRecord
       user.image = auth.info.image
     end
   end
+
+  def self.clean(usr)
+		new_user = {
+      id: usr.id,
+      nickname: usr.nickname,
+      email: usr.email,
+      image: usr.image,
+      two_factor: usr.otp_required_for_login,
+      guild_owner: usr.guild_owner,
+      guild_officer: usr.guild_officer
+    }
+	end
       
 end

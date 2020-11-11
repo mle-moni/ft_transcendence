@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   root "home#index"
   scope "api" do
     resources :guilds
+    get '/guild/join', to: 'guilds#join'
   end
 
   post '/profile/edit', to: 'profile#update'

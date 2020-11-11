@@ -44,6 +44,7 @@ ActiveRecord::Schema.define(version: 2020_11_09_194334) do
     t.bigint "guild_id"
     t.boolean "guild_owner", default: false
     t.boolean "guild_officer", default: false
+    t.boolean "guild_validated", default: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["guild_id"], name: "index_users_on_guild_id"
     t.index ["provider"], name: "index_users_on_provider"

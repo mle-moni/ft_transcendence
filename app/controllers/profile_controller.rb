@@ -34,7 +34,7 @@ class ProfileController < ApplicationController
 		_change_pwd(params[:password])
 		respond_to do |format|
 			format.html { redirect_to "/#profile", notice: 'Password updated' }
-			format.json { render json: user_cleaned(current_user), status: :ok }
+			format.json { render json: User.clean(current_user), status: :ok }
 		end
 	end
 
@@ -61,10 +61,6 @@ class ProfileController < ApplicationController
 
 	private
 
-	def user_cleaned(usr)
-		new_user = {id: usr.id, nickname: usr.nickname, email: usr.email, image: usr.image, two_factor: usr.otp_required_for_login}
-	end
-
 	# TODO better HTTP codes: https://gist.github.com/mlanett/a31c340b132ddefa9cca
 	def update_error(msg)
 		respond_to do |format|
@@ -87,7 +83,7 @@ class ProfileController < ApplicationController
 			# redirect_to "/#profile", notice: 'Profile was successfully updated.'
 			respond_to do |format|
 				format.html { redirect_to "/#profile", notice: 'Profile was successfully updated.' }
-				format.json { render json: user_cleaned(@user), status: :ok }
+				format.json { render json: User.clean(@user), status: :ok }
 			end
 		else
 			update_error("Could not save profile")

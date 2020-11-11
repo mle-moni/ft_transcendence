@@ -1,6 +1,7 @@
 class GuildsController < ApplicationController
   before_action :set_guild, only: [:show, :edit, :update, :destroy]
-  before_action :connect_user, only: [:new, :edit, :update, :destroy]
+  before_action :connect_user, only: [:new, :edit, :update, :destroy, :join]
+  before_action :has_guild, only: [:new, :join]
 
   # GET /guilds
   # GET /guilds.json
@@ -27,11 +28,6 @@ class GuildsController < ApplicationController
   # POST /guilds
   # POST /guilds.json
   def create
-
-    if current_user.guild
-      res_with_error("You already are in a guild", :bad_request)
-      return false
-    end
 
     g_params = guild_params()
     if (!g_params)
@@ -96,6 +92,14 @@ class GuildsController < ApplicationController
     end
   end
 
+  # TODO
+  def join
+    respond_to do |format|
+      format.html { redirect_to guilds_url, notice: 'Joining request sent.' }
+      format.json { render json: User.clean(current_user), status: :ok }
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_guild
@@ -139,5 +143,12 @@ class GuildsController < ApplicationController
         return false # no errors
       end
       return true # error
+    end
+
+    def has_guild
+      if current_user.guild
+        res_with_error("You already are in a guild", :bad_request)
+        return false
+      end
     end
 end
