@@ -3,21 +3,10 @@ AppClasses.Views.Game = class extends Backbone.View {
 		super(opts);
 		this.tagName = "div";
 		this.template = App.templates["game/game"];
-		this.canvasID = "gameCanvas";
-		this.canvas = null;
-		this.ctx = null;
 	}
 	updateRender() {
-		this.$el.html(this.template({
-			canvasID: this.canvasID
-		}));
+		this.$el.html(this.template({ }));
 		return (this);
-	}
-	initGame() {
-		this.canvas = $(`#${this.canvasID}`)[0];
-		this.ctx = this.canvas.getContext("2d");
-
-		this.ctx.fillRect(100, 100, 100, 100)
 	}
 	render() {
 		this.updateRender(); // generates HTML

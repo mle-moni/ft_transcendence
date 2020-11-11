@@ -22,6 +22,11 @@ gem 'jbuilder', '~> 2.7'
 # Use Active Model has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
+# for game data
+gem 'redis'
+gem 'redis-namespace'
+gem 'redis-rails' 
+
 # for auth
 gem 'devise'
 gem 'omniauth-marvin', '~> 1.0.2'
