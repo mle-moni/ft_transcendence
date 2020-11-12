@@ -16,8 +16,9 @@ AppClasses.Routers.GuildsRouter = class extends AppClasses.Routers.AbstractRoute
 		const guild_id = this.models.user.get("guild_id");
 		if (guild_id === null) {
 			location.hash = "#guilds/new";
+			return ;
 		}
-		this.viewWithRenderParam("myGuild", "MyGuild", guild_id, {
+		this.viewWithRenderParam("showGuild", "ShowGuild", guild_id, {
 			model: this.collections.guilds,
 			guild_id
 		});

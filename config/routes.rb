@@ -2,13 +2,16 @@ Rails.application.routes.draw do
   # home page
   root "home#index"
   scope "api" do
+    # guild actions
     resources :guilds
-    get '/guild/join', to: 'guilds#join'
+    post '/guild/join', to: 'guilds#join'
+    post '/guild/quit', to: 'guilds#quit'
+    post '/guild/accept', to: 'guilds#accept_request'
   end
 
+  # profile actions, I might move it to the API scope
   post '/profile/edit', to: 'profile#update'
   post '/profile/password', to: 'profile#change_password'
-
   post 'profile/enable_otp'
   post 'profile/disable_otp'
 

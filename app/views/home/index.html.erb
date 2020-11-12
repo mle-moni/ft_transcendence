@@ -25,7 +25,10 @@
 			image: <%= current_user.image.to_json.html_safe %>,
 			id: <%= current_user.id.to_json.html_safe %>,
 			two_factor: <%= current_user.otp_required_for_login.to_json.html_safe %>,
-			guild_id: <%= current_user.guild_id.to_json.html_safe %>
+			guild_id: <%= current_user.guild_id.to_json.html_safe %>,
+			guild_owner: <%= current_user.guild_owner.to_json.html_safe %>,
+			guild_officer: <%= current_user.guild_officer.to_json.html_safe %>,
+			guild_validated: <%= current_user.guild_validated.to_json.html_safe %>
 		};
 		App.data.links = {
 			signin: `<%= signinLink %>`,

@@ -10,14 +10,12 @@ AppClasses.Views.NewGuild = class extends Backbone.View {
 	}
 	submit(e) {
 		e.preventDefault();
-		const guildAttributes = {
-			name: $("#guildName")[0].value,
-			anagram: $("#guildAnagram")[0].value
-		};
 		App.utils.formAjax("/api/guilds.json", "#createGuildForm")
 		.done(res => {
 			App.toast.success("Guild successfully created !", { duration: 2000, style: App.toastStyle });
 			App.models.user.set("guild_id", res.id);
+			App.models.user.set("guild_owner", true);
+			App.models.user.set("guild_validated", true);
 			location.hash = `#guilds/${res.id}`;
 		})
 		.fail((e) => {

@@ -1,6 +1,6 @@
 class GuildsController < ApplicationController
-  before_action :set_guild, only: [:show, :edit, :update, :destroy]
-  before_action :connect_user, only: [:new, :edit, :update, :destroy, :join]
+  before_action :set_guild, only: [:show, :edit, :update, :destroy, :join]
+  before_action :connect_user, only: [:new, :edit, :update, :destroy, :join, :quit, :accept_request]
   before_action :has_guild, only: [:new, :join]
 
   # GET /guilds
@@ -35,6 +35,7 @@ class GuildsController < ApplicationController
     end
     @guild = current_user.create_guild(g_params)
     current_user.guild_owner = true
+    current_user.guild_validated = true
     current_user.save
 
     respond_to do |format|
@@ -82,8 +83,7 @@ class GuildsController < ApplicationController
     end
     # remove all associations with this guild
     User.where("guild_id = #{@guild.id}").each do |user|
-      user.guild_id = nil
-      user.save
+      User.reset_guild(user)
     end
     @guild.destroy
     respond_to do |format|
@@ -92,11 +92,46 @@ class GuildsController < ApplicationController
     end
   end
 
-  # TODO
+  def quit
+    if current_user.guild_owner
+      @guild = current_user.guild
+      destroy
+      return true
+    end
+    User.reset_guild(current_user)
+    respond_to do |format|
+      format.html { redirect_to guilds_url, notice: 'You quitted your guild' }
+      format.json { render json: User.clean(current_user), status: :ok }
+    end
+  end
+
   def join
+    current_user.guild_id = @guild.id
+    current_user.guild_officer = false
+    current_user.guild_owner = false
+    current_user.guild_validated = false
+    current_user.save
     respond_to do |format|
       format.html { redirect_to guilds_url, notice: 'Joining request sent.' }
       format.json { render json: User.clean(current_user), status: :ok }
+    end
+  end
+
+  def accept_request
+    new_usr = User.find(params[:id])
+    unless new_usr.guild_id == current_user.guild_id
+      res_with_error("Bad request", :bad_request)
+      return false
+    end
+    unless User.has_officer_rights(current_user)
+      res_with_error("Action unauthorized", :unauthorized)
+      return false
+    end
+    new_usr.guild_validated = true
+    new_usr.save
+    respond_to do |format|
+      format.html { redirect_to guilds_url, notice: 'Joining request accepted.' }
+      format.json { render json: {msg: "Joining request accepted"}, status: :ok }
     end
   end
 
