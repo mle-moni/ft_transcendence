@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :rooms
   # home page
   root "home#index"
   scope "api" do
