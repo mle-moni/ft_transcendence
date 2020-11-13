@@ -2,6 +2,14 @@ class User < ApplicationRecord
 
   # "required: false" because the user may have a null guild_id
   belongs_to :guild, required: false
+
+  # friends relation setup
+  has_many :friendships
+  has_many :confirmed_friendships, -> { where confirmed: true }, class_name: 'Friendship'
+  has_many :invitations, -> { where confirmed: false }, class_name: 'Friendship'
+  has_many :friends, :through => :confirmed_friendships, class_name: 'User', :source => :friend
+  has_many :requests, :through => :invitations, class_name: 'User', :source => :friend
+  
   validates :nickname, uniqueness: true
   validates :email, uniqueness: true # as long as it's needed for game rooms
 
