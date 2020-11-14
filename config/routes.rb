@@ -12,6 +12,9 @@ Rails.application.routes.draw do
     post '/friends/accept'
     post '/friends/reject'
     post '/friends/destroy'
+    post '/friends/get_all'
+    # profile actions
+    post 'profile/get'
   end
 
   # profile actions, I might move it to the API scope
@@ -19,7 +22,6 @@ Rails.application.routes.draw do
   post '/profile/password', to: 'profile#change_password'
   post 'profile/enable_otp'
   post 'profile/disable_otp'
-  post 'profile/update'
 
   # sign in route:
   devise_for :users, controllers: { omniauth_callbacks: "users/omniauth_callbacks" }

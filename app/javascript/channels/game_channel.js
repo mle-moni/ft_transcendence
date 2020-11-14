@@ -212,6 +212,6 @@ function subscription_loop() {
 }
 
 window.addEventListener("hashchange", e => {
-  console.log('hashchange1', window.location.hash );
+  // console.log('hashchange1', window.location.hash );
   setTimeout(subscription_loop, 50);
 });

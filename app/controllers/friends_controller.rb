@@ -1,8 +1,15 @@
-class FriendshipController < ApplicationController
+class FriendsController < ApplicationController
 
 	before_action :connect_user
 	before_action :set_id, only: [:destroy, :add, :accept, :reject]
 	before_action :check_in_friendlist, only: [:add, :accept]
+
+	def get_all
+		respond_to do |format|
+			format.html { redirect_to "/", notice: '^^' }
+			format.json { render json: User.all.to_json( only: [:id, :nickname] ), status: :ok }
+		end
+	end
 
 	def destroy
 		other_friendship = Friendship.where(user_id: @friend_id, friend_id: current_user.id).first
@@ -20,7 +27,14 @@ class FriendshipController < ApplicationController
 	end
 
 	def add
-		current_user.friendships.create({friend_id: @friend_id})
+		other_friendship = Friendship.where(user_id: @friend_id, friend_id: current_user.id).first
+		if other_friendship
+			current_user.friendships.create({friend_id: @friend_id, confirmed: true})
+			other_friendship.confirmed = true
+			other_friendship.save
+		else
+			current_user.friendships.create({friend_id: @friend_id})
+		end
 		respond_to do |format|
 			format.html { redirect_to guilds_url, notice: 'Friend request sent.' }
 			format.json { render json: {msg: "Friend request sent"}, status: :ok }
@@ -34,6 +48,8 @@ class FriendshipController < ApplicationController
 			res_with_error("Bad request", :bad_request)
 			return false
 		end
+		user_friendship.confirmed = true
+		user_friendship.save
 		current_user.friendships.create({friend_id: @friend_id, confirmed: true})
 		respond_to do |format|
 			format.html { redirect_to guilds_url, notice: 'Friend request accepted.' }
@@ -58,6 +74,10 @@ class FriendshipController < ApplicationController
 
 	def set_id
 		@friend_id = params[:id]
+		if @friend_id == current_user.id.to_s
+			res_with_error("You can't be friend with yourself", :bad_request)
+			return (false)
+		end
 	end
 
 	def res_with_error(msg, error)

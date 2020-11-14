@@ -93,10 +93,10 @@ AppClasses.Views.AuthInfos = class extends Backbone.View {
 			token: $('meta[name="csrf-token"]').attr('content'),
 			links: App.data.links
 		}));
-		this.delegateEvents();
 		return (this);
 	}
 	render() {
+		this.delegateEvents();
 		return (this);
 	}
 }

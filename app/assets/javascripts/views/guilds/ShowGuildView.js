@@ -71,7 +71,6 @@ AppClasses.Views.ShowGuild = class extends Backbone.View {
 			isInGuild: user.isInGuild(this.guild),
 			token: $('meta[name="csrf-token"]').attr('content')
 		}));
-		this.delegateEvents();
 		return (this);
 	}
 	render(guild_id) {
@@ -80,6 +79,7 @@ AppClasses.Views.ShowGuild = class extends Backbone.View {
 			this.updateRender();
 		}
 		this.model.fetch();
+		this.delegateEvents();
 		return (this);
 	}
 }

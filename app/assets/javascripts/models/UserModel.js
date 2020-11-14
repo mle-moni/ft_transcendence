@@ -32,5 +32,36 @@ AppClasses.Models.User = Backbone.Model.extend({
 			return (false);
 		}
 		return (guild.toJSON().id == App.models.user.get("guild_id"));
+	},
+	update: (model) => {
+		if (!model) {
+			console.error("You must pass a valid user");
+			return (false);
+		}
+		let data = {authenticity_token: $('meta[name="csrf-token"]').attr('content')};
+		jQuery.post("/api/profile/get.json", data)
+		.done(userData => {
+			model.set(userData);
+		})
+		.fail(e => {
+			console.error(e);
+		})
 	}
 });
+
+AppClasses.Collections.AllUsers = class extends Backbone.Collection {
+	constructor(opts) {
+		super(opts);
+		this.myFetch();
+	}
+	myFetch() {
+		let data = {authenticity_token: $('meta[name="csrf-token"]').attr('content')};
+		jQuery.post("/api/friends/get_all.json", data)
+		.done(usersData => {
+			this.set(usersData);
+		})
+		.fail(e => {
+			console.error(e);
+		})
+	}
+}
