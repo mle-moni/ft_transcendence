@@ -29,10 +29,11 @@ end
 end
 
 [
-	{name: "ChatRoom2", owner_id: User.find_by(nickname: "Bob"), privacy: "Public"},
-	{name: "ChatRoom3", owner_id: User.find_by(nickname: "Jo"), privacy: "Public"},
-	{name: "ChatRoom4", owner_id: User.find_by(nickname: "Jo"), privacy: "Public"}
+	{name: "ChatRoom1", owner_id: User.find_by(email: "bob@bob.bob").id, privacy: "Public"},
+	{name: "ChatRoom2", owner_id: User.find_by(email: "bob@bob.bob").id, privacy: "Public"},
+	{name: "ChatRoom3", owner_id: User.find_by(email: "jo@jo.jo").id, privacy: "Public"}
 
 ].each do |r|
 	room = Room.new(r)
+	room.save()
 end

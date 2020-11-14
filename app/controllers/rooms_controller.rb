@@ -26,8 +26,9 @@ class RoomsController < ApplicationController
   # POST /rooms.json
   def create
     
+    # add privacy
     filteredParams = params.require(:room).permit(:name, :owner_id)
-    @room = Room.new(filteredParams)
+    @room = Room.create(filteredParams)
     respond_to do |format|
       if @room.save
         format.html { redirect_to @room, notice: 'Room was successfully created.' }

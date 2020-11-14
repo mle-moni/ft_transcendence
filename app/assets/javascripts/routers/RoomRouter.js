@@ -3,19 +3,32 @@ AppClasses.Routers.RoomRouter = class extends AppClasses.Routers.AbstractRouter 
 		super(options);
 		this.route("room", "index");
 		this.route("room/new", "newRoom");
+		this.route("rooms/:room_id", "showRoom");
 
-		// Get ALL Rooms
-		this.models.user = new AppClasses.Models.User(App.data.user);
-
+		this.collections.rooms = new AppClasses.Collections.Room();
 	}
     
 	index() {
-		this.basicView("room", "Room", {model: this.models.user});
+		/* Retrieve current user to show proper rooms */
+		const user = this.models.user;
+		this.viewWithRenderParam("room", "Room", user, {
+			model: this.collections.rooms,
+			user
+		});
 	}
 
 	newRoom() {
 		this.basicView("newRoom", "NewRoom", {model: this.models.user});
 	}
 
+	showRoom(room_id) {
+		const r_id = parseInt(room_id);
+		const user = this.models.user;
+		this.viewWithRenderParam("showRoom", "ShowRoom", r_id, {
+			model: this.collections.rooms,
+			room_id: r_id,
+			user
+		});
+	}
 	
 }
