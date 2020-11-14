@@ -3,6 +3,13 @@ require 'fileutils'
 class ProfileController < ApplicationController
 	before_action :connect_user
 
+	def get
+		respond_to do |format|
+			format.html { redirect_to "/#profile", notice: 'Profile infos updated' }
+			format.json { render json: User.clean(current_user), status: :ok }
+		end
+	end
+
 	def disable_otp
 		current_user.otp_required_for_login = false
 		current_user.save!

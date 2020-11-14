@@ -1,0 +1,39 @@
+<h1>Your friends</h1>
+
+{{#each user.friends}}
+<div>
+	{{nickname}}
+	<span class="clickToDeleteFriend pointer">
+		delete
+		<span class="nodisplay">{{id}}</span>
+	</span>
+</div>
+{{/each}}
+
+<h4>Friend requests:</h4>
+{{#each user.invites}}
+<div>
+	{{nickname}}:
+	<span class="clickToAcceptFriend pointer">
+		accept
+		<span class="nodisplay">{{id}}</span>
+	</span>
+	<span class="clickToRejectFriend pointer">
+		reject
+		<span class="nodisplay">{{id}}</span>
+	</span>
+</div>
+{{/each}}
+
+<h4>Add friends</h4>
+<input type="text" name="" id="addFriend">
+<div id="userInputFriends">
+
+</div>
+
+<form style="display: none;" id="friendsForm" method="POST">
+	<input type="hidden" name="authenticity_token" value="{{token}}">
+	<input type="text" name="id" id="friendIDField">
+</form>
+
+<a href="#">Home</a>

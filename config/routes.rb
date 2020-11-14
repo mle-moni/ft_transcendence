@@ -9,11 +9,22 @@ Rails.application.routes.draw do
     post '/guild/join', to: 'guilds#join'
     post '/guild/quit', to: 'guilds#quit'
     post '/guild/accept', to: 'guilds#accept_request'
+<<<<<<< HEAD
 
     # CHAT ------
     resources :rooms
     # ------
 
+=======
+    # friends actions
+    post '/friends/add'
+    post '/friends/accept'
+    post '/friends/reject'
+    post '/friends/destroy'
+    post '/friends/get_all'
+    # profile actions
+    post 'profile/get'
+>>>>>>> master
   end
 
 

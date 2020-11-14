@@ -5,7 +5,7 @@ AppClasses.Routers.GuildsRouter = class extends AppClasses.Routers.AbstractRoute
 		this.route("guilds", "index");
 		this.route("guilds/:guild_id", "showGuild");
 		this.route("guilds/mine", "mine");
-		this.route("guilds/new", "new");
+		this.route("guilds/new", "newGuild");
 		this.route("guilds/edit", "edit");
 		this.collections.guilds = new AppClasses.Collections.Guild();
 	}
@@ -30,7 +30,7 @@ AppClasses.Routers.GuildsRouter = class extends AppClasses.Routers.AbstractRoute
 			guild_id: g_id
 		});
 	}
-	new() {
+	newGuild() {
 		this.basicView("newGuild", "NewGuild", {model: this.collections.guilds});
 	}
 	edit() {

@@ -2,6 +2,15 @@ class User < ApplicationRecord
 
   # "required: false" because the user may have a null guild_id
   belongs_to :guild, required: false
+
+  # friends relation setup
+  has_many :friendships
+  has_many :confirmed_friendships, -> { where confirmed: true }, class_name: 'Friendship'
+  has_many :friends, :through => :confirmed_friendships, class_name: 'User', :source => :friend
+  has_many :invitations, -> { where confirmed: false }, class_name: 'Friendship', foreign_key: "friend_id"
+  # get the users that sent me a friend request
+  has_many :invites, :through => :invitations, class_name: 'User', :source => :user
+  
   validates :nickname, uniqueness: true
   validates :email, uniqueness: true # as long as it's needed for game rooms
 
@@ -33,7 +42,9 @@ class User < ApplicationRecord
       two_factor: usr.otp_required_for_login,
       guild_owner: usr.guild_owner,
       guild_officer: usr.guild_officer,
-      guild_validated: usr.guild_validated
+      guild_validated: usr.guild_validated,
+      friends: usr.friends,
+      invites: usr.invites
     }
   end
   

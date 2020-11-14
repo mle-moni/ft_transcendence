@@ -10,10 +10,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema.define(version: 2020_11_12_224230) do
+=======
+ActiveRecord::Schema.define(version: 2020_11_13_152412) do
+>>>>>>> master
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "friendships", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "friend_id", null: false
+    t.boolean "confirmed", default: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["friend_id"], name: "index_friendships_on_friend_id"
+    t.index ["user_id"], name: "index_friendships_on_user_id"
+  end
 
   create_table "games", force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
@@ -72,6 +86,11 @@ ActiveRecord::Schema.define(version: 2020_11_12_224230) do
     t.index ["uid"], name: "index_users_on_uid"
   end
 
+<<<<<<< HEAD
   add_foreign_key "rooms", "users", column: "owner_id"
+=======
+  add_foreign_key "friendships", "users"
+  add_foreign_key "friendships", "users", column: "friend_id"
+>>>>>>> master
   add_foreign_key "users", "guilds"
 end
