@@ -1,14 +1,22 @@
 Rails.application.routes.draw do
-  resources :rooms
   # home page
   root "home#index"
+
+  
   scope "api" do
     # guild actions
     resources :guilds
     post '/guild/join', to: 'guilds#join'
     post '/guild/quit', to: 'guilds#quit'
     post '/guild/accept', to: 'guilds#accept_request'
+
+    # CHAT ------
+    resources :rooms
+    # ------
+
   end
+
+
 
   # profile actions, I might move it to the API scope
   post '/profile/edit', to: 'profile#update'

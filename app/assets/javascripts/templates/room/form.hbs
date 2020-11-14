@@ -1,0 +1,18 @@
+<h1>{{titleText}}</h1>
+
+<form id="{{formID}}" action="/api/rooms.json" accept-charset="UTF-8" method="{{method}}">
+	
+	<input type="hidden" name="authenticity_token" value="{{token}}">
+
+	{{!-- Room Data --}}
+	<label for="roomName">Room name</label>
+	<input type="text" id="roomName" name="room[name]">
+	<input type="hidden" id="roomOwner" name="room[owner_id]" value="{{user.id}}">
+
+	<br>
+	<input type="submit" value="{{submitText}}">
+	<br>
+</form>
+
+<br>
+<a href="#room">Back</a>

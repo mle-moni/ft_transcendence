@@ -1,5 +1,6 @@
 class RoomsController < ApplicationController
   before_action :set_room, only: [:show, :edit, :update, :destroy]
+  before_action :connect_user, only: [:new, :edit, :update, :destroy, :join, :quit, :accept_request]
 
   # GET /rooms
   # GET /rooms.json
@@ -24,8 +25,9 @@ class RoomsController < ApplicationController
   # POST /rooms
   # POST /rooms.json
   def create
-    @room = Room.new(room_params)
-
+    
+    filteredParams = params.require(:room).permit(:name, :owner_id)
+    @room = Room.new(filteredParams)
     respond_to do |format|
       if @room.save
         format.html { redirect_to @room, notice: 'Room was successfully created.' }
@@ -67,8 +69,5 @@ class RoomsController < ApplicationController
       @room = Room.find(params[:id])
     end
 
-    # Only allow a list of trusted parameters through.
-    def room_params
-      params.require(:room).permit(:name, :privacy, :password, :user_id)
-    end
+
 end

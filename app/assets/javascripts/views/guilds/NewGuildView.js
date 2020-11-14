@@ -10,6 +10,7 @@ AppClasses.Views.NewGuild = class extends Backbone.View {
 	}
 	submit(e) {
 		e.preventDefault();
+
 		App.utils.formAjax("/api/guilds.json", "#createGuildForm")
 		.done(res => {
 			App.toast.success("Guild successfully created !", { duration: 2000, style: App.toastStyle });

@@ -8,3 +8,31 @@ unless User.exists?(1)
 		user.save!(validate: false)
 	end
 end
+
+
+
+# ---------- CHAT Seed
+
+# Recreate users each time dedicated to chat feature
+# Recreate rooms each time too
+# Encrypted Passwords : bob - jo - kim
+
+
+[
+	{email: "bob@bob.bob", encrypted_password: "48181acd22b3edaebc8a447868a7df7ce629920a", reset_password_token: nil, reset_password_sent_at: nil, remember_created_at: nil, created_at: "2020-11-06 17:27:29", updated_at: "2020-11-06 17:27:57", nickname: "Bob", provider: nil, uid: nil, image: "https://images-na.ssl-images-amazon.com/images/I/51vy0hxKhtL._AC_SX425_.jpg"},
+	{email: "jo@jo.jo", encrypted_password: "bd73d35759d75cc215150d1bbc94f1b1078bee01", reset_password_token: nil, reset_password_sent_at: nil, remember_created_at: nil, created_at: "2020-11-06 17:27:29", updated_at: "2020-11-06 17:27:57", nickname: "Jo", provider: nil, uid: nil, image: "https://images-na.ssl-images-amazon.com/images/I/81dIf1bhapL._AC_SY355_.jpg"},
+	{email: "kim@kim.kim", encrypted_password: "a6312121e15caec74845b7ba5af23330d52d4ac0", reset_password_token: nil, reset_password_sent_at: nil, remember_created_at: nil, created_at: "2020-11-06 17:27:29", updated_at: "2020-11-06 17:27:57", nickname: "Kim", provider: nil, uid: nil, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTk5GO2sPjD47vukDnUIpPI0ewHkBbpy2Qc6g&usqp=CAU"}
+
+].each do |record|
+	newUser = User.new(record)
+	newUser.save!(validate: false)
+end
+
+[
+	{name: "ChatRoom2", owner_id: User.find_by(nickname: "Bob"), privacy: "Public"},
+	{name: "ChatRoom3", owner_id: User.find_by(nickname: "Jo"), privacy: "Public"},
+	{name: "ChatRoom4", owner_id: User.find_by(nickname: "Jo"), privacy: "Public"}
+
+].each do |r|
+	room = Room.new(r)
+end

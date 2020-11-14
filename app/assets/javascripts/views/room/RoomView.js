@@ -1,13 +1,10 @@
-AppClasses.Views.Chat = class extends Backbone.View {
+AppClasses.Views.Room = class extends Backbone.View {
 	constructor(opts) {
 		super(opts);
 		this.tagName = "div";
-        this.template = App.templates["chat/chat"];
+        this.template = App.templates["room/index"];
 
 		this.updateRender();
-        this.listenTo(this.model, "change", this.updateRender);
-        
-        console.log("Chat View Constructor");
         
     }
     

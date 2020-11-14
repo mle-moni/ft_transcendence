@@ -9,7 +9,7 @@ window.AppClasses = {
 	Models: {},
 	Collections: {},
 	Views: {},
-	Routers: {}
+	Routers: {},
 };
 
 window.App = {
