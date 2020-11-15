@@ -1,2 +1,24 @@
+<br><p>Logged in as : {{user.nickname}} in the room</p><br>
 
-<h3> You're successfully connected to the room {{room.name}}</h3>
+
+<div>
+
+    <ul class="list-group">
+
+    {{#each tab}}
+        
+        {{#when user_id "noteq" ../user.id}}
+            <li class="list-group-item"> From {{user_id}} : {{message}} </li>
+            <br><br>
+        {{/when}}
+        
+        {{#when user_id "eq" ../user.id}}
+            <li class="list-group-item"> From {{user_id}} : {{message}} </li>
+            <br><br>
+        {{/when}}
+
+    {{/each}}
+
+  </ul>
+</div>
+

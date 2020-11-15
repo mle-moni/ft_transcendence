@@ -19,9 +19,9 @@ end
 
 
 [
-	{email: "bob@bob.bob", encrypted_password: "48181acd22b3edaebc8a447868a7df7ce629920a", reset_password_token: nil, reset_password_sent_at: nil, remember_created_at: nil, created_at: "2020-11-06 17:27:29", updated_at: "2020-11-06 17:27:57", nickname: "Bob", provider: nil, uid: nil, image: "https://images-na.ssl-images-amazon.com/images/I/51vy0hxKhtL._AC_SX425_.jpg"},
-	{email: "jo@jo.jo", encrypted_password: "bd73d35759d75cc215150d1bbc94f1b1078bee01", reset_password_token: nil, reset_password_sent_at: nil, remember_created_at: nil, created_at: "2020-11-06 17:27:29", updated_at: "2020-11-06 17:27:57", nickname: "Jo", provider: nil, uid: nil, image: "https://images-na.ssl-images-amazon.com/images/I/81dIf1bhapL._AC_SY355_.jpg"},
-	{email: "kim@kim.kim", encrypted_password: "a6312121e15caec74845b7ba5af23330d52d4ac0", reset_password_token: nil, reset_password_sent_at: nil, remember_created_at: nil, created_at: "2020-11-06 17:27:29", updated_at: "2020-11-06 17:27:57", nickname: "Kim", provider: nil, uid: nil, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTk5GO2sPjD47vukDnUIpPI0ewHkBbpy2Qc6g&usqp=CAU"}
+	{email: "bob@bob.bob", encrypted_password: "$2b$10$hTWyjJ2M0cXVfbWZVDafZeA4Y3Q5BgmE3y8jhlaLEIe5kOH0Mrh0y", reset_password_token: nil, reset_password_sent_at: nil, remember_created_at: nil, created_at: "2020-11-06 17:27:29", updated_at: "2020-11-06 17:27:57", nickname: "Bob", provider: nil, uid: nil, image: "https://images-na.ssl-images-amazon.com/images/I/51vy0hxKhtL._AC_SX425_.jpg"},
+	{email: "jo@jo.jo", encrypted_password: "$2b$10$cTBNkgVpymjQUnmzcIOp..7LV89qUcA8oncTqPgm8Mhz7SU6.9SA2", reset_password_token: nil, reset_password_sent_at: nil, remember_created_at: nil, created_at: "2020-11-06 17:27:29", updated_at: "2020-11-06 17:27:57", nickname: "Jo", provider: nil, uid: nil, image: "https://images-na.ssl-images-amazon.com/images/I/81dIf1bhapL._AC_SY355_.jpg"},
+	{email: "kim@kim.kim", encrypted_password: "$2b$10$vlVG7aTb89HFydKlSMocCO1FHF.aut2CHeDT1VTRVk8BZyyyF8knO", reset_password_token: nil, reset_password_sent_at: nil, remember_created_at: nil, created_at: "2020-11-06 17:27:29", updated_at: "2020-11-06 17:27:57", nickname: "Kim", provider: nil, uid: nil, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTk5GO2sPjD47vukDnUIpPI0ewHkBbpy2Qc6g&usqp=CAU"}
 
 ].each do |record|
 	newUser = User.new(record)
@@ -36,4 +36,12 @@ end
 ].each do |r|
 	room = Room.new(r)
 	room.save()
+	
 end
+
+["Hello 1", "Hello 2", "Hello 3", "Hello 4"]. each do |content| 
+	newMessage = RoomMessage.new(message: content)
+	newMessage.user_id = User.find_by(email: "bob@bob.bob").id
+	newMessage.room_id = Room.find_by(name: "ChatRoom1").id
+	newMessage.save()
+end 

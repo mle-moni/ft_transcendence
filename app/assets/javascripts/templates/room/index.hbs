@@ -1,39 +1,28 @@
-<br><h3> • Your chat rooms - {{user.nickname}}</h3><br>
+<br><p>Logged in as {{user.nickname}}</p><br>
 {{!-- Rooms joined or owned by the current user  --}}
 
-<div>
+<a class="btn btn-primary" href="#room/new" role="button">Create a new room</a>
+<br><br>
 
-    <ul class="list-group">
-
-        {{#each rooms}}
-            {{#when owner_id "noteq" ../user.id}}
-            <li class="list-group-item"> {{name}} ({{privacy}}) :
-                <a style="font-size: 14px;" href="#rooms/{{id}}">Open</a>
-            </li>
-            <br>
-            {{/when}}
-        {{/each}}
-    </ul>
-</div>
-
-<br><h3> • Join chat rooms </h3><br>
+<br><h3> • Open or Join chat rooms </h3><br>
 {{!-- Every Rooms from DB except whoses which are owned by current user  --}}
 <div>
 
     <ul class="list-group">
     {{!-- https://stackoverflow.com/questions/27719071/nested-if-inside-each-handlebars-template-in-express-app --}}
         {{#each rooms}}
-            {{#when owner_id "eq" ../user.id}}
+            {{!-- {{#when owner_id "eq" ../user.id}} --}}
             <li class="list-group-item"> {{name}} ({{privacy}}) :
+
+                {{!-- If joined or opened --}}
                 <a style="font-size: 14px;" href="#rooms/{{id}}">Join</a>
+
             </li>
             <br>
-            {{/when}}
+            {{!-- {{/when}} --}}
         {{/each}}
         <br>
 
     </ul>
 </div>
 
-
-<a class="btn btn-primary" href="#room/new" role="button">Creat a new room</a>

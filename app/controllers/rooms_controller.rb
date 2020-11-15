@@ -26,8 +26,8 @@ class RoomsController < ApplicationController
   # POST /rooms.json
   def create
     
-    # add privacy
-    filteredParams = params.require(:room).permit(:name, :owner_id)
+    # client side validation to add
+    filteredParams = params.require(:room).permit(:name, :owner_id, :privacy, :password)
     @room = Room.create(filteredParams)
     respond_to do |format|
       if @room.save

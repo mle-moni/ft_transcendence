@@ -13,13 +13,16 @@ AppClasses.Routers.Main = class extends AppClasses.Routers.AbstractRouter {
 		// game routes
 		App.routers.game = new AppClasses.Routers.GameRouter();
 		
-		App.routers.room = new AppClasses.Routers.RoomRouter();
+		// Chat : Room & Messages
+		App.routers.rooms = new AppClasses.Routers.RoomRouter();
+
 		// friends routes
 		App.routers.friends = new AppClasses.Routers.FriendsRouter();
 
 		// create all models needed by multiple routes
 		this.models.user = new AppClasses.Models.User(App.data.user);
 		this.collections.allUsers = new AppClasses.Collections.AllUsers();
+
 	}
 	index() {
 		this.basicView("home", "Home");

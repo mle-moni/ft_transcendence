@@ -8,11 +8,17 @@
 	<label for="roomName">Room name</label>
 	<input type="text" id="roomName" name="room[name]">
 	<input type="hidden" id="roomOwner" name="room[owner_id]" value="{{user.id}}">
+	<br><br>
+	<label for="roomPrivacy">Room Privacy</label>
+	<input type="text" id="roomPrivacy" name="room[privacy]">
+	<br><br>
+	<label for="roomPassword">Room Password if private</label>
+	<input type="text" id="roomPassword" name="room[password]">
 
-	<br>
+	<br>	<br><br>
 	<input type="submit" value="{{submitText}}">
 	<br>
 </form>
 
 <br>
-<a href="#room">Back</a>
+<a class="btn btn-primary" href="#room" role="button"> Back </a>

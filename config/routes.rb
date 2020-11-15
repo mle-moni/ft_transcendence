@@ -10,10 +10,13 @@ Rails.application.routes.draw do
     post '/guild/quit', to: 'guilds#quit'
     post '/guild/accept', to: 'guilds#accept_request'
 
+
     # CHAT ------
-    resources :rooms
+    resources :rooms 
+    resources :room_messages
     # ------
 
+    
     # friends actions
     post '/friends/add'
     post '/friends/accept'
