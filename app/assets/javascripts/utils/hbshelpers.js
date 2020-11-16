@@ -14,3 +14,16 @@ Handlebars.registerHelper( "when",function(operand_1, operator, operand_2, optio
     else  return options.inverse(this);
 
 });
+
+/* Get user attributes by giving a collection, the user_id, the attribute key name */
+/* Example : {{#getUserAttributes ../members user_id "image"}} */
+
+Handlebars.registerHelper('getUserAttributes', function(collection, id, attribute) {
+    var collectionLength = collection.length;
+    for (var i = 0; i < collectionLength; i++) {
+        if (collection[i].id === id) {
+            return collection[i][attribute];
+        }
+    }
+    return null;
+});

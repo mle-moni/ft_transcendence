@@ -2,7 +2,9 @@ AppClasses.Models.Message = Backbone.Model.extend({
 	defaults: {
 		message: "",
         user_id: null,
-        room_id: null
+		room_id: null,
+		members: null,
+		room_messages: null
     }
 });
 

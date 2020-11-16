@@ -6,10 +6,6 @@ AppClasses.Routers.RoomRouter = class extends AppClasses.Routers.AbstractRouter 
 		this.route("rooms/:room_id", "showRoom");
 
 		this.collections.rooms = new AppClasses.Collections.Room();
-		this.collections.messages = new AppClasses.Collections.Message();
-
-		console.log(this.collections.messages);
-		
 
 	}
     
@@ -22,6 +18,7 @@ AppClasses.Routers.RoomRouter = class extends AppClasses.Routers.AbstractRouter 
 	}
 
 	newRoom() {
+		// TODO : brancher à cable l'ajout d'une room
 		this.basicView("newRoom", "NewRoom", {model: this.models.user});
 	}
 
@@ -30,11 +27,8 @@ AppClasses.Routers.RoomRouter = class extends AppClasses.Routers.AbstractRouter 
 		const r_id = parseInt(room_id);
 		const user = this.models.user;
 
-		console.log('Room ID = ' + r_id);
-		console.log("User ID = " + user.id);
-		
 		this.viewWithRenderParam("showRoom", "ShowRoom", r_id, {
-			model: this.collections.messages,
+			model: this.collections.rooms,
 			room_id: r_id,
 			user
 		});

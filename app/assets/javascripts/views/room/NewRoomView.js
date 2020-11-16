@@ -14,8 +14,6 @@ AppClasses.Views.NewRoom = class extends Backbone.View {
 		/* Cancels the event if it is cancelable*/
 		e.preventDefault();
 
-		console.log("Room Form - Submit Room Creation");
-
 		App.utils.formAjax("/api/rooms.json", "#createRoomForm")
 		.done(res => {
 			App.toast.success("Room successfully created !", { duration: 2000, style: App.toastStyle });

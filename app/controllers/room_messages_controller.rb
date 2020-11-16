@@ -26,8 +26,8 @@ class RoomMessagesController < ApplicationController
   # POST /room_messages
   # POST /room_messages.json
   def create
-    @room_message = RoomMessage.new(room_message_params)
-
+    filteredParams = params.require(:room_message).permit(:message, :user_id, :room_id)
+    @room_message = RoomMessage.create(filteredParams)
     respond_to do |format|
       if @room_message.save
         format.html { redirect_to @room_message, notice: 'Room message was successfully created.' }

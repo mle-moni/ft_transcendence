@@ -1,24 +1,74 @@
-<br><p>Logged in as : {{user.nickname}} in the room</p><br>
+<br>
+
+<a class="btn btn-primary" href="#room" role="button"> Back </a>
+
+<br>
+<br>
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+
+            <h1>{{titleText}}</h1>
+            <form id="{{formID}}" action="/api/room_messages.json" accept-charset="UTF-8" method="{{method}}">
+                <input type="hidden" name="authenticity_token" value="{{token}}">
+
+                {{!-- Room Data --}}
+                <label for="roomName">Message </label>
+                <input type="text" id="message" name="room_message[message]">
+
+                <input type="hidden" id="roomOwner" name="room_message[user_id]" value="{{currentUser.id}}">
+                <input type="hidden" id="roomID" name="room_message[room_id]" value="{{currentRoom.id}}">
 
 
-<div>
+                <br><br>
+                <input type="submit" value="{{submitText}}">
+                <br>
+            </form>
 
-    <ul class="list-group">
+        </div>
+    </div>
 
-    {{#each tab}}
-        
-        {{#when user_id "noteq" ../user.id}}
-            <li class="list-group-item"> From {{user_id}} : {{message}} </li>
-            <br><br>
-        {{/when}}
-        
-        {{#when user_id "eq" ../user.id}}
-            <li class="list-group-item"> From {{user_id}} : {{message}} </li>
-            <br><br>
-        {{/when}}
+    <br><br>
+    <div class="container">
+        <div class="row">
+            <div class="col">
 
-    {{/each}}
+                <ul class="list-group">
 
-  </ul>
-</div>
+                    {{#each roomMessages}}
 
+                    {{#when user_id "noteq" ../currentUser.id}}
+                    <li style="background-color: grey;" class="list-group-item">
+
+                        <div class"otherMessage">
+                            <img src="{{#getUserAttributes ../members user_id "image"}}{{/getUserAttributes}}"
+                                alt="Avatar" class="avatar">
+                            {{#getUserAttributes ../members user_id "nickname"}}{{/getUserAttributes}} : {{message}}
+                        </div>
+
+                    </li>
+                    <br>
+                    {{/when}}
+
+                    {{#when user_id "eq" ../currentUser.id}}
+                    <li class="list-group-item">
+
+                        <div class"ownMessage">
+
+                            <img src="{{#getUserAttributes ../members user_id "image"}}{{/getUserAttributes}}"
+                                alt="Avatar" class="avatar">
+                            {{#getUserAttributes ../members user_id "nickname"}}{{/getUserAttributes}} : {{message}}
+                        </div>
+
+                    </li>
+                    <br>
+                    {{/when}}
+
+                    {{/each}}
+
+                </ul>
+
+            </div>
+
+        </div>

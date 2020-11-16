@@ -39,9 +39,17 @@ end
 	
 end
 
-["Hello 1", "Hello 2", "Hello 3", "Hello 4"]. each do |content| 
+["Hello 1", "Hello 2"]. each do |content| 
 	newMessage = RoomMessage.new(message: content)
 	newMessage.user_id = User.find_by(email: "bob@bob.bob").id
+	newMessage.room_id = Room.find_by(name: "ChatRoom1").id
+	newMessage.save()
+end 
+
+
+["Hello 3", "Hello 4"]. each do |content| 
+	newMessage = RoomMessage.new(message: content)
+	newMessage.user_id = User.find_by(email: "kim@kim.kim").id
 	newMessage.room_id = Room.find_by(name: "ChatRoom1").id
 	newMessage.save()
 end 
