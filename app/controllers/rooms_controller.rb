@@ -11,12 +11,24 @@ class RoomsController < ApplicationController
   # GET /rooms/1
   # GET /rooms/1.json
   def show
+    puts params
   end
 
   # GET /rooms/new
   def new
     @room = Room.new
   end
+
+  def join
+
+    # https://coderwall.com/p/sjegjq/use-bcrypt-for-passwords
+    puts params
+    
+  end
+
+  def quit
+    puts params
+  end 
 
   # GET /rooms/1/edit
   def edit
@@ -28,6 +40,22 @@ class RoomsController < ApplicationController
     
     # client side validation to add
     filteredParams = params.require(:room).permit(:name, :owner_id, :privacy, :password)
+
+    if !["", "public", "private"].include?(filteredParams["privacy"])
+      res_with_error("Privacy field must be either empty, public or private", :bad_request)
+      return (false)
+    end
+    if filteredParams["privacy"] == "private"
+      if filteredParams["password"].empty?
+        res_with_error("None empty password required if the room is private", :bad_request)
+        return (false)
+      else
+        roomPassword = BCrypt::Password.create filteredParams["password"]
+        filteredParams["password"] = roomPassword
+        puts roomPassword
+      end
+    end
+  
     @room = Room.create(filteredParams)
     respond_to do |format|
       if @room.save
@@ -68,6 +96,13 @@ class RoomsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_room
       @room = Room.find(params[:id])
+    end
+
+    def res_with_error(msg, error)
+      respond_to do |format|
+        format.html { redirect_to "/", alert: "#{msg}" }
+        format.json { render json: {alert: "#{msg}"}, status: error }
+      end
     end
 
 

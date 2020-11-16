@@ -8,5 +8,6 @@ class Room < ApplicationRecord
   
   # later, admins mutes bans etc
   has_many :admins, through: :room_messages, :source => :user
+  has_many :muted, through: :room_messages, :source => :user
 
 end

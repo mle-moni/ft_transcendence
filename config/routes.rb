@@ -12,7 +12,10 @@ Rails.application.routes.draw do
 
 
     # CHAT ------
-    resources :rooms 
+    resources :rooms do
+      post '/join', to 'rooms#join'
+      post '/quit', to 'rooms#quit'
+    end 
     resources :room_messages
     # ------
 
