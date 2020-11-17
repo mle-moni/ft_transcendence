@@ -19,10 +19,11 @@
             {{!-- If joined or opened --}}
             {{#when privacy "eq" "private" }}
 
-                <form style="display: inline;" id="{{../formID}}" action="/api/rooms/join.json" accept-charset="UTF-8" method="{{../method}}">
+                <form class="privateRoomAuthForm" id="privateRoomAuthForm-{{id}}" style="display: inline;" id="{{../formID}}" action="/api/rooms/join.json" accept-charset="UTF-8" method="{{../method}}">
                     <input type="hidden" name="authenticity_token" value="{{../token}}">
                     <label for="roomPassword">Password : </label>
-                    <input type="text" id="roomPassword" name="room[password]">
+                   {{!-- L'emplacement en seconde position est important car on récupère le contenu du field après ! --}}
+                    <input type="text" class="privateRoomAuthFormField" id="roomPassword" name="room[password]">
                     <input type="hidden" id="roomOwner" name="room[owner_id]" value="{{owner_id}}">
                     <input type="hidden" id="roomID" name="room[room_id]" value="{{id}}">
                     <input type="submit" value="{{../submitText}}">

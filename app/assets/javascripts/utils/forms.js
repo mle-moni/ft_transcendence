@@ -5,8 +5,6 @@
 
 App.utils.formAjax = function(targetUrl, formStrQuery, progressStrQuery = null) {
 
-	console.log(formStrQuery);
-
 	const req = $.ajax({
 		// Your server script to process the upload
 		url: targetUrl,
