@@ -4,6 +4,7 @@ AppClasses.Routers.RoomRouter = class extends AppClasses.Routers.AbstractRouter 
 		this.route("room", "index");
 		this.route("room/new", "newRoom");
 		this.route("rooms/:room_id", "showRoom");
+		this.route("room/edit/:room_id", "editRoom");
 
 		this.collections.rooms = new AppClasses.Collections.Room();
 
@@ -31,6 +32,16 @@ AppClasses.Routers.RoomRouter = class extends AppClasses.Routers.AbstractRouter 
 			model: this.collections.rooms,
 			room_id: r_id,
 			user
+		});
+	
+	}
+
+	editRoom(room_id) {
+		const r_id = parseInt(room_id);
+		this.viewWithRenderParam("editRoom", "EditRoom", r_id, {
+			model: this.collections.rooms,
+			user: this.models.user,
+			room_id: r_id
 		});
 	}
 	
