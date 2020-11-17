@@ -13,15 +13,10 @@
     <ul class="list-group">
         {{!-- https://stackoverflow.com/questions/27719071/nested-if-inside-each-handlebars-template-in-express-app --}}
         {{#each rooms}}
-        {{!-- {{#when owner_id "eq" ../user.id}} --}}
         <li class="list-group-item"> {{name}} ({{privacy}}) :
 
-            {{!-- If joined or opened --}}
             {{#when privacy "eq" "private" }}
-                {{!-- If joined or opened --}}
-                <a style="font-size: 14px;" href="#rooms/{{id}}">Join</a>
-                <a style="font-size: 14px;" href="#room/edit/{{id}}">Edit</a>
-
+        
                 <form class="privateRoomAuthForm" id="privateRoomAuthForm-{{id}}" style="display: inline;" id="{{../formID}}" action="/api/rooms/join.json" accept-charset="UTF-8" method="{{../method}}">
                     <input type="hidden" name="authenticity_token" value="{{../token}}">
                     <label for="roomPassword">Password : </label>
@@ -32,14 +27,15 @@
                     <input type="submit" value="{{../submitText}}">
                 </form>
 
-            {{!-- <a style="font-size: 14px;" href="#rooms/{{id}}">Password : </a> --}}
             {{/when}}
             {{#when privacy "noteq" "private" }}
             <a style="font-size: 14px;" href="#rooms/{{id}}">Open</a>
             {{/when}}
+              {{#when owner_id "eq" ../user.id }}
+                <a style="font-size: 14px;" href="#room/edit/{{id}}">Edit</a>
+            {{/when}}
         </li>
         <br>
-        {{!-- {{/when}} --}}
         {{/each}}
         <br>
 

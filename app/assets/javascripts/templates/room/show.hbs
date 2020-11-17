@@ -1,3 +1,5 @@
+{{!-- <div id="checkRoomPresence"></div> --}}
+
 <br>
 <br>
 
@@ -36,39 +38,67 @@
 
                 <ul class="list-group">
 
-                    {{#each roomMessages}}
+                    {{!-- <div class="chat" data-channel-subscribe="room" data-room-id="{{currentRoom.id}}>"> --}}
+                        {{#each roomMessages}}
 
-                    {{#when user_id "noteq" ../currentUser.id}}
-                    <li style="background-color: grey;" class="list-group-item">
+                        {{#when user_id "noteq" ../currentUser.id}}
+                        <li style="background-color: grey;" class="list-group-item">
 
-                        <div class"otherMessage">
-                            <img src="{{#getUserAttributes ../members user_id "image"}}{{/getUserAttributes}}"
-                                alt="Avatar" class="avatar">
-                            {{#getUserAttributes ../members user_id "nickname"}}{{/getUserAttributes}} : {{message}}
-                        </div>
+                            <div class"otherMessage">
+                                <img src="{{#getUserAttributes ../members user_id "image"}}{{/getUserAttributes}}"
+                                    alt="Avatar" class="avatar">
+                                {{#getUserAttributes ../members user_id "nickname"}}{{/getUserAttributes}} :
+                                <p style="display: inline;" data-role="message-text">
+                                    {{message}}
+                                </p>
+                            </div>
 
-                    </li>
-                    <br>
-                    {{/when}}
+                        </li>
+                        <br>
+                        {{/when}}
 
-                    {{#when user_id "eq" ../currentUser.id}}
-                    <li class="list-group-item">
+                        {{#when user_id "eq" ../currentUser.id}}
+                        <li class="list-group-item">
 
-                        <div class"ownMessage">
+                            {{!-- <div class"ownMessage"> --}}
+                            <div class"otherMessage">
 
-                            <img src="{{#getUserAttributes ../members user_id "image"}}{{/getUserAttributes}}"
-                                alt="Avatar" class="avatar">
-                            {{#getUserAttributes ../members user_id "nickname"}}{{/getUserAttributes}} : {{message}}
-                        </div>
+                                <img src="{{#getUserAttributes ../members user_id "image"}}{{/getUserAttributes}}"
+                                    alt="Avatar" class="avatar">
+                                {{#getUserAttributes ../members user_id "nickname"}}{{/getUserAttributes}} :
+                                <p style="display: inline;" data-role="message-text">
+                                    {{message}}
+                                </p>
+                            </div>
 
-                    </li>
-                    <br>
-                    {{/when}}
+                        </li>
+                        <br>
+                        {{/when}}
 
-                    {{/each}}
+                        {{/each}}
+                    {{!-- </div> --}}
 
                 </ul>
 
             </div>
 
         </div>
+    </div>
+
+
+
+
+
+    {{!-- <div class="d-none" data-role="message-template">
+        <li style="background-color: grey;" class="list-group-item">
+
+            <div class"otherMessage">
+                <p style="display: inline;" data-role="message-text">
+
+                </p>
+                <img src="{{#getUserAttributes ../members user_id "image"}}{{/getUserAttributes}}" alt="Avatar" class="avatar">
+
+            </div>
+
+        </li>
+    </div> --}}

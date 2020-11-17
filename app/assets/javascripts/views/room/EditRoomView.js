@@ -24,9 +24,6 @@ AppClasses.Views.EditRoom = class extends Backbone.View {
 	
 	submit(e) {
 		e.preventDefault();
-		console.log("Room Form - Submit Room Edition");
-
-		console.log(this.room_id.toString());
 		App.utils.formAjax(`/api/rooms/${this.room_id}.json`, "#editRoomForm")
 		.done(res => {
 			App.toast.success("Room successfully created !", { duration: 2000, style: App.toastStyle });

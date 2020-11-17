@@ -11,7 +11,6 @@ class RoomMessagesController < ApplicationController
   # GET /room_messages/1
   # GET /room_messages/1.json
   def show
-    puts "HELLO"
   end
 
   # GET /room_messages/new
@@ -27,9 +26,16 @@ class RoomMessagesController < ApplicationController
   # POST /room_messages.json
   def create
     filteredParams = params.require(:room_message).permit(:message, :user_id, :room_id)
+    @room = Room.find(filteredParams["room_id"])
     @room_message = RoomMessage.create(filteredParams)
     respond_to do |format|
       if @room_message.save
+        
+
+        # ACTION CABLE STEP
+        # output = {"type": "message", "content": @room_message.as_json}
+        # RoomChannel.broadcast_to @room,  output
+
         format.html { redirect_to @room_message, notice: 'Room message was successfully created.' }
         format.json { render :show, status: :created, location: @room_message }
       else
