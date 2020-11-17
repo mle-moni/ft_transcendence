@@ -164,6 +164,9 @@ class GuildsController < ApplicationController
           format.json { render json: {alert: "You need to be connected for this action"}, status: :unprocessable_entity }
         end
       end
+      if user_signed_in? && current_user.banned
+        res_with_error("You are banned", :unauthorized)
+      end
     end
 
     def res_with_error(msg, error)

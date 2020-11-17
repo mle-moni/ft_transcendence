@@ -46,7 +46,8 @@ class User < ApplicationRecord
       guild_validated: usr.guild_validated,
       friends: usr.friends,
       invites: usr.invites,
-      last_seen: usr.last_seen
+      last_seen: usr.last_seen,
+      admin: usr.admin
     }
   end
   

@@ -1,0 +1,42 @@
+<h1>Admin page</h1>
+
+{{#each allUsers}}
+<div>
+	{{nickname}}
+
+	{{!-- BAN / UNBAN --}}
+	{{#if banned}}
+	<span class="clickToUnbanUser pointer">
+		UNBAN
+		<span class="nodisplay">{{id}}</span>
+	</span>
+	{{else}}
+	<span class="clickToBanUser pointer">
+		BAN
+		<span class="nodisplay">{{id}}</span>
+	</span>
+	{{/if}}
+
+	{{!-- PROMOTE / DEMOTE --}}
+	{{#if admin}}
+	<span class="clickToDemoteUser pointer">
+		DEMOTE
+		<span class="nodisplay">{{id}}</span>
+	</span>
+	{{else}}
+	<span class="clickToPromoteUser pointer">
+		PROMOTE
+		<span class="nodisplay">{{id}}</span>
+	</span>
+	{{/if}}
+</div>
+{{/each}}
+
+</div>
+
+<form style="display: none;" id="adminForm" method="POST">
+	<input type="hidden" name="authenticity_token" value="{{token}}">
+	<input type="text" name="id" id="userIDField">
+</form>
+
+<a href="#">Home</a>
