@@ -18,6 +18,9 @@
 
             {{!-- If joined or opened --}}
             {{#when privacy "eq" "private" }}
+                {{!-- If joined or opened --}}
+                <a style="font-size: 14px;" href="#rooms/{{id}}">Join</a>
+                <a style="font-size: 14px;" href="#room/edit/{{id}}">Edit</a>
 
                 <form class="privateRoomAuthForm" id="privateRoomAuthForm-{{id}}" style="display: inline;" id="{{../formID}}" action="/api/rooms/join.json" accept-charset="UTF-8" method="{{../method}}">
                     <input type="hidden" name="authenticity_token" value="{{../token}}">

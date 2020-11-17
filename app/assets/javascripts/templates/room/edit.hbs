@@ -1,0 +1,32 @@
+<h1>{{titleText}}</h1>
+
+<form id="{{editID}}" action="/api/rooms/{{room_id}}.json" accept-charset="UTF-8" method="PUT">
+	
+	<input type="hidden" name="authenticity_token" value="{{token}}">
+
+	{{!-- Room Data --}}
+	<label for="roomName">Room name</label>
+	<input type="text" id="roomName" name="room[name]" value="TEST">
+
+	<br><br>
+	<label for="roomPrivacy">Room Privacy</label>
+	<input type="text" id="roomPrivacy" name="room[privacy]">
+	<br><br>
+	<label for="roomPassword">Room Password if private</label>
+	<input type="text" id="roomPassword" name="room[password]">
+
+	<br><br><br>
+	<input type="submit" value="Confirm room edit">
+	<br><br>
+</form>
+
+<button id="{{DeleteButton}}">{{DeleteText}}</button>
+<form style="display: none;" id="{{deleteID}}" method="DELETE">
+	<input type="hidden" name="authenticity_token" value="{{token}}">
+	<label for="confirmRoomName">Type room name</label>
+	<input type="text" id="confirmRoomName">
+	<input type="submit" value="Confirm room delete">
+</form>
+
+<br><br>
+<a class="btn btn-primary" href="#room" role="button"> Back </a>

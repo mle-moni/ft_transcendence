@@ -85,10 +85,12 @@ class RoomsController < ApplicationController
   # PATCH/PUT /rooms/1
   # PATCH/PUT /rooms/1.json
   def update
+
+    filteredParams = params.require(:room).permit(:name, :privacy, :password)
     respond_to do |format|
-      if @room.update(room_params)
-        format.html { redirect_to @room, notice: 'Room was successfully updated.' }
-        format.json { render :show, status: :ok, location: @room }
+      if @room.update(filteredParams)
+        format.html { redirect_to :index, notice: 'Room was successfully updated.' }
+        format.json { render :index, status: :ok, location: @room }
       else
         format.html { render :edit }
         format.json { render json: @room.errors, status: :unprocessable_entity }
@@ -99,9 +101,14 @@ class RoomsController < ApplicationController
   # DELETE /rooms/1
   # DELETE /rooms/1.json
   def destroy
-    @room.destroy
+    if @room.room_messages # Deleting all messages from the room
+      @room.room_messages.each do |message|
+        message.destroy
+      end
+    end
+    @room.destroy # Deleting room
     respond_to do |format|
-      format.html { redirect_to rooms_url, notice: 'Room was successfully destroyed.' }
+      format.html { redirect_to :index, notice: 'Room was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
