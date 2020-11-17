@@ -7,7 +7,11 @@ class FriendsController < ApplicationController
 	def get_all
 		respond_to do |format|
 			format.html { redirect_to "/", notice: '^^' }
-			format.json { render json: User.all.to_json( only: [:id, :nickname] ), status: :ok }
+			format.json { render json: User.all.to_json(
+				only: 
+					[:id, :nickname, :email, :image, :guild_validated, :guild_id, :last_seen]
+				), status: :ok
+			}
 		end
 	end
 

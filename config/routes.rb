@@ -15,6 +15,7 @@ Rails.application.routes.draw do
     post '/friends/get_all'
     # profile actions
     post 'profile/get'
+    post 'active', to: 'profile#active'
   end
 
   # profile actions, I might move it to the API scope

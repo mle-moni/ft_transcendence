@@ -3,6 +3,11 @@ require 'fileutils'
 class ProfileController < ApplicationController
 	before_action :connect_user
 
+	# needed to see users status
+	def active
+		current_user.update(last_seen: DateTime.now)
+	end
+
 	def get
 		respond_to do |format|
 			format.html { redirect_to "/#profile", notice: 'Profile infos updated' }

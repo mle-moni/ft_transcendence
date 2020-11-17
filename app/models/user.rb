@@ -40,11 +40,13 @@ class User < ApplicationRecord
       email: usr.email,
       image: usr.image,
       two_factor: usr.otp_required_for_login,
+      guild_id: usr.guild_id,
       guild_owner: usr.guild_owner,
       guild_officer: usr.guild_officer,
       guild_validated: usr.guild_validated,
       friends: usr.friends,
-      invites: usr.invites
+      invites: usr.invites,
+      last_seen: usr.last_seen
     }
   end
   
