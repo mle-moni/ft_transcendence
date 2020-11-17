@@ -3,7 +3,7 @@ class Room < ApplicationRecord
   validates   :name, uniqueness: true
   belongs_to  :owner, class_name: "User", required: true
 
-  has_many :room_messages
+  has_many :room_messages, dependent: :destroy
   has_many :members, through: :room_messages, :source => :user
   
   # later, admins mutes bans etc

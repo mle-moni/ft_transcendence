@@ -4,10 +4,15 @@
 // You can assign callbacks to the request, see at the bottom of this page
 
 App.utils.formAjax = function(targetUrl, formStrQuery, progressStrQuery = null) {
+
+	console.log(formStrQuery);
+
 	const req = $.ajax({
 		// Your server script to process the upload
 		url: targetUrl,
 		type: $(formStrQuery).attr("method") || "GET",
+
+		
 	
 		// Form data
 		data: new FormData($(formStrQuery)[0]),

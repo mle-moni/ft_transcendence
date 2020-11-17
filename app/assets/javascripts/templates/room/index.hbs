@@ -1,57 +1,43 @@
-<br><p>Logged in as {{user.nickname}}</p><br>
+<br>
+<p>Logged in as {{user.nickname}}</p><br>
 {{!-- Rooms joined or owned by the current user  --}}
 
 <a class="btn btn-primary" href="#room/new" role="button">Create a new room</a>
 <br><br>
 
-<br><h3> • Open or Join chat rooms </h3><br>
+<br>
+<h3> • Open or Join chat rooms </h3><br>
 {{!-- Every Rooms from DB except whoses which are owned by current user  --}}
 <div>
 
     <ul class="list-group">
-    {{!-- https://stackoverflow.com/questions/27719071/nested-if-inside-each-handlebars-template-in-express-app --}}
+        {{!-- https://stackoverflow.com/questions/27719071/nested-if-inside-each-handlebars-template-in-express-app --}}
         {{#each rooms}}
-            {{!-- {{#when owner_id "eq" ../user.id}} --}}
-            <li class="list-group-item"> {{name}} ({{privacy}}) :
+        {{!-- {{#when owner_id "eq" ../user.id}} --}}
+        <li class="list-group-item"> {{name}} ({{privacy}}) :
 
-                {{!-- If joined or opened --}}
-                {{#when privacy "eq" "private" }}
-                    <a style="font-size: 14px;" href="#rooms/{{id}}">Password : </a>
-                {{/when}}
-                {{#when privacy "noteq" "private" }}
-                    <a style="font-size: 14px;" href="#rooms/{{id}}">Open</a>
-                {{/when}}
-            </li>
-            <br>
-            {{!-- {{/when}} --}}
+            {{!-- If joined or opened --}}
+            {{#when privacy "eq" "private" }}
+
+                <form style="display: inline;" id="{{../formID}}" action="/api/rooms/join.json" accept-charset="UTF-8" method="{{../method}}">
+                    <input type="hidden" name="authenticity_token" value="{{../token}}">
+                    <label for="roomPassword">Password : </label>
+                    <input type="text" id="roomPassword" name="room[password]">
+                    <input type="hidden" id="roomOwner" name="room[owner_id]" value="{{owner_id}}">
+                    <input type="hidden" id="roomID" name="room[room_id]" value="{{id}}">
+                    <input type="submit" value="{{../submitText}}">
+                </form>
+
+            {{!-- <a style="font-size: 14px;" href="#rooms/{{id}}">Password : </a> --}}
+            {{/when}}
+            {{#when privacy "noteq" "private" }}
+            <a style="font-size: 14px;" href="#rooms/{{id}}">Open</a>
+            {{/when}}
+        </li>
+        <br>
+        {{!-- {{/when}} --}}
         {{/each}}
         <br>
 
     </ul>
 </div>
-
-
-
-{{!-- <form id="{{formID}}" action="/api/roomAuth" accept-charset="UTF-8" method="">
-	
-	<input type="hidden" name="authenticity_token" value="{{token}}">
-
-	{{!-- Room Data --}}
-	<label for="roomName">Room name</label>
-	<input type="text" id="roomName" name="room[name]">
-	<input type="hidden" id="roomOwner" name="room[owner_id]" value="{{user.id}}">
-	<br><br>
-	<label for="roomPrivacy">Room Privacy</label>
-	<input type="text" id="roomPrivacy" name="room[privacy]">
-	<br><br>
-	<label for="roomPassword">Room Password if private</label>
-	<input type="text" id="roomPassword" name="room[password]">
-
-	<br>	<br><br>
-	<input type="submit" value="{{submitText}}">
-	<br>
-</form>
-
-<br>
-<a class="btn btn-primary" href="#room" role="button"> Back </a>
- --}}

@@ -1,7 +1,8 @@
 AppClasses.Models.Room = Backbone.Model.extend({
 	defaults: {
 		name: "",
-        privacy: "",
+		privacy: "",
+		password: "",
         owner_id: null
     }
 });
