@@ -62,6 +62,6 @@ function chatRoomMain() {
 }
 
 window.addEventListener("hashchange", e => {
-  console.log("You've change of route 3");
+  console.log("You've change of route 1");
   setTimeout(chatRoomMain, 50);
 }); 
