@@ -31,8 +31,13 @@ class RoomMessagesController < ApplicationController
     respond_to do |format|
       if @room_message.save
         
+        # TEST
+        
+        RoomChannel.broadcast_to @room, content: @room_message.message, user: current_user
 
-        ActionCable.server.broadcast "room_channel", content: @room_message.message
+        # TEST
+        # ActionCable.server.broadcast "room_channel", content: @room_message.message
+
         # ACTION CABLE STEP
         # output = {"type": "message", "content": @room_message.as_json}
         # RoomChannel.broadcast_to @room,  output

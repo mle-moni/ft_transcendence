@@ -67,6 +67,7 @@ AppClasses.Views.ShowRoom = class extends Backbone.View {
 			this.updateRender();
 		}
 		this.model.fetch();
+		this.delegateEvents();
 		return (this);
     }
     

@@ -1,6 +1,15 @@
+
+
 import consumer from "./consumer"
 
-consumer.subscriptions.create("RoomChannel", {
+$(document).ready(function() {
+  console.log($('#room_messages').attr('data-room-id'));
+});
+
+consumer.subscriptions.create({
+    channel: "RoomChannel",
+    room_id: 1
+  }, {
   connected() {
     // Called when the subscription is ready for use on the server
     console.log("Connected");
@@ -15,6 +24,6 @@ consumer.subscriptions.create("RoomChannel", {
     // Called when there's incoming data on the websocket for this channel
     console.log("Received");
     console.log(data)
-    $('#checkRoomPresence').append('<div class="message"> ' + "Message = " + data.content + '</div>')
+    $('#checkRoomPresence').append('<p class="message"> New Message ! </p>')
   }
 });
