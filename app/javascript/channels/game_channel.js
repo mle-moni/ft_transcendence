@@ -27,7 +27,7 @@ function subscription_loop() {
   const ingameelement = document.getElementById("in_game_id")
   if (ingameelement === null) {
     consumer.subscriptions.subscriptions.forEach(sub => {
-      console.log(sub);
+      // console.log(sub);
       sub.disconnected();
       consumer.subscriptions.remove(sub);
     })

@@ -43,6 +43,7 @@ AppClasses.Views.ShowRoom = class extends Backbone.View {
 		})
 		if (_.size(currentRoom) > 0) {
 			var roomMessages = currentRoom[0].room_messages;
+			roomMessages.reverse();
 			var members = currentRoom[0].members;	
 		}
 		this.$el.html(this.template({
