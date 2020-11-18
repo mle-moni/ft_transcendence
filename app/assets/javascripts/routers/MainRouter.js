@@ -14,6 +14,8 @@ AppClasses.Routers.Main = class extends AppClasses.Routers.AbstractRouter {
 		App.routers.game = new AppClasses.Routers.GameRouter();
 		// friends routes
 		App.routers.friends = new AppClasses.Routers.FriendsRouter();
+		// admin routes
+		App.routers.admin = new AppClasses.Routers.AdminRouter();
 
 		// create all models needed by multiple routes
 		this.models.user = new AppClasses.Models.User(App.data.user);
@@ -31,7 +33,7 @@ AppClasses.Routers.Main = class extends AppClasses.Routers.AbstractRouter {
 		}, 1000 * seconds);
 	}
 	index() {
-		this.basicView("home", "Home");
+		this.basicView("home", "Home", {model: this.models.user});
 	}
 	salut(name) {
 		this.mainDiv.html(`salut ${name}`);

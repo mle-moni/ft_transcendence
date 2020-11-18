@@ -9,7 +9,7 @@ class FriendsController < ApplicationController
 			format.html { redirect_to "/", notice: '^^' }
 			format.json { render json: User.all.to_json(
 				only: 
-					[:id, :nickname, :email, :image, :guild_validated, :guild_id, :last_seen]
+					[:id, :nickname, :email, :image, :guild_validated, :guild_id, :last_seen, :admin, :banned]
 				), status: :ok
 			}
 		end
@@ -104,6 +104,12 @@ class FriendsController < ApplicationController
 			respond_to do |format|
 				format.html { redirect_to "/", alert: "You need to be connected for this action" }
 				format.json { render json: {alert: "You need to be connected for this action"}, status: :unprocessable_entity }
+			end
+		end
+		if user_signed_in? && current_user.banned
+			respond_to do |format|
+				format.html { redirect_to "/", alert: "You are banned" }
+				format.json { render json: {alert: "You are banned"}, status: :unauthorized }
 			end
 		end
 	end

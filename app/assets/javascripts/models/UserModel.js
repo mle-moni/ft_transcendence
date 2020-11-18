@@ -52,6 +52,7 @@ AppClasses.Models.User = Backbone.Model.extend({
 AppClasses.Collections.AllUsers = class extends Backbone.Collection {
 	constructor(opts) {
 		super(opts);
+		this.comparator = "nickname";
 		this.myFetch();
 	}
 	myFetch() {

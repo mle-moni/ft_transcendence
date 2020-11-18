@@ -4,17 +4,20 @@ AppClasses.Views.Home = class extends Backbone.View {
 		this.tagName = "div";
 		this.template = App.templates["home/index"];
 		this.user = new AppClasses.Views.ConnectionInfos({
-			model: App.models.user
+			model: this.model
 		});
+		this.listenTo(this.model, "change", this.updateRender);
 		this.updateRender();
 	}
 	updateRender() {
-		// change it if it has to re render, for now it's static
-		this.$el.html(this.template({}));
+		this.$el.html(this.template({
+			user: this.model.toJSON()
+		}));
 		this.$el.find("#connectionInfos").html(this.user.render().el);
 		return (this);
 	}
 	render() {
+		this.model.update(this.model);
 		return (this);
 	}
 }
