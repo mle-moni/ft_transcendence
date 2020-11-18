@@ -1,9 +1,9 @@
 class RoomChannel < ApplicationCable::Channel
   def subscribed
-    puts "Subscribed"
-    stream_for room
+    puts "<<<<<<< Subscribed >>>>>>"
     puts params
-
+    #stream_for room
+    stream_from "room_channel_#{params[:room_id]}"
   end
 
   def unsubscribed
