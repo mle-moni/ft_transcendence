@@ -121,7 +121,7 @@ Please respect the following rules:
 																									
 #### Guild ranks																									
 - There must be a guild master, officers, and one or more "member" ranks.																									
-- Guild master and officer an manage the guild, add/remove users, and other guild managing stuff.
+- Guild master and officer an manage the guild, add/remove users, and other guild managing stuff. 
 
 #### Guild points																									
 - A guild has points, brought in by its users. Whenever a user wins a match or a tournament, points are added to the guild points' pool.																									
