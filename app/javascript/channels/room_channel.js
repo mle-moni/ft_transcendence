@@ -3,62 +3,50 @@ import consumer from "./consumer"
 var sub = null;
 
 
-function chatRoomMain() {
+// $(document).ready(function() {
+//   console.log($('#room_messages').attr('data-room-id'));
+// });
 
-  if (sub) {
-		sub.unsubscribe();
-		sub = null;
-	}
-  
-  // var messageTemplate = $('[data-role="message-template"]');
-  // var placeToAppend = $('[data-channel-subscribe="room"]');
-  // var room_id = $('#room_messages').attr('data-room-id');
+function manage_subscription() {
+    const in_room = document.getElementById("checkRoomPresence")
+    if (in_room)
+    {
+        consumer.subscriptions.create({
+          channel: "RoomChannel",
+          room_id: $('#room_messages').attr('data-room-id')
+        }, {
+        connected() {
+          // Called when the subscription is ready for use on the server
+          console.log("Connected ROOM");
+          //console.log("room_id = " + room_id.toString());
+        },
+    
+        disconnected() {
+          // Called when the subscription has been terminated by the server
+          console.log("Disconnected ROOM");
+        },
+    
+        received(data) {
+          // Called when there's incoming data on the websocket for this channel
+          console.log("Received");
+          console.log(subscriptions)
 
-  // if (messageSection == null || placeToAppend == null || room_id == null || messageTemplate == null) {
-  //   alert("Null");
-  // }
+          const currentUserID = document.getElementById("userID").value
 
-  const checkRoomPresence = document.getElementById("checkRoomPresence")
-  if (checkRoomPresence === null) {
-    consumer.subscriptions.subscriptions.forEach(subscription => {
-      console.log(subscription);
-    })
-  } else {
+          var addMessage = ""
+          if (data.user.id == currentUserID)
+            addMessage = '<li style="background-color:lightskyblue" class="list-group-item">'
+          else
+            addMessage = '<li style="background-color:grey" class="list-group-item">'
+          addMessage  += '<div class"otherMessage"> <img src="' + data.user.image + '"alt="Avatar" class="avatar"> '
+                      + data.user.nickname + ' : ' + data.content + '</div> </li> <br>'
 
-    console.log("We're inside the room !" + $('[data-channel-subscribe="room"]').data('room-id'));
-  
-    sub = consumer.subscriptions.create({
-        channel: "RoomChannel",
-        room_id: 2
-      }, {
-
-      connected() {
-        // Called when the subscription is ready for use on the server
-        console.log("Connected");
-      },
-
-      disconnected() {
-        // Called when the subscription has been terminated by the server
-        console.log("Disconnected");
-      },
-
-      received(data) {
-        // Called when there's incoming data on the websocket for this channel
-        console.log("Received");
-        // $('#roomIndexPage').append('<p class="message"> New Message ! </p>')
-        // $('#checkRoomPresence').append('<p class="message"> New Message ! </p>')
-
-        console.log(data)
-
-        // var content = messageTemplate.children().clone(true, true);
-        // content.find('[data-role="message-text"]').text(data.content);
-        $('#checkRoomPresence').append('<p class="message">' + data.content + '</p>')
-
-      }
-    });
-
-  }
-
+          // $('#checkRoomPresence').append('<p class="message"> New Message ! </p>')
+          $('.list-group').append(addMessage)
+          //AppClasses.Views.ShowRoom.rooms.fetch()
+        }
+      });
+    }
 }
 
 window.addEventListener("hashchange", e => {

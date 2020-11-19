@@ -1,16 +1,5 @@
-<div id="checkRoomPresence" data-channel-subscribe="room"
-     data-room-id="{{currentRoom.id}}">
-     .
-</div>
-
-
-<div class="d-none" data-role="message-template">
-    <li style="background-color: grey;" class="list-group-item">
-
-        {{!-- <div class"otherMessage"> --}}
-            <p style="display: inline;" data-role="message-text"> . </p>
-            {{!-- <img src="{{#getUserAttributes ../members user_id "image"}}{{/getUserAttributes}}" alt="Avatar" class="avatar"> --}}
-        {{!-- </div> --}}
+<div id="checkRoomPresence"></div>
+<div id="userID" value="{{currentUser.id}}"></div>
 
     </li>
 </div>
@@ -72,8 +61,8 @@
                     <br>
                     {{/when}}
 
-                    {{#when user_id "eq" ../currentUser.id}}
-                    <li class="list-group-item">
+                        {{#when user_id "eq" ../currentUser.id}}
+                        <li style="background-color:lightskyblue" class="list-group-item">
 
                         {{!-- <div class"ownMessage"> --}}
                         <div class"otherMessage">
@@ -95,7 +84,6 @@
 
                 </ul>
 
-            </div>
 
         </div>
     </div>
