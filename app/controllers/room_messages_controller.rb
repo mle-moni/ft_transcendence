@@ -32,8 +32,15 @@ class RoomMessagesController < ApplicationController
       if @room_message.save
         
         # TEST
-        
-        RoomChannel.broadcast_to @room, content: @room_message.message, user: current_user
+        puts "------------------"
+        puts @room.id
+        puts "room_channel_#{@room.id}"
+        puts @room_message.message
+        puts current_user
+        puts "------------------"
+
+        #RoomChannel.broadcast_to "room_channel_#{@room.id}", content: @room_message.message, user: current_user
+        ActionCable.server.broadcast "room_channel_#{@room.id}", content: @room_message.message, user: current_user
 
         # TEST
         # ActionCable.server.broadcast "room_channel", content: @room_message.message

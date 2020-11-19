@@ -28,8 +28,21 @@ function manage_subscription() {
         received(data) {
           // Called when there's incoming data on the websocket for this channel
           console.log("Received");
-          console.log(data)
-          $('#checkRoomPresence').append('<p class="message"> New Message ! </p>')
+          console.log(subscriptions)
+
+          const currentUserID = document.getElementById("userID").value
+
+          var addMessage = ""
+          if (data.user.id == currentUserID)
+            addMessage = '<li style="background-color:lightskyblue" class="list-group-item">'
+          else
+            addMessage = '<li style="background-color:grey" class="list-group-item">'
+          addMessage  += '<div class"otherMessage"> <img src="' + data.user.image + '"alt="Avatar" class="avatar"> '
+                      + data.user.nickname + ' : ' + data.content + '</div> </li> <br>'
+
+          // $('#checkRoomPresence').append('<p class="message"> New Message ! </p>')
+          $('.list-group').append(addMessage)
+          //AppClasses.Views.ShowRoom.rooms.fetch()
         }
       });
     }
