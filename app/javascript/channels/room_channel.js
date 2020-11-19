@@ -51,5 +51,5 @@ function manage_subscription() {
 
 window.addEventListener("hashchange", e => {
   console.log("You've change of route 1");
-  setTimeout(chatRoomMain, 50);
+  setTimeout(manage_subscription, 50);
 }); 
