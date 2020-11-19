@@ -19,27 +19,62 @@ class RoomsController < ApplicationController
     @room = Room.new
   end
 
-  def join
+  def joinPublic
 
-    # https://coderwall.com/p/sjegjq/use-bcrypt-for-passwords
-    room = Room.find(params["room"]["room_id"])
-   
-   
-    # roomPass = BCrypt::Password.new(room.password)
-    # if roomPass != params["room"]["password"]
-    #   res_with_error("Wrong password", :bad_request)
-    #   return false
-    # else # todo admin etc
-    #   unless room.members.include?(current_user)
-    #     room.members << current_user
-    #   end
-    # end
+    @room = Room.find(params["room"]["room_id"])
+    if !@room
+      res_with_error("Unknow Room", :bad_request)
+      return (false)
+    end
+
+    # The 'if' shouldn't be needed since the "Join" action is offer only 1 time, but by prevention we keep it
+    # Owner is admin with the differences vs other admin that he match the room owner_id
+
+    if !current_user.rooms_as_member.include?(@room) && current_user.id != @room.owner_id
+      @rlm = RoomLinkMember.new(room: @room, user: current_user)
+      @rlm.save
+      current_user.rooms_as_member << @room
+      current_user.save
+      @room.members << current_user
+      @room.save
+    end
 
     respond_to do |format|
       format.html { redirect_to rooms_url, notice: 'Room Joined !' }
-      format.json { render json: {roomID: room.id}, status: :ok }
+      format.json { render json: {roomID: @room.id}, status: :ok }
     end
   end
+
+  def joinPrivate
+
+    @room = Room.find(params["room"]["room_id"])
+    if !@room
+      res_with_error("Unknow Room", :bad_request)
+      return (false)
+    end
+    # https://coderwall.com/p/sjegjq/use-bcrypt-for-passwords
+    roomPass = BCrypt::Password.new(@room.password)
+    if roomPass != params["room"]["password"]
+      res_with_error("Wrong password !", :bad_request)
+      return false
+    end
+
+    # The 'if' shouldn't be needed since the "Join" action is offer only 1 time, but by prevention we keep it
+    if !current_user.rooms_as_member.include?(@room) && current_user.id != @room.owner_id
+      @rlm = RoomLinkMember.new(room: @room, user: current_user)
+      @rlm.save
+      current_user.rooms_as_member << @room
+      current_user.save
+      @room.members << current_user
+      @room.save
+    end
+
+    respond_to do |format|
+      format.html { redirect_to rooms_url, notice: 'Room Joined !' }
+      format.json { render json: {roomID: @room.id}, status: :ok }
+    end
+    
+  end 
 
   def quit
     puts params
@@ -60,6 +95,7 @@ class RoomsController < ApplicationController
       res_with_error("Privacy field must be either empty, public or private", :bad_request)
       return (false)
     end
+
     if filteredParams["privacy"] == "private"
       if filteredParams["password"].empty?
         res_with_error("None empty password required if the room is private", :bad_request)
@@ -70,8 +106,19 @@ class RoomsController < ApplicationController
         puts roomPassword
       end
     end
-  
+
     @room = Room.create(filteredParams)
+
+    if !current_user.rooms_as_admin.include?(@room)
+      puts "!current_user.rooms_as_admin.include?(@room)"
+      @rla = RoomLinkAdmin.new(room: @room, user: current_user)
+      @rla.save
+      # current_user.rooms_as_admin << @room
+      # current_user.save
+      # @room.admins << current_user
+      # @room.save
+    end
+  
     respond_to do |format|
       if @room.save
         format.html { redirect_to @room, notice: 'Room was successfully created.' }
@@ -102,12 +149,13 @@ class RoomsController < ApplicationController
   # DELETE /rooms/1
   # DELETE /rooms/1.json
   def destroy
-    if @room.room_messages # Deleting all messages from the room
-      @room.room_messages.each do |message|
-        message.destroy
-      end
-    end
-    @room.destroy # Deleting room
+
+    # Pas de params via delete, donc à voir comment check que le nom de room passé est bien identique à la room
+
+    @room.members.destroy_all
+    @room.admins.destroy_all
+    @room.room_messages.destroy_all
+    @room.destroy
     respond_to do |format|
       format.html { redirect_to :index, notice: 'Room was successfully destroyed.' }
       format.json { head :no_content }

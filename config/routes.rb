@@ -15,7 +15,9 @@ Rails.application.routes.draw do
       resources :members, controller: 'room/members', only: [:index, :new, :create, :destroy]
       resources :admins, controller: 'room/admins',  only: [:index, :new, :create, :destroy]
     end 
-    post '/rooms/join', to: 'rooms#join'
+    post '/rooms/joinPublic', to: 'rooms#joinPublic'
+    post '/rooms/joinPrivate', to: 'rooms#joinPrivate'
+
     post '/rooms/quit', to: 'rooms#quit'
     resources :room_messages
     # ------

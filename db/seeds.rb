@@ -17,7 +17,6 @@ end
 # Recreate rooms each time too
 # Encrypted Passwords : bob - jo - kim
 
-
 [
 	{email: "bob@bob.bob", encrypted_password: "$2b$10$hTWyjJ2M0cXVfbWZVDafZeA4Y3Q5BgmE3y8jhlaLEIe5kOH0Mrh0y", reset_password_token: nil, reset_password_sent_at: nil, remember_created_at: nil, created_at: "2020-11-06 17:27:29", updated_at: "2020-11-06 17:27:57", nickname: "Bob", provider: nil, uid: nil, image: "https://images-na.ssl-images-amazon.com/images/I/51vy0hxKhtL._AC_SX425_.jpg"},
 	{email: "jo@jo.jo", encrypted_password: "$2b$10$cTBNkgVpymjQUnmzcIOp..7LV89qUcA8oncTqPgm8Mhz7SU6.9SA2", reset_password_token: nil, reset_password_sent_at: nil, remember_created_at: nil, created_at: "2020-11-06 17:27:29", updated_at: "2020-11-06 17:27:57", nickname: "Jo", provider: nil, uid: nil, image: "https://images-na.ssl-images-amazon.com/images/I/81dIf1bhapL._AC_SY355_.jpg"},
@@ -28,31 +27,31 @@ end
 	newUser.save!(validate: false)
 end
 
-[
-	{name: "ChatRoom1", owner_id: User.find_by(email: "bob@bob.bob").id, privacy: "Public"},
-	{name: "ChatRoom2", owner_id: User.find_by(email: "bob@bob.bob").id, privacy: "Public"},
-	{name: "ChatRoom3", owner_id: User.find_by(email: "jo@jo.jo").id, privacy: "Public"}
+# [
+# 	{name: "ChatRoom1", owner_id: User.find_by(email: "bob@bob.bob").id, privacy: "Public"},
+# 	{name: "ChatRoom2", owner_id: User.find_by(email: "bob@bob.bob").id, privacy: "Public"},
+# 	{name: "ChatRoom3", owner_id: User.find_by(email: "jo@jo.jo").id, privacy: "Public"}
 
-].each do |r|
-	room = Room.new(r)
-	room.save()
+# ].each do |r|
+# 	room = Room.new(r)
+# 	room.save()
 	
-end
+# end
 
-["Hello 1", "Hello 2"]. each do |content| 
-	newMessage = RoomMessage.new(message: content)
-	newMessage.user_id = User.find_by(email: "bob@bob.bob").id
-	newMessage.room_id = Room.find_by(name: "ChatRoom1").id
-	newMessage.save()
-end 
+# ["Hello 1", "Hello 2"]. each do |content| 
+# 	newMessage = RoomMessage.new(message: content)
+# 	newMessage.user_id = User.find_by(email: "bob@bob.bob").id
+# 	newMessage.room_id = Room.find_by(name: "ChatRoom1").id
+# 	newMessage.save()
+# end 
 
 
-["Hello 3", "Hello 4"]. each do |content| 
-	newMessage = RoomMessage.new(message: content)
-	newMessage.user_id = User.find_by(email: "kim@kim.kim").id
-	newMessage.room_id = Room.find_by(name: "ChatRoom1").id
-	newMessage.save()
-end 
+# ["Hello 3", "Hello 4"]. each do |content| 
+# 	newMessage = RoomMessage.new(message: content)
+# 	newMessage.user_id = User.find_by(email: "kim@kim.kim").id
+# 	newMessage.room_id = Room.find_by(name: "ChatRoom1").id
+# 	newMessage.save()
+# end 
 
 
 # RoomLinkMember.new(room: Room.first, user: User.first)

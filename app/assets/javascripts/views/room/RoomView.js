@@ -28,7 +28,7 @@ AppClasses.Views.Room = class extends Backbone.View {
 		e.preventDefault();
 		const roomID = e.target.children[4].value
 		const selectorFormID = "#privateRoomAuthForm-" + roomID
-		App.utils.formAjax("/api/rooms/join.json", selectorFormID)
+		App.utils.formAjax("/api/rooms/joinPrivate.json", selectorFormID)
 		.done(res => {
 			App.toast.success("Good Password", { duration: 2000, style: App.toastStyle });
 			location.hash = `#rooms/` + res.roomID;
@@ -48,7 +48,7 @@ AppClasses.Views.Room = class extends Backbone.View {
 		const roomID = e.target.children[1].value
 		// Here publicRoomJoinForm-X must match the view's form ID
 		const selectorFormID = "#publicRoomJoinForm-" + roomID
-		App.utils.formAjax("/api/rooms/join.json", selectorFormID)
+		App.utils.formAjax("/api/rooms/joinPublic.json", selectorFormID)
 		.done(res => {
 			App.toast.success("Room Joined !", { duration: 1500, style: App.toastStyle });
 			location.hash = `#rooms/` + res.roomID;
@@ -62,21 +62,81 @@ AppClasses.Views.Room = class extends Backbone.View {
 		})
 		return (false);
 	}
-
     
 	updateRender() {
 
 		const { attributes } = App.models.user;
+		const userID = attributes.id;
+		
+		// console.log(attributes);
+		// console.log(this.model.toJSON());
+
+		// roomsMember:  this.model.toJSON(),
+		// roomsAdmins: this.model.toJSON(),
+		
+		var tabID = [];
+		var roomJoinedAsOwner = {};
+		var roomJoinedAsRoomAdmin = {};
+		var roomJoinedAsMember = {};
+		const data = this.model.toJSON();
+
+		data.forEach(room => {
+			if (room.admins.length > 0) {
+				room.admins.forEach(admin => {
+					if (admin.id === userID) {
+						tabID.push(room.id);
+						Object.assign(roomJoinedAsRoomAdmin, room);
+					}
+				}
+			)}
+		});
+		data.forEach(room => {
+			if (room.members.length > 0) {
+				room.members.forEach(member => {
+					if (member.id === userID) {
+						tabID.push(room.id);
+						Object.assign(roomJoinedAsMember, room);
+					}
+				}
+			)}
+		});
+		data.forEach(room => {
+			if (room.owner_id === userID) {
+				tabID.push(room.id);
+				Object.assign(roomJoinedAsOwner, room);
+			}
+		})
+
+		tabID = [...new Set(tabID)];
+		// console.log(data);
+		// console.log(tabID);
+		// console.log(notJoinedRooms);
+		var notJoinedRooms = data.filter(function(room) {
+			return !tabID.includes(room.id);
+		});
+
+		if (!_.isEmpty(roomJoinedAsOwner))
+			roomJoinedAsOwner = [roomJoinedAsOwner];
+		if (!_.isEmpty(roomJoinedAsRoomAdmin))
+			roomJoinedAsRoomAdmin = [roomJoinedAsRoomAdmin];
+		if (!_.isEmpty(roomJoinedAsMember))
+			roomJoinedAsMember = [roomJoinedAsMember];
+
 		this.$el.html(this.template({
-			rooms: this.model.toJSON(),
+			roomJoinedAsOwner: roomJoinedAsOwner,
+			roomJoinedAsRoomAdmin: roomJoinedAsRoomAdmin,
+			roomJoinedAsMember: roomJoinedAsMember,
+			notJoinedRooms: notJoinedRooms,
+
 			user: attributes,
 			// Join Private Room Form
-			method: "POST",
-			titleText: "Join private room",
-			submitText: "Open",
-			formID: "privateRoomAuthForm",
-			token: $('meta[name="csrf-token"]').attr('content'),
-
+			privateForm: {
+				method: "POST",
+				titleText: "Join private room",
+				submitText: "Open",
+				formID: "privateRoomAuthForm",
+				token: $('meta[name="csrf-token"]').attr('content'),
+			},
 			// Join Public Room Form
 			publicForm: {
 				method: "POST",

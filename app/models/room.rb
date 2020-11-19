@@ -6,8 +6,11 @@ class Room < ApplicationRecord
   has_many :room_messages, dependent: :destroy
   
   # TO DEL
-  has_many :members, through: :room_messages, :source => :user
+  # has_many :members, through: :room_messages, :source => :user
   # TO ADD
-  # has_many :members, :through => :room_link_members, :source => :user
+	has_many :room_link_members
+  has_many :members, :through => :room_link_members, :source => :user
   
+  has_many :room_link_admins
+  has_many :admins, :through => :room_link_admins, :source => :user
 end

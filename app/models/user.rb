@@ -5,9 +5,10 @@ class User < ApplicationRecord
 
   # ---------- Chat / User Relations ----------
   has_many :room_link_members
-	has_many :rooms_as_member, :through => :room_link_members, :source => :room
+  has_many :rooms_as_member, :through => :room_link_members, :source => :room
+  # Attention à la syntaxe : room_link_members (table) vs rooms_as_member (relation)
   has_many :room_link_admins
-	has_many :rooms_as_admin, :through => :room_link_members, :source => :room
+	has_many :rooms_as_admin, :through => :room_link_admins, :source => :room
   # ---------- ---------- ---------- ----------
 
   # friends relation setup
