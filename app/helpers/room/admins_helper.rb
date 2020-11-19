@@ -1,0 +1,2 @@
+module Room::AdminsHelper
+end

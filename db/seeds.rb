@@ -53,3 +53,7 @@ end
 	newMessage.room_id = Room.find_by(name: "ChatRoom1").id
 	newMessage.save()
 end 
+
+
+# RoomLinkMember.new(room: Room.first, user: User.first)
+# User.first.rooms_as_member

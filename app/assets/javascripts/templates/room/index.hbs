@@ -33,7 +33,16 @@
 
             {{/when}}
             {{#when privacy "noteq" "private" }}
-            <a style="font-size: 14px;" href="#rooms/{{id}}">Open</a>
+                <a style="font-size: 14px;" href="#rooms/{{id}}">Open</a>
+
+                <form class="publicRoomJoinForm" id="publicRoomJoinForm-{{id}}" style="display: inline;" action="/api/rooms/join.json" accept-charset="UTF-8" method="{{../publicForm.method}}">
+                    <input type="hidden" name="authenticity_token" value="{{../publicForm.token}}">
+                    <input type="hidden" id="roomID" name="room[room_id]" value="{{id}}">
+                    <input type="hidden" id="roomOwner" name="room[owner_id]" value="{{owner_id}}">
+                    <input class="btn btn-primary" type="submit" value="{{../publicForm.submitText}}">
+                </form>
+
+
             {{/when}}
               {{#when owner_id "eq" ../user.id }}
                 <a style="font-size: 14px;" href="#room/edit/{{id}}">Edit</a>

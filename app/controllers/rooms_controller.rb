@@ -20,22 +20,23 @@ class RoomsController < ApplicationController
   end
 
   def join
+
     # https://coderwall.com/p/sjegjq/use-bcrypt-for-passwords
     room = Room.find(params["room"]["room_id"])
-    roomPass = BCrypt::Password.new(room.password)
+   
+   
+    # roomPass = BCrypt::Password.new(room.password)
+    # if roomPass != params["room"]["password"]
+    #   res_with_error("Wrong password", :bad_request)
+    #   return false
+    # else # todo admin etc
+    #   unless room.members.include?(current_user)
+    #     room.members << current_user
+    #   end
+    # end
 
-    puts params["room"]
-
-    if roomPass != params["room"]["password"]
-      res_with_error("Wrong password", :bad_request)
-      return false
-    else # todo admin etc
-      unless room.members.include?(current_user)
-        room.members << current_user
-      end
-    end
     respond_to do |format|
-      format.html { redirect_to rooms_url, notice: 'Good password' }
+      format.html { redirect_to rooms_url, notice: 'Room Joined !' }
       format.json { render json: {roomID: room.id}, status: :ok }
     end
   end

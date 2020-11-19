@@ -3,9 +3,12 @@ class User < ApplicationRecord
   # "required: false" because the user may have a null guild_id
   belongs_to :guild, required: false
 
-  # Chat Relations
+  # ---------- Chat / User Relations ----------
   has_many :room_link_members
-	has_many :joined_rooms_as_member, :through => :room_link_members, :source => :room
+	has_many :rooms_as_member, :through => :room_link_members, :source => :room
+  has_many :room_link_admins
+	has_many :rooms_as_admin, :through => :room_link_members, :source => :room
+  # ---------- ---------- ---------- ----------
 
   # friends relation setup
   has_many :friendships

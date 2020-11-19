@@ -1,8 +1,8 @@
 Rails.application.routes.draw do
+ 
   # home page
   root "home#index"
 
-  
   scope "api" do
     # guild actions
     resources :guilds
@@ -10,14 +10,15 @@ Rails.application.routes.draw do
     post '/guild/quit', to: 'guilds#quit'
     post '/guild/accept', to: 'guilds#accept_request'
 
-
     # CHAT ------
-    resources :rooms
+    resources :rooms do 
+      resources :members, controller: 'room/members', only: [:index, :new, :create, :destroy]
+      resources :admins, controller: 'room/admins',  only: [:index, :new, :create, :destroy]
+    end 
     post '/rooms/join', to: 'rooms#join'
     post '/rooms/quit', to: 'rooms#quit'
     resources :room_messages
     # ------
-
     
     # friends actions
     post '/friends/add'

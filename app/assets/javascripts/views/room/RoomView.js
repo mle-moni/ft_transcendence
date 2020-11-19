@@ -1,7 +1,9 @@
 AppClasses.Views.Room = class extends Backbone.View {
 	constructor(opts) {
 		opts.events = {
-			"submit .privateRoomAuthForm": "submit"
+			"submit .privateRoomAuthForm": "submitPasswordPrivateRoom",
+			"submit .publicRoomJoinForm": "submitJoinPublicRoom"
+
 		}
 		super(opts);
 		this.tagName = "div";
@@ -22,7 +24,7 @@ AppClasses.Views.Room = class extends Backbone.View {
 	// 		postData[formElements[i].name]=formElements[i].value;
 	// console.log(postData);
 
-	submit(e) {
+	submitPasswordPrivateRoom(e) {
 		e.preventDefault();
 		const roomID = e.target.children[4].value
 		const selectorFormID = "#privateRoomAuthForm-" + roomID
@@ -40,6 +42,27 @@ AppClasses.Views.Room = class extends Backbone.View {
 		return (false);
 	}
 
+	submitJoinPublicRoom(e) {
+		e.preventDefault();
+		console.log("submitJoinPublicRoom()");
+		const roomID = e.target.children[1].value
+		// Here publicRoomJoinForm-X must match the view's form ID
+		const selectorFormID = "#publicRoomJoinForm-" + roomID
+		App.utils.formAjax("/api/rooms/join.json", selectorFormID)
+		.done(res => {
+			App.toast.success("Room Joined !", { duration: 1500, style: App.toastStyle });
+			location.hash = `#rooms/` + res.roomID;
+		})
+		.fail((e) => {
+			App.utils.toastError(e);
+		});
+		// In case of some fields have been filed
+		$(".privateRoomAuthFormField").each(function() {
+			$( this ).val("");
+		})
+		return (false);
+	}
+
     
 	updateRender() {
 
@@ -47,11 +70,21 @@ AppClasses.Views.Room = class extends Backbone.View {
 		this.$el.html(this.template({
 			rooms: this.model.toJSON(),
 			user: attributes,
+			// Join Private Room Form
 			method: "POST",
 			titleText: "Join private room",
 			submitText: "Open",
 			formID: "privateRoomAuthForm",
-			token: $('meta[name="csrf-token"]').attr('content')
+			token: $('meta[name="csrf-token"]').attr('content'),
+
+			// Join Public Room Form
+			publicForm: {
+				method: "POST",
+				submitText: "Join the room",
+				token: $('meta[name="csrf-token"]').attr('content'),
+			}
+
+
 		}));
 		return (this);
     }
