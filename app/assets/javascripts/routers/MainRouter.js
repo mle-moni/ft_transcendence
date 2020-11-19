@@ -30,6 +30,7 @@ AppClasses.Routers.Main = class extends AppClasses.Routers.AbstractRouter {
 			});
 			this.models.user.update(this.models.user);
 			this.collections.allUsers.myFetch();
+			this.collections.guilds.fetch();
 		}, 1000 * seconds);
 	}
 	index() {
