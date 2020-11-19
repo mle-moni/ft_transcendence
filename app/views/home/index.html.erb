@@ -17,7 +17,7 @@
 	<% signinLink = link_to "Sign in with 42", user_marvin_omniauth_authorize_path %>
 	<% signoutLink = link_to "Sign out", destroy_user_session_path, :method => :delete %>
 
-	<% if user_signed_in? %>
+	<% if user_signed_in? && !current_user.banned %>
 		// providing data to instantiate our user model
 		App.data.user = {
 			nickname: <%= current_user.nickname.to_json.html_safe %>,
@@ -30,7 +30,9 @@
 			guild_officer: <%= current_user.guild_officer.to_json.html_safe %>,
 			guild_validated: <%= current_user.guild_validated.to_json.html_safe %>,
 			friends: <%= current_user.friends.to_json.html_safe %>,
-			invites: <%= current_user.invites.to_json.html_safe %>
+			invites: <%= current_user.invites.to_json.html_safe %>,
+			last_seen: <%= current_user.last_seen.to_json.html_safe %>,
+			admin: <%= current_user.admin.to_json.html_safe %>
 		};
 		App.data.links = {
 			signin: `<%= signinLink %>`,
@@ -40,6 +42,8 @@
 			authenticator: `<%= current_user.otp_provisioning_uri(current_user.email, issuer: "ft_transcendence") %>`
 		};
 		initApp(); // init backbone only for connected users
+	<% elsif user_signed_in? && current_user.banned %>
+		$("#app").html(`You are banned.`)
 	<% else %>
 		// if user is not connected, just display a signin form
 		$("#app").html(`<%= render 'signin' %>`)

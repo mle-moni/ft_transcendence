@@ -30,6 +30,12 @@ Rails.application.routes.draw do
     post '/friends/get_all'
     # profile actions
     post 'profile/get'
+    post 'active', to: 'profile#active'
+    # admin actions
+    post 'admin/ban'
+    post 'admin/unban'
+    post 'admin/promote'
+    post 'admin/demote'
   end
 
 

@@ -3,6 +3,11 @@ require 'fileutils'
 class ProfileController < ApplicationController
 	before_action :connect_user
 
+	# needed to see users status
+	def active
+		current_user.update(last_seen: DateTime.now)
+	end
+
 	def get
 		respond_to do |format|
 			format.html { redirect_to "/#profile", notice: 'Profile infos updated' }
@@ -129,6 +134,12 @@ class ProfileController < ApplicationController
 			respond_to do |format|
 				format.html { redirect_to "/", alert: "You need to be connected for this action" }
 				format.json { render json: {alert: "You need to be connected for this action"}, status: :unprocessable_entity }
+			end
+		end
+		if user_signed_in? && current_user.banned
+			respond_to do |format|
+				format.html { redirect_to "/", alert: "You are banned" }
+				format.json { render json: {alert: "You are banned"}, status: :unauthorized }
 			end
 		end
 	end

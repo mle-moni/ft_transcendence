@@ -18,14 +18,27 @@ AppClasses.Routers.Main = class extends AppClasses.Routers.AbstractRouter {
 
 		// friends routes
 		App.routers.friends = new AppClasses.Routers.FriendsRouter();
+		// admin routes
+		App.routers.admin = new AppClasses.Routers.AdminRouter();
 
 		// create all models needed by multiple routes
 		this.models.user = new AppClasses.Models.User(App.data.user);
 		this.collections.allUsers = new AppClasses.Collections.AllUsers();
 
+		const seconds = 10; // update every N seconds
+		setInterval(() => {
+			$.ajax({
+				url:  '/api/active',
+				data: { "authenticity_token": $('meta[name="csrf-token"]').attr('content') },
+				type: 'POST'
+			});
+			this.models.user.update(this.models.user);
+			this.collections.allUsers.myFetch();
+			this.collections.guilds.fetch();
+		}, 1000 * seconds);
 	}
 	index() {
-		this.basicView("home", "Home");
+		this.basicView("home", "Home", {model: this.models.user});
 	}
 	salut(name) {
 		this.mainDiv.html(`salut ${name}`);
