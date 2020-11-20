@@ -80,7 +80,7 @@ AppClasses.Views.Room = class extends Backbone.View {
 		App.utils.formAjax("/api/rooms/quit.json", selectorFormID)
 		.done(res => {
 			App.toast.success("You have quit the room", { duration: 1500, style: App.toastStyle });
-			location.hash = `#`;
+			location.hash = `#room`;
 		}).fail((e) => {App.utils.toastError(e);});
 		return (false);
 	}

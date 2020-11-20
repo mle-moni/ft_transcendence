@@ -12,9 +12,11 @@ AppClasses.Views.EditRoom = class extends Backbone.View {
 		this.tagName = "div";
 		this.template = App.templates["room/edit"];
 
-		this.updateRender();
 		this.listenTo(this.model, "change reset add remove", this.updateRender);
+		this.listenTo(App.collections.rooms, "change reset add remove", this.updateRender);
+
 		this.model.fetch();
+		this.updateRender();
 
 	}
 
@@ -40,8 +42,6 @@ AppClasses.Views.EditRoom = class extends Backbone.View {
 	delete(e) {
 		e.preventDefault();
 		const room = this.model.findWhere({id: this.room_id});
-
-
 		if (room.get("name") != $("#confirmRoomName")[0].value) {
 			App.toast.message("Rooms names don't match", { duration: 2000, style: App.toastStyle });
 			return ;
@@ -62,7 +62,7 @@ AppClasses.Views.EditRoom = class extends Backbone.View {
 
 		/* Give Data to the room form template */
 		this.$el.html(this.template({ 
-			user: this.user,
+			user: u,
 			titleText: "Edit a chat room",
 			EditText: "Edit the room",
 			editID: "editRoomForm",
@@ -76,7 +76,11 @@ AppClasses.Views.EditRoom = class extends Backbone.View {
 		this.delegateEvents();
 		return (this);
 	}
-	render() {
+	render(room_id) {
+		if (this.room_id != room_id) {
+			this.room_id = room_id;
+			this.updateRender();
+		}
 		this.updateRender();
 		return (this);
 	}
