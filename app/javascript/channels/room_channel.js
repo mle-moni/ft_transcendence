@@ -2,11 +2,6 @@ import consumer from "./consumer"
 
 var sub = null;
 
-
-// $(document).ready(function() {
-//   console.log($('#room_messages').attr('data-room-id'));
-// });
-
 function manage_subscription() {
     const in_room = document.getElementById("checkRoomPresence")
     if (in_room)

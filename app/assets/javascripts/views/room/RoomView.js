@@ -27,12 +27,12 @@ AppClasses.Views.Room = class extends Backbone.View {
 
 	submitPasswordPrivateRoom(e) {
 		e.preventDefault();
-		const roomID = e.target.children[4].value
+		const roomID = e.target.children[3].value
 		const selectorFormID = "#privateRoomAuthForm-" + roomID
 		App.utils.formAjax("/api/rooms/joinPrivate.json", selectorFormID)
 		.done(res => {
 			App.toast.success("Good Password", { duration: 2000, style: App.toastStyle });
-			location.hash = `#rooms/` + res.roomID;
+			location.hash = `#rooms/` + roomID;
 		})
 		.fail((e) => {
 			App.utils.toastError(e);
@@ -51,7 +51,7 @@ AppClasses.Views.Room = class extends Backbone.View {
 		App.utils.formAjax("/api/rooms/joinPublic.json", selectorFormID)
 		.done(res => {
 			App.toast.success("Room Joined !", { duration: 1500, style: App.toastStyle });
-			location.hash = `#rooms/` + res.roomID;
+			location.hash = `#rooms/` + roomID;
 		})
 		.fail((e) => {
 			App.utils.toastError(e);
@@ -124,9 +124,6 @@ AppClasses.Views.Room = class extends Backbone.View {
 		var notJoinedRooms = data.filter(function(room) {
 			return !tabID.includes(room.id);
 		});
-
-		console.log(roomJoinedAsMember);
-		
 
 		this.$el.html(this.template({
 			roomJoinedAsOwner: roomJoinedAsOwner,
