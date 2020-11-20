@@ -4,6 +4,7 @@
     </li>
 </div>
 
+
 <br>
 <br>
 
@@ -50,6 +51,7 @@
 
                         <div class"otherMessage">
                             <img src="{{#getUserAttributes ../members user_id "image"}}{{/getUserAttributes}}"
+                            {{!-- <img src="{{../profileImage}}" --}}
                                 alt="Avatar" class="avatar">
                             {{#getUserAttributes ../members user_id "nickname"}}{{/getUserAttributes}} :
                             <p style="display: inline;" data-role="message-text">
@@ -68,6 +70,7 @@
                         <div class"otherMessage">
 
                             <img src="{{#getUserAttributes ../members user_id "image"}}{{/getUserAttributes}}"
+                            {{!-- <img src="{{profileImage}}" --}}
                                 alt="Avatar" class="avatar">
                             {{#getUserAttributes ../members user_id "nickname"}}{{/getUserAttributes}} :
                             <p style="display: inline;" data-role="message-text">

@@ -21,6 +21,12 @@ AppClasses.Views.ShowRoom = class extends Backbone.View {
 	
 	submit(e) {
 		e.preventDefault();
+
+		if (e.currentTarget.message.value == "")
+		{
+			// App.toast.message("You cannot send empty message", { duration: 2000, style: App.toastStyle });
+			return ;
+		}
 		App.utils.formAjax("/api/room_messages.json", "#sendRoomMessageForm")
 		.done(res => {
 			App.toast.success("Message sent", { duration: 1000, style: App.toastStyle });
@@ -50,6 +56,7 @@ AppClasses.Views.ShowRoom = class extends Backbone.View {
 			currentRoom: currentRoom[0],
 			roomMessages: roomMessages || null,
 			currentUser: attributes,
+			profileImage: attributes.image,
 			members: members || null,
 			// Form data for message creation
 			method: "POST",

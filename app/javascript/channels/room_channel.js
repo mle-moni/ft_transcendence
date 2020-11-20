@@ -6,9 +6,6 @@ function manage_subscription() {
     const in_room = document.getElementById("checkRoomPresence")
     if (in_room)
     {
-      console.log("----------")
-      console.log($('.chat').attr('data-room-id'));
-      console.log("----------")
         consumer.subscriptions.create({
           channel: "RoomChannel",
           room_id: $('.chat').attr('data-room-id')
@@ -36,11 +33,10 @@ function manage_subscription() {
           else
             addMessage = '<li style="background-color:grey" class="list-group-item">'
           addMessage  += '<div class"otherMessage"> <img src="' + data.user.image + '" alt="Avatar" class="avatar"> '
-                      + data.user.nickname + ' : ' + data.content + '</div> </li> <br> <br>'
+                      + data.user.nickname + ' : '
+                      + '<p style="display: inline;" data-role="message-text">' + data.content + '</p> </div> </li> <br>'
 
-          // $('#checkRoomPresence').append('<p class="message"> New Message ! </p>')
-          $('.list-group').prepend(addMessage)
-          //AppClasses.Views.ShowRoom.rooms.fetch()
+          $('.chat').prepend(addMessage)
         }
       });
     }
