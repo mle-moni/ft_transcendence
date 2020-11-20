@@ -36,6 +36,8 @@ class RoomsController < ApplicationController
     end
 
     respond_to do |format|
+
+      ActionCable.server.broadcast "room_channel", type: "rooms", description: "join-public", user: current_user
       format.html { redirect_to rooms_url, notice: 'Room Joined !' }
       format.json { render json: {roomID: @room.id}, status: :ok }
     end
@@ -62,6 +64,8 @@ class RoomsController < ApplicationController
     end
 
     respond_to do |format|
+
+      ActionCable.server.broadcast "room_channel", type: "rooms", description: "join-private", user: current_user
       format.html { redirect_to rooms_url, notice: 'Room Joined !' }
       format.json { render json: {room: @room}, status: :ok }
     end
@@ -90,6 +94,8 @@ class RoomsController < ApplicationController
       @room.destroy
     end 
     respond_to do |format|
+
+      ActionCable.server.broadcast "room_channel", type: "rooms", description: "quit", user: current_user
       format.html { redirect_to rooms_url, notice: 'You have leave the room'}
       format.json { head :no_content }
     end
@@ -132,6 +138,7 @@ class RoomsController < ApplicationController
   
     respond_to do |format|
       if @room.save
+        ActionCable.server.broadcast "room_channel", type: "rooms", description: "create", user: current_user
         format.html { redirect_to @room, notice: 'Room was successfully created.' }
         format.json { render :show, status: :created, location: @room }
       else
@@ -176,6 +183,8 @@ class RoomsController < ApplicationController
     
     respond_to do |format|
       if @room.update(filteredParams)
+
+        ActionCable.server.broadcast "room_channel", type: "rooms", description: "update", user: current_user
         format.html { redirect_to :index, notice: 'Room was successfully updated.' }
         format.json { render :index, status: :ok, location: @room }
       else
@@ -194,6 +203,8 @@ class RoomsController < ApplicationController
     @room.room_messages.destroy_all
     @room.destroy
     respond_to do |format|
+
+      ActionCable.server.broadcast "room_channel", type: "rooms", description: "destroy", user: current_user
       format.html { redirect_to :index, notice: 'Room was successfully destroyed.' }
       format.json { head :no_content }
     end

@@ -40,8 +40,8 @@ class RoomMessagesController < ApplicationController
         puts "------------------"
 
         #RoomChannel.broadcast_to "room_channel_#{@room.id}", content: @room_message.message, user: current_user
-        ActionCable.server.broadcast "room_channel_#{@room.id}", content: @room_message.message, user: current_user
-
+        # ActionCable.server.broadcast "room_channel_#{@room.id}", content: @room_message.message, user: current_user
+        ActionCable.server.broadcast "room_channel", type: "room_message", description: "create-message", user: current_user
         # TEST
         # ActionCable.server.broadcast "room_channel", content: @room_message.message
 
@@ -63,6 +63,7 @@ class RoomMessagesController < ApplicationController
   def update
     respond_to do |format|
       if @room_message.update(room_message_params)
+
         format.html { redirect_to @room_message, notice: 'Room message was successfully updated.' }
         format.json { render :show, status: :ok, location: @room_message }
       else
