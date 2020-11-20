@@ -6,7 +6,10 @@ AppClasses.Views.Profile = class extends Backbone.View {
 		this.updateRender(); // render the template only one time, unless model changed
 		this.listenTo(this.model, "change", this.updateRender);
 	}
-	updateRender() {
+	updateRender(changes) {
+		if (changes && App.utils.onlyThoseAttrsChanged(changes.changed, ["last_seen"])) {
+			return (this);
+		}
 		this.$el.html(this.template(this.model.attributes));
 		return (this);
 	}

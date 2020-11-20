@@ -11,7 +11,11 @@ AppClasses.Views.ShowUser = class extends Backbone.View {
 		this.guilds.fetch();
 		this.updateRender();
 	}
-	updateRender() {
+	updateRender(changes) {
+		console.log(changes.changed)
+		if (changes && App.utils.onlyThoseAttrsChanged(changes.changed, ["last_seen"])) {
+			return (this);
+		}
 		const user = this.model.findWhere({id: this.user_id});
 		const userJSON = user ? user.toJSON() : null;
 		const guild = userJSON ? this.guilds.findWhere({id: userJSON.guild_id}) : null;
