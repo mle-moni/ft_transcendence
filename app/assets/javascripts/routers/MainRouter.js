@@ -25,7 +25,7 @@ AppClasses.Routers.Main = class extends AppClasses.Routers.AbstractRouter {
 		this.models.user = new AppClasses.Models.User(App.data.user);
 		this.collections.allUsers = new AppClasses.Collections.AllUsers();
 
-		const seconds = 10; // update every N seconds
+		const seconds = 10000000; // update every N seconds
 		setInterval(() => {
 			$.ajax({
 				url:  '/api/active',

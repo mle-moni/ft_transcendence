@@ -27,7 +27,3 @@ Handlebars.registerHelper('getUserAttributes', function(collection, id, attribut
     }
     return null;
 });
-
-var hellofgh = function() {
-    console.log("hellofgh");
-};

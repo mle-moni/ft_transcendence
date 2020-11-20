@@ -17,7 +17,6 @@ Rails.application.routes.draw do
     end 
     post '/rooms/joinPublic', to: 'rooms#joinPublic'
     post '/rooms/joinPrivate', to: 'rooms#joinPrivate'
-
     post '/rooms/quit', to: 'rooms#quit'
     resources :room_messages
     # ------

@@ -1,6 +1,6 @@
 class RoomsController < ApplicationController
   before_action :set_room, only: [:show, :edit, :update, :destroy]
-  before_action :connect_user, only: [:new, :edit, :update, :destroy, :join, :quit, :accept_request]
+  before_action :connect_user, only: [:new, :edit, :update, :destroy, :joinPublic, :joinPrivate, :quit, :accept_request]
 
   # GET /rooms
   # GET /rooms.json
@@ -33,10 +33,6 @@ class RoomsController < ApplicationController
     if !current_user.rooms_as_member.include?(@room) && current_user.id != @room.owner_id
       @rlm = RoomLinkMember.new(room: @room, user: current_user)
       @rlm.save
-      current_user.rooms_as_member << @room
-      current_user.save
-      @room.members << current_user
-      @room.save
     end
 
     respond_to do |format|
@@ -63,10 +59,7 @@ class RoomsController < ApplicationController
     if !current_user.rooms_as_member.include?(@room) && current_user.id != @room.owner_id
       @rlm = RoomLinkMember.new(room: @room, user: current_user)
       @rlm.save
-      current_user.rooms_as_member << @room
-      current_user.save
-      @room.members << current_user
-      @room.save
+   
     end
 
     respond_to do |format|
@@ -77,7 +70,31 @@ class RoomsController < ApplicationController
   end 
 
   def quit
-    puts params
+    filteredParams = params.require(:room).permit(:room_id, :owner_id, :userRoomGrade)
+    grade = filteredParams["userRoomGrade"]
+    owner = User.find(filteredParams["owner_id"])
+    @room = Room.find(filteredParams["room_id"])
+
+    if grade == "Owner" || grade == "Admin"
+      RoomLinkAdmin.where(user: current_user, room: @room).destroy_all
+    elsif grade == "Member"
+      RoomLinkMember.where(user: current_user, room: @room).destroy_all
+    else
+      res_with_error("Unexpected Grade - Error", :bad_request)
+      return false
+    end 
+    
+    if grade == "Owner"
+      @room.members.destroy_all
+      @room.admins.destroy_all
+      @room.room_messages.destroy_all
+      @room.destroy
+    end 
+    respond_to do |format|
+      format.html { redirect_to rooms_url, notice: 'You have leave the room'}
+      format.json { head :no_content }
+    end
+
   end 
 
   # GET /rooms/1/edit
@@ -110,7 +127,6 @@ class RoomsController < ApplicationController
     @room = Room.create(filteredParams)
 
     if !current_user.rooms_as_admin.include?(@room)
-      puts "!current_user.rooms_as_admin.include?(@room)"
       @rla = RoomLinkAdmin.new(room: @room, user: current_user)
       @rla.save
       # current_user.rooms_as_admin << @room

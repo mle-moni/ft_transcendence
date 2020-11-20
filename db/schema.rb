@@ -43,14 +43,14 @@ ActiveRecord::Schema.define(version: 2020_11_18_211408) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "room_link_admins", id: false, force: :cascade do |t|
+  create_table "room_link_admins", force: :cascade do |t|
     t.bigint "room_id"
     t.bigint "user_id"
     t.index ["room_id"], name: "index_room_link_admins_on_room_id"
     t.index ["user_id"], name: "index_room_link_admins_on_user_id"
   end
 
-  create_table "room_link_members", id: false, force: :cascade do |t|
+  create_table "room_link_members", force: :cascade do |t|
     t.bigint "room_id"
     t.bigint "user_id"
     t.index ["room_id"], name: "index_room_link_members_on_room_id"
