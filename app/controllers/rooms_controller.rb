@@ -1,6 +1,6 @@
 class RoomsController < ApplicationController
-  before_action :set_room, only: [:show, :edit, :update, :destroy]
-  before_action :connect_user, only: [:new, :edit, :update, :destroy, :join, :quit, :accept_request]
+  # before_action :set_room, only: [:show, :edit, :update, :destroy]
+  before_action :connect_user, only: [:new, :edit, :update, :destroy, :joinPublic, :joinPrivate, :quit, :accept_request]
 
   # GET /rooms
   # GET /rooms.json
@@ -33,10 +33,6 @@ class RoomsController < ApplicationController
     if !current_user.rooms_as_member.include?(@room) && current_user.id != @room.owner_id
       @rlm = RoomLinkMember.new(room: @room, user: current_user)
       @rlm.save
-      current_user.rooms_as_member << @room
-      current_user.save
-      @room.members << current_user
-      @room.save
     end
 
     respond_to do |format|
@@ -63,21 +59,41 @@ class RoomsController < ApplicationController
     if !current_user.rooms_as_member.include?(@room) && current_user.id != @room.owner_id
       @rlm = RoomLinkMember.new(room: @room, user: current_user)
       @rlm.save
-      current_user.rooms_as_member << @room
-      current_user.save
-      @room.members << current_user
-      @room.save
     end
 
     respond_to do |format|
       format.html { redirect_to rooms_url, notice: 'Room Joined !' }
-      format.json { render json: {roomID: @room.id}, status: :ok }
+      format.json { render json: {room: @room}, status: :ok }
     end
     
   end 
 
   def quit
-    puts params
+    filteredParams = params.require(:room).permit(:room_id, :owner_id, :userRoomGrade)
+    grade = filteredParams["userRoomGrade"]
+    owner = User.find(filteredParams["owner_id"])
+    @room = Room.find(filteredParams["room_id"])
+
+    if grade == "Owner" || grade == "Admin"
+      RoomLinkAdmin.where(user: current_user, room: @room).destroy_all
+    elsif grade == "Member"
+      RoomLinkMember.where(user: current_user, room: @room).destroy_all
+    else
+      res_with_error("Unexpected Grade - Error", :bad_request)
+      return false
+    end 
+    
+    if grade == "Owner"
+      @room.members.destroy_all
+      @room.admins.destroy_all
+      @room.room_messages.destroy_all
+      @room.destroy
+    end 
+    respond_to do |format|
+      format.html { redirect_to rooms_url, notice: 'You have leave the room'}
+      format.json { head :no_content }
+    end
+
   end 
 
   # GET /rooms/1/edit
@@ -103,20 +119,14 @@ class RoomsController < ApplicationController
       else
         roomPassword = BCrypt::Password.create filteredParams["password"]
         filteredParams["password"] = roomPassword
-        puts roomPassword
       end
     end
 
     @room = Room.create(filteredParams)
 
     if !current_user.rooms_as_admin.include?(@room)
-      puts "!current_user.rooms_as_admin.include?(@room)"
       @rla = RoomLinkAdmin.new(room: @room, user: current_user)
       @rla.save
-      # current_user.rooms_as_admin << @room
-      # current_user.save
-      # @room.admins << current_user
-      # @room.save
     end
   
     respond_to do |format|
@@ -134,14 +144,29 @@ class RoomsController < ApplicationController
   # PATCH/PUT /rooms/1.json
   def update
 
-    filteredParams = params.require(:room).permit(:name, :privacy, :password)
+    filteredParams = params.require(:room).permit(:name, :privacy, :password, :id)
+    @room = Room.find(filteredParams["id"])
+    if !["", "public", "private"].include?(filteredParams["privacy"])
+      res_with_error("Privacy field must be either empty, public or private", :bad_request)
+      return (false)
+    end
+    if filteredParams["privacy"] == "private"
+      if filteredParams["password"].empty?
+        res_with_error("None empty password required if the room is private", :bad_request)
+        return (false)
+      else
+        roomPassword = BCrypt::Password.create filteredParams["password"]
+        filteredParams["password"] = roomPassword
+      end
+    end
+    
     respond_to do |format|
       if @room.update(filteredParams)
         format.html { redirect_to :index, notice: 'Room was successfully updated.' }
         format.json { render :index, status: :ok, location: @room }
       else
         format.html { render :edit }
-        format.json { render json: @room.errors, status: :unprocessable_entity }
+        format.json { render json: @room, status: :unprocessable_entity }
       end
     end
   end
@@ -149,9 +174,7 @@ class RoomsController < ApplicationController
   # DELETE /rooms/1
   # DELETE /rooms/1.json
   def destroy
-
-    # Pas de params via delete, donc à voir comment check que le nom de room passé est bien identique à la room
-
+    @room = Room.find(params["id"])
     @room.members.destroy_all
     @room.admins.destroy_all
     @room.room_messages.destroy_all
