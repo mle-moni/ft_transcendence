@@ -159,6 +159,10 @@ class RoomsController < ApplicationController
         filteredParams["password"] = roomPassword
       end
     end
+
+    if filteredParams["privacy"] == "public"
+      roomPassword = ""
+    end
     
     respond_to do |format|
       if @room.update(filteredParams)
