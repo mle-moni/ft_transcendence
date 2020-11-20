@@ -24,6 +24,7 @@ AppClasses.Views.EditRoom = class extends Backbone.View {
 	
 	submit(e) {
 		e.preventDefault();
+
 		App.utils.formAjax(`/api/rooms/${this.room_id}.json`, "#editRoomForm")
 		.done(res => {
 			App.toast.success("Room successfully created !", { duration: 2000, style: App.toastStyle });
@@ -38,10 +39,8 @@ AppClasses.Views.EditRoom = class extends Backbone.View {
 	delete(e) {
 		e.preventDefault();
 		const room = this.model.findWhere({id: this.room_id});
-		// if (this.user.id != room.owner_id) {
-		// 	App.toast.message("Your are not the owner of the room", { duration: 2000, style: App.toastStyle });
-		// 	return ;
-		// }
+
+
 		if (room.get("name") != $("#confirmRoomName")[0].value) {
 			App.toast.message("Rooms names don't match", { duration: 2000, style: App.toastStyle });
 			return ;

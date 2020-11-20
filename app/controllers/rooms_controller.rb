@@ -107,6 +107,7 @@ class RoomsController < ApplicationController
     # client side validation to add
     filteredParams = params.require(:room).permit(:name, :owner_id, :privacy, :password)
 
+
     if !["", "public", "private"].include?(filteredParams["privacy"])
       res_with_error("Privacy field must be either empty, public or private", :bad_request)
       return (false)
@@ -145,11 +146,14 @@ class RoomsController < ApplicationController
   def update
 
     filteredParams = params.require(:room).permit(:name, :privacy, :password, :id)
+
     @room = Room.find(filteredParams["id"])
+
     if !["", "public", "private"].include?(filteredParams["privacy"])
       res_with_error("Privacy field must be either empty, public or private", :bad_request)
       return (false)
     end
+
     if filteredParams["privacy"] == "private"
       if filteredParams["password"].empty?
         res_with_error("None empty password required if the room is private", :bad_request)
@@ -161,7 +165,13 @@ class RoomsController < ApplicationController
     end
 
     if filteredParams["privacy"] == "public"
-      roomPassword = ""
+      filteredParams["password"] = ""
+    end
+
+    filteredParams.each do |key, value|
+      if (value == "" && (filteredParams["privacy"] != "public" && key != "password"))
+        filteredParams.delete(key)
+      end
     end
     
     respond_to do |format|
@@ -199,6 +209,13 @@ class RoomsController < ApplicationController
       respond_to do |format|
         format.html { redirect_to "/", alert: "#{msg}" }
         format.json { render json: {alert: "#{msg}"}, status: error }
+      end
+    end
+
+    def res_with_info(msg)
+      respond_to do |format|
+        format.html { redirect_to "/", notice: "#{msg}" }
+        format.json { render json: {msg: "#{msg}"}} #status: :ok
       end
     end
 

@@ -4,6 +4,7 @@
     </li>
 </div>
 
+
 <br>
 <br>
 
@@ -42,7 +43,7 @@
 
                 <ul class="list-group">
 
-                    <div class="chat" data-channel-subscribe="room" data-room-id="{{currentRoom.id}}>">
+                    <div class="chat" data-channel-subscribe="room" data-room-id="{{currentRoom.id}}">
                     {{#each roomMessages}}
 
                     {{#when user_id "noteq" ../currentUser.id}}
@@ -50,6 +51,7 @@
 
                         <div class"otherMessage">
                             <img src="{{#getUserAttributes ../members user_id "image"}}{{/getUserAttributes}}"
+                            {{!-- <img src="{{../profileImage}}" --}}
                                 alt="Avatar" class="avatar">
                             {{#getUserAttributes ../members user_id "nickname"}}{{/getUserAttributes}} :
                             <p style="display: inline;" data-role="message-text">
@@ -68,6 +70,7 @@
                         <div class"otherMessage">
 
                             <img src="{{#getUserAttributes ../members user_id "image"}}{{/getUserAttributes}}"
+                            {{!-- <img src="{{profileImage}}" --}}
                                 alt="Avatar" class="avatar">
                             {{#getUserAttributes ../members user_id "nickname"}}{{/getUserAttributes}} :
                             <p style="display: inline;" data-role="message-text">
