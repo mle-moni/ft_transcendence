@@ -5,7 +5,9 @@ AppClasses.Models.Room = Backbone.Model.extend({
 		password: "",
 		owner_id: null,
 		members: null,
-		admins: null
+		admins: null,
+		bans: null,
+		mutes: null
     }
 });
 

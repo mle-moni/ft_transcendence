@@ -4,10 +4,7 @@ AppClasses.Models.User = Backbone.Model.extend({
 		email: "",
 		image: "",
 		two_factor: false,
-		guild_id: null,
-		/* CHAT */
-		rooms_as_member: null,
-		rooms_as_admin: null
+		guild_id: null
 	},
 	isOwner: (guild) => {
 		if (!guild) {
