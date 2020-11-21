@@ -87,7 +87,6 @@ AppClasses.Views.Room = class extends Backbone.View {
     
 	updateRender() {
 
-		console.log("UPDATE RENDER TRIGGER")
 		const { attributes } = App.models.user;
 		const userID = attributes.id;
 		
@@ -156,7 +155,10 @@ AppClasses.Views.Room = class extends Backbone.View {
 				submitText: "Quit",
 				token: $('meta[name="csrf-token"]').attr('content'),
 				url: "/api/rooms/quit.json"
-			}
+			},
+			administrateStatusOwner: btoa("status=owner"),
+			administrateStatusAdmin: btoa("status=admin")
+
 		}));
 		return (this);
     }

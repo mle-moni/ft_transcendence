@@ -50,20 +50,23 @@ AppClasses.Views.ShowRoom = class extends Backbone.View {
 		if (_.size(currentRoom) > 0) {
 			var roomMessages = currentRoom[0].room_messages;
 			roomMessages.reverse();
-			var members = currentRoom[0].members;	
+			var members = [...currentRoom[0].members, ...currentRoom[0].admins];	
 		}
+
 		this.$el.html(this.template({
 			currentRoom: currentRoom[0],
 			roomMessages: roomMessages || null,
 			currentUser: attributes,
-			profileImage: attributes.image,
 			members: members || null,
 			// Form data for message creation
-			method: "POST",
-			titleText: "Send a message",
-			submitText: "Send",
-			formID: "sendRoomMessageForm",
-			token: $('meta[name="csrf-token"]').attr('content')
+			messageCreateForm: {
+				method: "POST",
+				titleText: "Send a message",
+				submitText: "Send",
+				formID: "sendRoomMessageForm",
+				token: $('meta[name="csrf-token"]').attr('content')
+			}
+		
 		}));
 		this.delegateEvents();
 		return (this);

@@ -18,6 +18,7 @@
         <li class="list-group-item"> {{name}} &nbsp; [{{privacy}}] &nbsp;
             <a class="btn btn-success btn-sm" href="#rooms/{{id}}">Open</a>
             <a class="btn btn-primary btn-sm" href="#room/edit/{{id}}">Edit</a>
+            <a class="btn btn-info btn-sm" href="#room/administrate/{{id}}?{{../administrateStatusOwner}}">Administrate</a>
             {{!-- QUIT Form --}}
             <form class="roomQuitForm" id="roomQuitForm-{{id}}" style="display: inline;" action="{{../quitForm.url}}"
                 accept-charset="UTF-8" method="{{../quitForm.method}}">
@@ -36,6 +37,8 @@
         {{!-- roomJoinedAsRoomAdmin --}}
         <li class="list-group-item"> {{name}} &nbsp; [{{privacy}}] &nbsp;
             <a class="btn btn-success btn-sm" href="#rooms/{{id}}">Open</a>
+            <a class="btn btn-info btn-sm" href="#room/administrate/{{id}}?{{../administrateStatusAdmin}}">Administrate</a>
+
              <form class="roomQuitForm" id="roomQuitForm-{{id}}" style="display: inline;" action="{{../quitForm.url}}"
                 accept-charset="UTF-8" method="{{../quitForm.method}}">
                 <input type="hidden" name="authenticity_token" value="{{../quitForm.token}}">

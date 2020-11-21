@@ -1,0 +1,30 @@
+<div id="checkRoomPresence"></div>
+
+<div class="administratorRoomView">
+
+        <a class="btn btn-primary" href="#room" role="button">Back</a>
+        <br>
+        <br>
+
+        <p> Your status of <strong><u>{{status}}</u></strong> offers some administrator rights : </p><br>
+        <br>
+
+    {{#when status "eq" "superAdmin"}}
+    <div class="superAdminSection">
+    </div>
+    {{/when}}
+
+    {{#when status "eq" "owner"}}
+
+    <div class="ownerSection">
+    </div>
+    {{/when}}
+
+    {{#when status "eq" "admin"}}
+
+    <div class="adminSection">
+    </div>
+    {{/when}}
+
+
+</div>

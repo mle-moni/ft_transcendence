@@ -4,7 +4,7 @@ class Room < ApplicationRecord
   belongs_to  :owner, class_name: "User", required: true
 
   has_many :room_messages, dependent: :destroy
-  
+
 	has_many :room_link_members, dependent: :destroy
   has_many :members, :through => :room_link_members, :source => :user
   
