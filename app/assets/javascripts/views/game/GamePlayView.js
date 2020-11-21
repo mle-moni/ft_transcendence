@@ -13,7 +13,6 @@ AppClasses.Views.GamePlay = class extends Backbone.View {
 	}
 	render(room_id) {
 		this.updateRender(room_id); // generates HTML
-		// the game has to be started in the router
 		return (this);
 	}
 }

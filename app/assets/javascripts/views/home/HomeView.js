@@ -9,7 +9,10 @@ AppClasses.Views.Home = class extends Backbone.View {
 		this.listenTo(this.model, "change", this.updateRender);
 		this.updateRender();
 	}
-	updateRender() {
+	updateRender(changes) {
+		if (changes && App.utils.onlyThoseAttrsChanged(changes.changed, ["last_seen"])) {
+			return (this);
+		}
 		this.$el.html(this.template({
 			user: this.model.toJSON()
 		}));
