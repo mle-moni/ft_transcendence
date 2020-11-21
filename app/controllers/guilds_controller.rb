@@ -6,7 +6,13 @@ class GuildsController < ApplicationController
   # GET /guilds
   # GET /guilds.json
   def index
-    @guilds = Guild.all
+    @guilds = Guild.all.map do |guild|
+      Guild.clean(guild)
+    end
+    respond_to do |format|
+			format.html { redirect_to "/", notice: ':)' }
+			format.json { render json: @guilds, status: :ok }
+		end
   end
 
   # GET /guilds/1
