@@ -100,6 +100,25 @@ class RoomsAdministrateController < ApplicationController
     end
   end
 
+  def kick
+    filteredParams = params.require(:room).permit(:room_id, :targetMemberID)
+    @room = Room.find(filteredParams["room_id"])
+    userTargeted = User.find(filteredParams["targetMemberID"])
+    if @room == nil || userTargeted == nil
+      res_with_error("Room or Targeted User invalid", :bad_request)
+      return false
+    end
+    RoomLinkMember.where(user: userTargeted, room: @room).destroy_all
+    RoomLinkAdmin.where(user: userTargeted, room: @room).destroy_all
+    RoomMute.where(room: @room, user: userTargeted).destroy_all
+    RoomBan.where(room: @room, user: userTargeted).destroy_all
+    respond_to do |format|
+      ActionCable.server.broadcast "room_channel", type: "rooms", description: "Kick", user: current_user
+      format.html { redirect_to rooms_url, notice: 'User kicked'}
+      format.json { head :no_content }
+    end
+  end 
+
   private
 
     def res_with_error(msg, error)

@@ -141,7 +141,7 @@ class RoomsController < ApplicationController
       format.json { head :no_content }
     end
 
-  end 
+  end
 
   # GET /rooms/1/edit
   def edit

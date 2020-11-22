@@ -11,7 +11,8 @@ AppClasses.Views.AdministrateRoom = class extends Backbone.View {
 			"submit #promoteAdminForm": "promote",
 			"submit #demoteAdminForm": "demote",
 			// Global
-			"submit #destroyRoomForm": "destroyRoom"
+			"submit #destroyRoomForm": "destroyRoom",
+			"submit .roomKickForm": "kick"
 
 		}
 
@@ -133,6 +134,19 @@ AppClasses.Views.AdministrateRoom = class extends Backbone.View {
 		});
 	}
 
+	kick(e) {
+		e.preventDefault();
+		const roomID = e.target.children[1].value;
+		const target = e.target.children[2].value;
+		App.utils.formAjax("/api/rooms/kick.json", "#roomKickForm-" + target)
+		.done(res => {
+			App.toast.success("User Kicked", { duration: 2000, style: App.toastStyle });
+		})
+		.fail((e) => {
+			App.utils.toastError(e);
+		});
+	}
+
 	updateRender() {
 
 		const { attributes } = App.models.user;
@@ -150,6 +164,12 @@ AppClasses.Views.AdministrateRoom = class extends Backbone.View {
 		if (currentRoom) {
 			members		= currentRoom.members;
 			admins		= currentRoom.admins;
+
+			// Deletion of the current user in the admin view
+
+			members = members.filter(m => { return m.id != attributes.id; })
+			admins = admins.filter(a => { return a.id != attributes.id; })
+
 			// Here, record is the table RoomMute / RoomBan, not users
 			currentRoom.mutes.forEach(record => {
 				mutesTabIDs.push(record.user_id);
@@ -185,7 +205,7 @@ AppClasses.Views.AdministrateRoom = class extends Backbone.View {
 			superAdmin: this.superAdmin,
 			members: members,
 			admins: admins,
-			membersPlusAdmins: {...members, ...admins},
+			membersPlusAdmins: membersPlusAdmins,
 			currentTime: App.utils.getHoursMinutes(),
 			mutesTabIDs: mutesTabIDs,
 			bansTabIDs: bansTabIDs,
@@ -210,6 +230,10 @@ AppClasses.Views.AdministrateRoom = class extends Backbone.View {
 			destroyForm: {
 				method: "DELETE",
 				url: "/api/rooms/"+ (currentRoom ? currentRoom.id : "") + ".json"
+			},
+			kickForm: {
+				method: "POST",
+				url: "/api/rooms/kick.json"
 			}
 		}));
 		this.delegateEvents();

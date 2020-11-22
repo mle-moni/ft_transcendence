@@ -46,20 +46,34 @@ AppClasses.Views.ShowRoom = class extends Backbone.View {
 		var currentRoom = this.rooms ? this.rooms.toJSON() : null;
 		currentRoom = _.filter(currentRoom, m => {
 			return m.id === this.room_id;
-		})
-		if (_.size(currentRoom) > 0) {
-			var roomMessages = currentRoom[0].room_messages;
+		})[0] || null;
+
+		if (currentRoom) {
+			var roomMessages = currentRoom.room_messages;
 			roomMessages.reverse();
-			var members = [...currentRoom[0].members, ...currentRoom[0].admins];	
-			currentRoom[0].bans.forEach(roomBanRecord => {
+			var members = [...currentRoom.members, ...currentRoom.admins];	
+			currentRoom.bans.forEach(roomBanRecord => {
 				if (roomBanRecord.user_id == attributes.id) {
 					location.hash = `#room`;
 					return (false);
 				}
 			});
+
+			// This snippet have to handle the case when an user has been kick so that he doesn't stay on the chat page
+			var idTab = [];
+			currentRoom.members.forEach(user => {
+				idTab.push(user.id);
+			})
+			currentRoom.admins.forEach(user => {
+				idTab.push(user.id);
+			})
+			if (!idTab.includes(attributes.id)) {
+				location.hash = '#room';
+			}
+
 		}
 		this.$el.html(this.template({
-			currentRoom: currentRoom[0],
+			currentRoom: currentRoom,
 			roomMessages: roomMessages || null,
 			currentUser: attributes,
 			members: members || null,
