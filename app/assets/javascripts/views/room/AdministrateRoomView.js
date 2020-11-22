@@ -1,7 +1,6 @@
 AppClasses.Views.AdministrateRoom = class extends Backbone.View {
 	constructor(opts) {
 		opts.events = {
-			// TODO : convertir un 1 fonction et if/else sur le nom d'event
 			// Mute
 			"submit .roomMuteMemberForm": "roomMuteBanHandler",
 			"submit .roomUnMuteMemberForm": "roomMuteBanHandler",
@@ -10,7 +9,9 @@ AppClasses.Views.AdministrateRoom = class extends Backbone.View {
 			"submit .roomUnBanMemberForm": "roomMuteBanHandler",
 			// Admin
 			"submit #promoteAdminForm": "promote",
-			"submit #demoteAdminForm": "demote"
+			"submit #demoteAdminForm": "demote",
+			// Global
+			"submit #destroyRoomForm": "destroyRoom"
 
 		}
 
@@ -35,17 +36,23 @@ AppClasses.Views.AdministrateRoom = class extends Backbone.View {
 		var status = window.location.href.substring(window.location.href.lastIndexOf('?') + 1);
 		if (!_.isEmpty(status)) {
 			this.encodedStatusAdministrate = status;
-			status = atob(status);
-			status = status.substring(status.lastIndexOf('=') + 1);
-			if (status != "admin" && status != "owner") { // admin ou Admin ?
+			try {
+				status = atob(status);
+				status = status.substring(status.lastIndexOf('=') + 1);
+			} catch (error) {
 				App.utils.toastError("Nice try");
 				location.hash = `#room`;
-				return (false);
+				return (this);
+			}
+			if (status != "admin" && status != "owner" && status != "superAdmin") {
+				App.utils.toastError("Nice try");
+				location.hash = `#room`;
+				return (this);
 			}
 		} else {
 			App.utils.toastError("Nice try");
 			location.hash = `#room`;
-			return (false);
+			return (this);
 		}
 		this.statusAdministrate = status;
 		this.updateRender();
@@ -93,11 +100,9 @@ AppClasses.Views.AdministrateRoom = class extends Backbone.View {
 
 	promote(e) {
 		e.preventDefault();
-
 		App.utils.formAjax(`/api/rooms/promoteAdmin.json`, "#promoteAdminForm")
 		.done(res => {
 			App.toast.success("Admin successfully promoted !", { duration: 2000, style: App.toastStyle });
-			// location.hash = `#room`;
 		})
 		.fail((e) => {
 			App.utils.toastError(e);
@@ -106,11 +111,22 @@ AppClasses.Views.AdministrateRoom = class extends Backbone.View {
 
 	demote(e) {
 		e.preventDefault();
-
 		App.utils.formAjax(`/api/rooms/demoteAdmin.json`, "#demoteAdminForm")
 		.done(res => {
-			App.toast.success("Admin successfully promoted !", { duration: 2000, style: App.toastStyle });
-			// location.hash = `#room`;
+			App.toast.success("Admin successfully demoted !", { duration: 2000, style: App.toastStyle });
+		})
+		.fail((e) => {
+			App.utils.toastError(e);
+		});
+	}
+
+	destroyRoom(e) {
+		e.preventDefault();
+		const roomID = e.target.children[1].value
+		App.utils.formAjax("/api/rooms/" + roomID + ".json", "#destroyRoomForm")
+		.done(res => {
+			App.toast.success("Room Destroyed", { duration: 2000, style: App.toastStyle });
+			location.hash = '#room';
 		})
 		.fail((e) => {
 			App.utils.toastError(e);
@@ -142,24 +158,25 @@ AppClasses.Views.AdministrateRoom = class extends Backbone.View {
 				bansTabIDs.push(record.user_id);
 			});
 
-			var sortedMember = currentRoom.members.sort(function (a, b) {
+			members = members.sort(function (a, b) {
 				return b.nickname < a.nickname ?  1 
 					 : b.nickname > a.nickname ? -1 
 					 : 0;                  
 			});
 	
-			var sortedAdmin = currentRoom.admins.sort(function (a, b) {
+			var admins = admins.sort(function (a, b) {
 				return b.nickname < a.nickname ?  1 
 					 : b.nickname > a.nickname ? -1 
 					 : 0;                 
 			});
+
+			admins = admins.filter(admin => {
+				return admin.id != currentRoom.owner_id;
+			})
 		}
 
 		if (attributes.admin == true)
 			this.statusAdministrate = "superAdmin";
-		// console.log(currentRoom);
-		// console.log(mutesTabIDs);
-		// console.log(bansTabIDs);
 	
 		this.$el.html(this.template({
 			token: $('meta[name="csrf-token"]').attr('content'),
@@ -169,11 +186,12 @@ AppClasses.Views.AdministrateRoom = class extends Backbone.View {
 			superAdmin: this.superAdmin, // TODO
 			members: members,
 			admins: admins,
+			membersPlusAdmins: {...members, ...admins},
 			currentTime: App.utils.getHoursMinutes(),
 			mutesTabIDs: mutesTabIDs,
 			bansTabIDs: bansTabIDs,
-			roomMembers: sortedMember,
-			roomAdmins: sortedAdmin,
+			roomMembers: members,
+			roomAdmins: admins,
 			formMute: {
 				method: "POST",
 				url: "/api/rooms/mute.json"
@@ -189,6 +207,10 @@ AppClasses.Views.AdministrateRoom = class extends Backbone.View {
 			formUnBan: {
 				method: "POST",
 				url: "/api/rooms/unban.json"
+			},
+			destroyForm: {
+				method: "DELETE",
+				url: "/api/rooms/"+ (currentRoom ? currentRoom.id : "") + ".json"
 			}
 		}));
 		this.delegateEvents();

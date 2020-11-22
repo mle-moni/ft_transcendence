@@ -96,7 +96,8 @@
             {{/when}}
 
              {{#if ../superAdmin }}
-                <a class="btn btn-info btn-sm" href="#rooms/{{id}}">Inspect</a>
+                <a class="btn btn-light btn-sm" href="#rooms/{{id}}">Inspect</a>
+                <a class="btn btn-info btn-sm" href="#room/administrate/{{id}}?{{../administrateStatusOwner}}">Administrate</a>
             {{/if}}
             
         </li>

@@ -8,12 +8,18 @@
 
     <p> Your status of <strong><u>{{status}}</u></strong> in the room <strong><u>{{room.name}}</u></strong> offers
         some administrator rights
-    </p><br><br>
+    </p><br>
 
-    {{!-- {{#when status "eq" "superAdmin"}} --}}
+    {{!-- If courrent user is superAdmin or owner --}}
     {{#ifOr currentUser.admin status "owner"}}
     <div class="ownerSection">
 
+        <form id="destroyRoomForm" style="display: inline;" action="{{destroyForm.url}}"
+            accept-charset="UTF-8" method="{{destroyForm.method}}">
+            <input type="hidden" name="authenticity_token" value="{{token}}">
+            <input type="hidden" id="roomID" name="room[room_id]" value="{{room.id}}">
+            <input class="btn btn-danger btn-sm" type="submit" value="Destroy Room">
+        </form> <br><br>
 
         <form id="promoteAdminForm" style="display: inline;" action="/api/rooms/promoteAdmin.json" accept-charset="UTF-8" method="POST">
             <input type="hidden" name="authenticity_token" value="{{token}}">
@@ -43,15 +49,15 @@
     {{/ifOr}}
 
     {{#when status "eq" "admin"}}
-    <div class="adminSection">
-    </div>
+        <div class="adminSection">
+        </div>
     {{/when}}
 
     <div class="commonSection">
 
         <div class="sectionTitle"> <u>Room Members</u> : </div>
         <br>
-        {{#each members}}
+        {{#each membersPlusAdmins}}
         <div class="memberCard">
             • {{nickname}} &nbsp;
 

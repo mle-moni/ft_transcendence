@@ -78,14 +78,12 @@ class RoomsController < ApplicationController
     @room = Room.find(filteredParams["id"])
     newAdmin = User.find(filteredParams["member"])
 
-    #if !newAdmin.rooms_as_admin.include?(@room) && newAdmin.id != @room.owner_id
     if !RoomLinkAdmin.where(user_id: filteredParams["member"], room_id: filteredParams["id"]).exists?
       add = RoomLinkAdmin.new(room: @room, user: newAdmin)
       add.save
       RoomLinkMember.where(user_id: filteredParams["member"], room_id: filteredParams["id"]).destroy_all
+      ActionCable.server.broadcast "room_channel", type: "rooms", description: "promote-admin", user: current_user
     end
-
-    ActionCable.server.broadcast "room_channel", type: "rooms", description: "promote-admin", user: current_user
 
     respond_to do |format|
       format.html { redirect_to @room, notice: 'Admin promoted' }
@@ -103,9 +101,8 @@ class RoomsController < ApplicationController
       add = RoomLinkMember.new(room: @room, user: admin)
       add.save
       RoomLinkAdmin.where(user_id: filteredParams["member"], room_id: filteredParams["id"]).destroy_all
+      ActionCable.server.broadcast "room_channel", type: "rooms", description: "demote-admin", user: current_user
     end
-
-    ActionCable.server.broadcast "room_channel", type: "rooms", description: "demote-admin", user: current_user
 
     respond_to do |format|
       format.html { redirect_to @room, notice: 'Admin demoted' }
@@ -115,6 +112,7 @@ class RoomsController < ApplicationController
 
 
   def quit
+  # Quitter une room ne reset pas les restrictions, autrement on quitte/re-rentre en boucle
     filteredParams = params.require(:room).permit(:room_id, :owner_id, :userRoomGrade)
     grade = filteredParams["userRoomGrade"]
     owner = User.find(filteredParams["owner_id"])
@@ -133,10 +131,11 @@ class RoomsController < ApplicationController
       @room.members.destroy_all
       @room.admins.destroy_all
       @room.room_messages.destroy_all
+      RoomMute.where(room: @room).destroy_all
+      RoomBan.where(room: @room).destroy_all
       @room.destroy
     end 
     respond_to do |format|
-
       ActionCable.server.broadcast "room_channel", type: "rooms", description: "quit", user: current_user
       format.html { redirect_to rooms_url, notice: 'You have leave the room'}
       format.json { head :no_content }
@@ -244,14 +243,20 @@ class RoomsController < ApplicationController
   # DELETE /rooms/1
   # DELETE /rooms/1.json
   def destroy
-    @room = Room.find(params["id"])
+    filteredParams = params.require(:room).permit(:room_id)
+    @room = Room.find(filteredParams["room_id"])
+    if !@room
+      res_with_error("Unknow room", :bad_request)
+      return (false)
+    end 
     @room.members.destroy_all
     @room.admins.destroy_all
     @room.room_messages.destroy_all
+    RoomMute.where(room: @room).destroy_all
+    RoomBan.where(room: @room).destroy_all
     @room.destroy
     respond_to do |format|
-
-      ActionCable.server.broadcast "room_channel", type: "rooms", description: "destroy", user: current_user
+      ActionCable.server.broadcast "room_channel", type: "rooms", description: "Room Destroyed", user: current_user
       format.html { redirect_to :index, notice: 'Room was successfully destroyed.' }
       format.json { head :no_content }
     end
