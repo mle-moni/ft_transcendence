@@ -146,7 +146,7 @@ AppClasses.Views.AdministrateRoom = class extends Backbone.View {
 		var admins = null;
 		var mutesTabIDs = []
 		var bansTabIDs = [];
-
+		var membersPlusAdmins = [];
 		if (currentRoom) {
 			members		= currentRoom.members;
 			admins		= currentRoom.admins;
@@ -157,22 +157,21 @@ AppClasses.Views.AdministrateRoom = class extends Backbone.View {
 			currentRoom.bans.forEach(record => {
 				bansTabIDs.push(record.user_id);
 			});
-
 			members = members.sort(function (a, b) {
 				return b.nickname < a.nickname ?  1 
 					 : b.nickname > a.nickname ? -1 
 					 : 0;                  
 			});
-	
-			var admins = admins.sort(function (a, b) {
+			admins = admins.sort(function (a, b) {
 				return b.nickname < a.nickname ?  1 
 					 : b.nickname > a.nickname ? -1 
 					 : 0;                 
 			});
-
 			admins = admins.filter(admin => {
 				return admin.id != currentRoom.owner_id;
 			})
+			membersPlusAdmins = [...members, ...admins];
+		
 		}
 
 		if (attributes.admin == true)
@@ -183,7 +182,7 @@ AppClasses.Views.AdministrateRoom = class extends Backbone.View {
 			room: currentRoom,
 			currentUser: attributes,
 			status: this.statusAdministrate,
-			superAdmin: this.superAdmin, // TODO
+			superAdmin: this.superAdmin,
 			members: members,
 			admins: admins,
 			membersPlusAdmins: {...members, ...admins},

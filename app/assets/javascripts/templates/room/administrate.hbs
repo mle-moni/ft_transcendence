@@ -23,7 +23,7 @@
 
         <form id="promoteAdminForm" style="display: inline;" action="/api/rooms/promoteAdmin.json" accept-charset="UTF-8" method="POST">
             <input type="hidden" name="authenticity_token" value="{{token}}">
-            <div class="sectionTitle"> <u>Room Members</u> : </div><br>
+            <div class="sectionTitle"> <u>Promote</u></div><br>
             <select class="form-control-sm" name="room[member]" id="member-select">
                 {{#each roomMembers}}
                 <option value="{{id}}">{{nickname}}</option>
@@ -35,7 +35,7 @@
 
         <form id="demoteAdminForm" style="display: inline;" action="/api/rooms/demoteAdmin.json" accept-charset="UTF-8" method="POST">
             <input type="hidden" name="authenticity_token" value="{{token}}">
-            <div class="sectionTitle"> <u>Room Members</u> : </div><br>
+            <div class="sectionTitle"> <u>Demote</u></div><br>
             <select class="form-control-sm"  name="room[member]" id="member-select">
                 {{#each roomAdmins}}
                 <option value="{{id}}">{{nickname}}</option>
@@ -55,7 +55,7 @@
 
     <div class="commonSection">
 
-        <div class="sectionTitle"> <u>Room Members</u> : </div>
+        <div class="sectionTitle"> <u>Room Members and Admins</u> </div>
         <br>
         {{#each membersPlusAdmins}}
         <div class="memberCard">

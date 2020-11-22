@@ -1,34 +1,22 @@
 <div id="checkRoomPresence"></div>
 <div id="userID" value="{{currentUser.id}}"></div>
 
-</li>
-</div>
-
-
 <div class="container">
     <div class="row">
         <div class="col" style="justify-content: center;">
-
             <br>
-
             <a class="btn btn-primary" href="#room" role="button"> Back </a>
             <br>
             <br>
-
-            <h3>{{messageCreateForm.titleText}}</h3> <br>
+            <div class="sectionTitle"> <strong>Send a message</strong> </div><br>
             <form id="{{messageCreateForm.formID}}" action="/api/room_messages.json" accept-charset="UTF-8"
                 method="{{messageCreateForm.method}}">
                 <input type="hidden" name="authenticity_token" value="{{messageCreateForm.token}}">
-
                 {{!-- Room Data --}}
-                <label for="roomName">Message </label>
-                <input type="text" id="message" name="room_message[message]">
-
+                <input class="form-control" placeholder="Message" type="text" id="message" name="room_message[message]">
                 <input type="hidden" id="roomOwner" name="room_message[user_id]" value="{{currentUser.id}}">
                 <input type="hidden" id="roomID" name="room_message[room_id]" value="{{currentRoom.id}}">
-
-
-                <br><br>
+                <br>
                 <input class="btn btn-success" type="submit" value="{{messageCreateForm.submitText}}">
                 <br>
             </form>
@@ -97,3 +85,5 @@
 
             </div>
         </div>
+    </div>
+</div>
