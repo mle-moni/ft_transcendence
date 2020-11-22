@@ -7,7 +7,10 @@ AppClasses.Views.AdministrateRoom = class extends Backbone.View {
 			"submit .roomUnMuteMemberForm": "roomMuteBanHandler",
 			// Ban
 			"submit .roomBanMemberForm": "roomMuteBanHandler",
-			"submit .roomUnBanMemberForm": "roomMuteBanHandler"
+			"submit .roomUnBanMemberForm": "roomMuteBanHandler",
+			// Admin
+			"submit #promoteAdminForm": "promote",
+			"submit #demoteAdminForm": "demote"
 
 		}
 
@@ -18,7 +21,7 @@ AppClasses.Views.AdministrateRoom = class extends Backbone.View {
 		
 		this.listenTo(this.model, "change reset add remove", this.updateRender);
 		this.listenTo(App.collections.rooms, "change reset add remove", this.updateRender);
-		// this.listenTo(App.collections.allUsers, "change reset add remove", this.updateRender);
+		this.listenTo(App.collections.allUsers, "change reset add remove", this.updateRender);
 
 		this.model.fetch();
 		this.rooms = null;
@@ -88,6 +91,32 @@ AppClasses.Views.AdministrateRoom = class extends Backbone.View {
 		return (false);
 	}
 
+	promote(e) {
+		e.preventDefault();
+
+		App.utils.formAjax(`/api/rooms/promoteAdmin.json`, "#promoteAdminForm")
+		.done(res => {
+			App.toast.success("Admin successfully promoted !", { duration: 2000, style: App.toastStyle });
+			// location.hash = `#room`;
+		})
+		.fail((e) => {
+			App.utils.toastError(e);
+		});
+	}
+
+	demote(e) {
+		e.preventDefault();
+
+		App.utils.formAjax(`/api/rooms/demoteAdmin.json`, "#demoteAdminForm")
+		.done(res => {
+			App.toast.success("Admin successfully promoted !", { duration: 2000, style: App.toastStyle });
+			// location.hash = `#room`;
+		})
+		.fail((e) => {
+			App.utils.toastError(e);
+		});
+	}
+
 	updateRender() {
 
 		const { attributes } = App.models.user;
@@ -112,6 +141,18 @@ AppClasses.Views.AdministrateRoom = class extends Backbone.View {
 			currentRoom.bans.forEach(record => {
 				bansTabIDs.push(record.user_id);
 			});
+
+			var sortedMember = currentRoom.members.sort(function (a, b) {
+				return b.nickname < a.nickname ?  1 
+					 : b.nickname > a.nickname ? -1 
+					 : 0;                  
+			});
+	
+			var sortedAdmin = currentRoom.admins.sort(function (a, b) {
+				return b.nickname < a.nickname ?  1 
+					 : b.nickname > a.nickname ? -1 
+					 : 0;                 
+			});
 		}
 
 		if (attributes.admin == true)
@@ -131,6 +172,8 @@ AppClasses.Views.AdministrateRoom = class extends Backbone.View {
 			currentTime: App.utils.getHoursMinutes(),
 			mutesTabIDs: mutesTabIDs,
 			bansTabIDs: bansTabIDs,
+			roomMembers: sortedMember,
+			roomAdmins: sortedAdmin,
 			formMute: {
 				method: "POST",
 				url: "/api/rooms/mute.json"

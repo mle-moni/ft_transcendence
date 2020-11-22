@@ -22,6 +22,8 @@ Rails.application.routes.draw do
     post '/rooms/unmute', to: 'rooms_administrate#unmute'
     post '/rooms/ban', to: 'rooms_administrate#ban'
     post '/rooms/unban', to: 'rooms_administrate#unban'
+    post '/rooms/promoteAdmin', to: 'rooms#promoteAdmin'
+    post '/rooms/demoteAdmin', to: 'rooms#demoteAdmin'
     resources :room_messages
     # ------
     

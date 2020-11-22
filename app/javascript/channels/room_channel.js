@@ -25,8 +25,10 @@ function manage_subscription() {
           // Called when there's incoming data on the websocket for this channel
           console.log("Received");
 
+          //TODO: condition suivant type
           window.App.collections.rooms.fetch();
-
+          window.App.collections.allUsers.myFetch();
+          
         }
       });
     }

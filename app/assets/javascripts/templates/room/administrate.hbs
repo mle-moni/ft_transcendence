@@ -19,6 +19,44 @@
 
     {{#when status "eq" "owner"}}
     <div class="ownerSection">
+
+
+        <form id="promoteAdminForm" action="/api/rooms/promoteAdmin.json" accept-charset="UTF-8" method="POST">
+            
+            <input type="hidden" name="authenticity_token" value="{{token}}">
+
+            <h3>Promote as admin: </h3>
+            <select name="room[member]" id="member-select">
+                {{#each roomMembers}}
+                    <option value="{{id}}">{{nickname}}</option>
+                {{/each}}
+            </select>
+
+            <input type="hidden" name="room[id]" value="{{room.id}}">
+
+            <br><br>
+            <input type="submit" value="Confirm promote">
+            <br><br>
+        </form>
+
+        <form id="demoteAdminForm" action="/api/rooms/demoteAdmin.json" accept-charset="UTF-8" method="POST">
+            
+            <input type="hidden" name="authenticity_token" value="{{token}}">
+
+            <h3>Demote as member: </h3>
+            <select name="room[member]" id="member-select">
+                {{#each roomAdmins}}
+                    <option value="{{id}}">{{nickname}}</option>
+                {{/each}}
+            </select>
+
+            <input type="hidden" name="room[id]" value="{{room.id}}">
+
+            <br><br>
+            <input type="submit" value="Confirm demote">
+            <br><br>
+        </form>
+
     </div>
     {{/when}}
 

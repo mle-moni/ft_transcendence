@@ -106,6 +106,7 @@ AppClasses.Views.Room = class extends Backbone.View {
 				}
 			)}
 		});
+
 		data.forEach(room => {
 			if (room.members.length > 0) {
 				room.members.forEach(member => {
@@ -122,11 +123,17 @@ AppClasses.Views.Room = class extends Backbone.View {
 				roomJoinedAsOwner.push(room);
 			}
 		})
-		
+		console.log(roomJoinedAsRoomAdmin);
+		console.log(userID);
+
 		tabID = [...new Set(tabID)];
+
 		roomJoinedAsRoomAdmin = roomJoinedAsRoomAdmin.filter(roomAdministred => {
 			roomJoinedAsRoomAdmin.owner_id != userID;
 		})
+
+		console.log(roomJoinedAsRoomAdmin);
+		//console.log(filteredRoomAdmin);
 
 		var notJoinedRooms = data.filter(function(room) {
 			return !tabID.includes(room.id);
