@@ -65,7 +65,8 @@ class User < ApplicationRecord
       image: usr.image,
       guild_validated: usr.guild_validated,
       guild_id: usr.guild_id,
-      last_seen: usr.last_seen
+      last_seen: usr.last_seen,
+      matches: usr.matches
     }
   end
   

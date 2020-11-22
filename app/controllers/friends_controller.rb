@@ -5,13 +5,12 @@ class FriendsController < ApplicationController
 	before_action :check_in_friendlist, only: [:add, :accept]
 
 	def get_all
+		@users = User.all.map do |usr|
+			User.strict_clean(usr)
+		end
 		respond_to do |format|
 			format.html { redirect_to "/", notice: '^^' }
-			format.json { render json: User.all.to_json(
-				only: 
-					[:id, :nickname, :image, :guild_validated, :guild_id, :last_seen]
-				), status: :ok
-			}
+			format.json { render json: @users, status: :ok }
 		end
 	end
 

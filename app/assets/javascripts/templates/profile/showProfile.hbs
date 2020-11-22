@@ -11,6 +11,30 @@
 	{{/if}}
 <br>
 <br>
+
+<h3>Game history</h3>
+{{#each matches}}
+<article>
+	<h4>
+		{{#if won }}
+		Victory
+		{{else}}
+		Defeat
+		{{/if}}
+	</h4>
+	<h6>{{ dateStr }}</h6>
+	<p> {{ you }} VS <a href="#profiles/{{ enemy.id }}">{{ enemy.nickname }}</a> </p>
+	<p>
+		{{#if won }}
+		{{ winner_score }} - {{ loser_score }} 
+		{{else}}
+		{{ loser_score }} - {{ winner_score }} 
+		{{/if}}
+	</p>
+	<hr>
+</article>
+{{/each}}
+<br>
 {{else}}
 <h1>This user does not seem to exist</h1>
 <br>
