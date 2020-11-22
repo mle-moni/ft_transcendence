@@ -10,10 +10,12 @@
         some administrator rights
     </p><br><br>
 
-    {{#when status "eq" "superAdmin"}}
-    <div class="superAdminSection">
-    </div>
-    {{/when}}
+    {{!-- {{#when status "eq" "superAdmin"}} --}}
+    {{#if currentUser.admin }}
+        <div class="superAdminSection">
+            TODO
+        </div>
+    {{/if}}
 
     {{#when status "eq" "owner"}}
     <div class="ownerSection">

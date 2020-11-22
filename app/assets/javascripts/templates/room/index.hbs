@@ -70,7 +70,9 @@
 
         {{#each notJoinedRooms}}
         {{!-- notJoinedRooms --}}
+
         <li class="list-group-item"> {{name}} &nbsp; [{{privacy}}] &nbsp;
+        
             {{#when privacy "eq" "private" }}
             <form class="privateRoomAuthForm" id="privateRoomAuthForm-{{id}}" style="display: inline;"
                 id="{{../privateForm.formID}}" action="/api/rooms/joinPrivate.json" accept-charset="UTF-8"
@@ -92,6 +94,11 @@
                 <input class="btn btn-success btn-sm" type="submit" value="{{../publicForm.submitText}}">
             </form>
             {{/when}}
+
+             {{#if ../superAdmin }}
+                <a class="btn btn-info btn-sm" href="#rooms/{{id}}">Inspect</a>
+            {{/if}}
+            
         </li>
         <br>
         {{/each}}

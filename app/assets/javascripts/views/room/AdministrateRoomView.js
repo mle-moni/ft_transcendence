@@ -114,6 +114,8 @@ AppClasses.Views.AdministrateRoom = class extends Backbone.View {
 			});
 		}
 
+		if (attributes.admin == true)
+			this.statusAdministrate = "superAdmin";
 		// console.log(currentRoom);
 		// console.log(mutesTabIDs);
 		// console.log(bansTabIDs);

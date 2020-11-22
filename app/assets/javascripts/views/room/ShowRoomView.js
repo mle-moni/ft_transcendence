@@ -52,12 +52,11 @@ AppClasses.Views.ShowRoom = class extends Backbone.View {
 			roomMessages.reverse();
 			var members = [...currentRoom[0].members, ...currentRoom[0].admins];	
 			currentRoom[0].bans.forEach(roomBanRecord => {
-			if (roomBanRecord.user_id == attributes.id) {
-				// TODO : toast problem multi render
-				location.hash = `#room`;
-				return (false);
-			}
-		});
+				if (roomBanRecord.user_id == attributes.id) {
+					location.hash = `#room`;
+					return (false);
+				}
+			});
 		}
 		this.$el.html(this.template({
 			currentRoom: currentRoom[0],

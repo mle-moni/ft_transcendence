@@ -157,7 +157,8 @@ AppClasses.Views.Room = class extends Backbone.View {
 				url: "/api/rooms/quit.json"
 			},
 			administrateStatusOwner: btoa("status=owner"),
-			administrateStatusAdmin: btoa("status=admin")
+			administrateStatusAdmin: btoa("status=admin"),
+			superAdmin: (attributes.admin == true)
 
 		}));
 		return (this);
