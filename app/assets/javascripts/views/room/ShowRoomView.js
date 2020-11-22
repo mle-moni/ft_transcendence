@@ -51,8 +51,14 @@ AppClasses.Views.ShowRoom = class extends Backbone.View {
 			var roomMessages = currentRoom[0].room_messages;
 			roomMessages.reverse();
 			var members = [...currentRoom[0].members, ...currentRoom[0].admins];	
+			currentRoom[0].bans.forEach(roomBanRecord => {
+			if (roomBanRecord.user_id == attributes.id) {
+				// TODO : toast problem multi render
+				location.hash = `#room`;
+				return (false);
+			}
+		});
 		}
-
 		this.$el.html(this.template({
 			currentRoom: currentRoom[0],
 			roomMessages: roomMessages || null,

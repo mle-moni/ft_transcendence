@@ -27,6 +27,13 @@ class RoomMessagesController < ApplicationController
   def create
     filteredParams = params.require(:room_message).permit(:message, :user_id, :room_id)
     @room = Room.find(filteredParams["room_id"])
+
+    # Le "by" n'importe pas car c'est forcément un admin ou owner ou superAdmin qui l'a mute, et un tel mute vaut pour tout le monde
+    if RoomMute.where(room: @room, user: current_user).exists?
+      res_with_error("You're currently muted", :bad_request)
+      return false
+    end 
+
     @room_message = RoomMessage.create(filteredParams)
     respond_to do |format|
       if @room_message.save
@@ -93,4 +100,19 @@ class RoomMessagesController < ApplicationController
     def room_message_params
       params.require(:room_message).permit(:user_id, :room_id)
     end
+
+    def res_with_error(msg, error)
+      respond_to do |format|
+        format.html { redirect_to "/", alert: "#{msg}" }
+        format.json { render json: {alert: "#{msg}"}, status: error }
+      end
+    end
+
+    def res_with_info(msg)
+      respond_to do |format|
+        format.html { redirect_to "/", notice: "#{msg}" }
+        format.json { render json: {msg: "#{msg}"}} #status: :ok
+      end
+    end
+    
 end
