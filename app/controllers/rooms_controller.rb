@@ -72,6 +72,47 @@ class RoomsController < ApplicationController
     
   end 
 
+  def promoteAdmin
+  
+    filteredParams = params.require(:room).permit(:id, :member)
+    @room = Room.find(filteredParams["id"])
+    newAdmin = User.find(filteredParams["member"])
+
+    if !newAdmin.rooms_as_admin.include?(@room) && newAdmin.id != @room.owner_id
+      add = RoomLinkAdmin.new(room: @room, user: newAdmin)
+      add.save
+      RoomLinkMember.where(user_id: filteredParams["member"], room_id: filteredParams["id"]).destroy_all
+    end
+
+    ActionCable.server.broadcast "room_channel", type: "rooms", description: "promote-admin", user: current_user
+
+    respond_to do |format|
+      format.html { redirect_to @room, notice: 'Admin promoted' }
+      format.json { render :show, status: :created, location: @room }
+    end
+  end
+
+  def demoteAdmin
+  
+    filteredParams = params.require(:room).permit(:id, :member)
+    @room = Room.find(filteredParams["id"])
+    admin = User.find(filteredParams["member"])
+
+    if admin.rooms_as_admin.include?(@room) && admin.id != @room.owner_id
+      add = RoomLinkMember.new(room: @room, user: admin)
+      add.save
+      RoomLinkAdmin.where(user_id: filteredParams["member"], room_id: filteredParams["id"]).destroy_all
+    end
+
+    ActionCable.server.broadcast "room_channel", type: "rooms", description: "demote-admin", user: current_user
+
+    respond_to do |format|
+      format.html { redirect_to @room, notice: 'Admin demoted' }
+      format.json { render :show, status: :created, location: @room }
+    end
+  end
+
+
   def quit
     filteredParams = params.require(:room).permit(:room_id, :owner_id, :userRoomGrade)
     grade = filteredParams["userRoomGrade"]

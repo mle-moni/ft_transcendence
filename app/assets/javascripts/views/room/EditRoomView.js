@@ -58,7 +58,8 @@ AppClasses.Views.EditRoom = class extends Backbone.View {
 	}
 
 	updateRender() {
-        const u = App.models.user;
+		const u = App.models.user;
+		const room = this.model.findWhere({id: this.room_id}); 
 
 		/* Give Data to the room form template */
 		this.$el.html(this.template({ 
@@ -69,7 +70,8 @@ AppClasses.Views.EditRoom = class extends Backbone.View {
 			DeleteButton: "displayDeleteForm",
 			DeleteText: "Delete the room",
 			deleteID: "deleteRoomForm",
-            room_id: this.room_id,
+			room_id: this.room_id,
+			room: room,
 			token: $('meta[name="csrf-token"]').attr('content')
 		}));
 		/* Tell BB to remove after submit */

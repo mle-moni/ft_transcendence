@@ -18,6 +18,8 @@ Rails.application.routes.draw do
     post '/rooms/joinPublic', to: 'rooms#joinPublic'
     post '/rooms/joinPrivate', to: 'rooms#joinPrivate'
     post '/rooms/quit', to: 'rooms#quit'
+    post '/rooms/promoteAdmin', to: 'rooms#promoteAdmin'
+    post '/rooms/demoteAdmin', to: 'rooms#demoteAdmin'
     resources :room_messages
     # ------
     
