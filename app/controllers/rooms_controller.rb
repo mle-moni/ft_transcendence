@@ -161,6 +161,11 @@ class RoomsController < ApplicationController
       return (false)
     end
 
+    if filteredParams["name"].empty?
+      res_with_error("Invalid parameters", :bad_request)
+      return (false)
+    end
+
     if filteredParams["privacy"] == "private"
       if filteredParams["password"].empty?
         res_with_error("None empty password required if the room is private", :bad_request)
