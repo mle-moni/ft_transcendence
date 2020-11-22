@@ -10,11 +10,12 @@ Rails.application.routes.draw do
     post '/guild/quit', to: 'guilds#quit'
     post '/guild/accept', to: 'guilds#accept_request'
 
-    # CHAT ------
+    # CHAT & DMS ------
     resources :rooms do 
       resources :members, controller: 'room/members', only: [:index, :new, :create, :destroy]
       resources :admins, controller: 'room/admins',  only: [:index, :new, :create, :destroy]
     end 
+    resources :room_messages
     post '/rooms/joinPublic', to: 'rooms#joinPublic'
     post '/rooms/joinPrivate', to: 'rooms#joinPrivate'
     post '/rooms/quit', to: 'rooms#quit'
@@ -24,7 +25,9 @@ Rails.application.routes.draw do
     post '/rooms/unban', to: 'rooms_administrate#unban'
     post '/rooms/promoteAdmin', to: 'rooms#promoteAdmin'
     post '/rooms/demoteAdmin', to: 'rooms#demoteAdmin'
-    resources :room_messages
+
+    resources :direct_chats
+
     # ------
     
     # friends actions
