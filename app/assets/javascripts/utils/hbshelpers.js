@@ -41,3 +41,11 @@ Handlebars.registerHelper('ifNotIn', function(elem, list, options) {
     }
     return options.inverse(this);
 });
+
+// Or test on 1 boolean + 1 string
+Handlebars.registerHelper('ifOr', function(aBoolean, bValue, bTested, options) {
+
+    if (aBoolean || bValue == bTested)
+        return options.fn(this);
+    return options.inverse(this);
+});
