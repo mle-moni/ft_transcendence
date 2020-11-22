@@ -3,11 +3,11 @@ AppClasses.Views.AdministrateRoom = class extends Backbone.View {
 		opts.events = {
 			// TODO : convertir un 1 fonction et if/else sur le nom d'event
 			// Mute
-			"submit .roomMuteMemberForm": "roomMuteMemberForm",
-			"submit .roomUnMuteMemberForm": "roomUnMuteMemberForm",
+			"submit .roomMuteMemberForm": "roomMuteBanHandler",
+			"submit .roomUnMuteMemberForm": "roomMuteBanHandler",
 			// Ban
-			"submit .roomBanMemberForm": "roomBanMemberForm",
-			"submit .roomUnBanMemberForm": "roomUnBanMemberForm"
+			"submit .roomBanMemberForm": "roomMuteBanHandler",
+			"submit .roomUnBanMemberForm": "roomMuteBanHandler"
 
 		}
 
@@ -48,14 +48,39 @@ AppClasses.Views.AdministrateRoom = class extends Backbone.View {
 		this.updateRender();
 	}
 
-	roomMuteMemberForm(e) {
+	roomMuteBanHandler(e) {
+
 		e.preventDefault();
 		const roomID = e.target.children[1].value
 		const targetMemberID = e.target.children[2].value
-		const selectorFormMemberID = "#roomMuteMemberForm-" + targetMemberID
-		App.utils.formAjax("/api/rooms/mute.json", selectorFormMemberID)
+		
+		var urlAPI = null;
+		var selectorFormID = null;
+
+		switch (e.target.className) {
+			case "roomMuteMemberForm":
+				urlAPI = "/api/rooms/mute.json"
+				selectorFormID =  "#roomMuteMemberForm-" + targetMemberID
+				break;
+			case "roomUnMuteMemberForm":
+				urlAPI = "/api/rooms/unmute.json"
+				selectorFormID =  "#roomUnMuteMemberForm-" + targetMemberID
+				break;
+			case "roomBanMemberForm":
+				urlAPI = "/api/rooms/ban.json"
+				selectorFormID =  "#roomBanMemberForm-" + targetMemberID
+				break;
+			case "roomUnBanMemberForm":
+				urlAPI = "/api/rooms/unban.json"
+				selectorFormID =  "#roomUnBanMemberForm-" + targetMemberID
+				break;
+			default:
+				return (false);
+				break;
+		}
+		App.utils.formAjax(urlAPI, selectorFormID)
 		.done(res => {
-			App.toast.success("Mute done", { duration: 2000, style: App.toastStyle });
+			App.toast.success("Done", { duration: 2000, style: App.toastStyle });
 		})
 		.fail((e) => {
 			App.utils.toastError(e);
@@ -63,52 +88,6 @@ AppClasses.Views.AdministrateRoom = class extends Backbone.View {
 		return (false);
 	}
 
-	roomUnMuteMemberForm(e) {
-		e.preventDefault();
-		const roomID = e.target.children[1].value
-		const targetMemberID = e.target.children[2].value
-		const selectorFormMemberID = "#roomUnMuteMemberForm-" + targetMemberID
-		App.utils.formAjax("/api/rooms/unmute.json", selectorFormMemberID)
-		.done(res => {
-			App.toast.success("Unmute done", { duration: 2000, style: App.toastStyle });
-		})
-		.fail((e) => {
-			App.utils.toastError(e);
-		});
-		return (false);
-	}
-
-	roomBanMemberForm(e) {
-		e.preventDefault();
-		const roomID = e.target.children[1].value
-		const targetMemberID = e.target.children[2].value
-		const selectorFormMemberID = "#roomBanMemberForm-" + targetMemberID
-		App.utils.formAjax("/api/rooms/ban.json", selectorFormMemberID)
-		.done(res => {
-			App.toast.success("Ban done", { duration: 2000, style: App.toastStyle });
-		})
-		.fail((e) => {
-			App.utils.toastError(e);
-		});
-		return (false);
-	}
-
-	roomUnBanMemberForm(e) {
-		e.preventDefault();
-		const roomID = e.target.children[1].value
-		const targetMemberID = e.target.children[2].value
-		const selectorFormMemberID = "#roomUnBanMemberForm-" + targetMemberID
-		App.utils.formAjax("/api/rooms/unban.json", selectorFormMemberID)
-		.done(res => {
-			App.toast.success("Unban done", { duration: 2000, style: App.toastStyle });
-		})
-		.fail((e) => {
-			App.utils.toastError(e);
-		});
-		return (false);
-	}
-	
-	
 	updateRender() {
 
 		const { attributes } = App.models.user;

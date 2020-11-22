@@ -13,8 +13,15 @@ class ApplicationController < ActionController::Base
 	# Stupid PostGre : couldn't fin a way to force PGSQL to make queries with France's timezone 
 	# OLD : RoomBan.where('"endTime" < ?', DateTime.now.in_time_zone("Europe/Paris")).destroy_all
 	def reset_temporary_restrictions
-		RoomMute.where('"endTime" < ?', DateTime.now).destroy_all
-		RoomBan.where('"endTime" < ?', DateTime.now).destroy_all
+		if RoomMute.where('"endTime" < ?', DateTime.now).exists?
+			RoomMute.where('"endTime" < ?', DateTime.now).destroy_all
+			ActionCable.server.broadcast "room_channel", type: "rooms", description: "A user has reach the end of its muted period"
+		end
+		if RoomBan.where('"endTime" < ?', DateTime.now).exists?
+			RoomBan.where('"endTime" < ?', DateTime.now).destroy_all
+			ActionCable.server.broadcast "room_channel", type: "rooms", description: "A user has reach the end of its ban period"
+		end 
+
 	end
 
 end

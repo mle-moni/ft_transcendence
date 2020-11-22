@@ -1,11 +1,6 @@
 class RoomsAdministrateController < ApplicationController
   before_action :connect_user
 
-  # if RoomMute.where(user: userTargeted, room: @room).exists?
-  #   res_with_error("User already muted", :bad_request)
-  #   return false
-  # end
-
   def mute
 
     filteredParams = params.require(:room).permit(:room_id, :targetMemberID, :endTime)
@@ -22,7 +17,6 @@ class RoomsAdministrateController < ApplicationController
     # puts endDateTimeFormat
     # Complètement WTF le timezone avec PGSQL
     # Besoin de soustraire 1H car PGSQL est en UTC 0 peu importe les paramètres de la requête
-    # De 00H00 à 1H00 du matin ça ne fonctionne pas --' xD
     endDateTimeFormat = endDateTimeFormat - 1.hours
     #  puts "-------"
     #  puts endDateTimeFormat
@@ -68,27 +62,15 @@ class RoomsAdministrateController < ApplicationController
     @room = Room.find(filteredParams["room_id"])
     userTargeted = User.find(filteredParams["targetMemberID"])
     endDateTimeFormat = DateTime.parse(filteredParams["endTime"])
-   
     if @room == nil || userTargeted == nil
       res_with_error("Room or Targeted User invalid", :bad_request)
       return false
     end
-
-    # puts "-------"
-    # puts endDateTimeFormat
-    # Besoin de soustraire 1H car PGSQL est en UTC 0 peu importe les paramètres de la requête
-    # De 00H00 à 1H00 du matin ça ne fonctionne pas pour l'instant --' xD
-    # - 1H pour faire les comparaison cohérent avec la DB
     endDateTimeFormat = endDateTimeFormat - 1.hours
-    #  puts "-------"
-    #  puts endDateTimeFormat
-    #  puts "-------"
-    
     if endDateTimeFormat.past?
       res_with_error("You can't ban in the past", :bad_request)
       return false
     end
-   
     rm = RoomBan.new(user: userTargeted, room: @room, by: current_user, endTime: endDateTimeFormat)
     @room.bans << rm
     respond_to do |format|
@@ -120,11 +102,6 @@ class RoomsAdministrateController < ApplicationController
 
   private
 
-
-    def communAdministrateFunctions
-      
-    end
- 
     def res_with_error(msg, error)
       respond_to do |format|
         format.html { redirect_to "/", alert: "#{msg}" }
