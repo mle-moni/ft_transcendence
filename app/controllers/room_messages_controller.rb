@@ -27,35 +27,15 @@ class RoomMessagesController < ApplicationController
   def create
     filteredParams = params.require(:room_message).permit(:message, :user_id, :room_id)
     @room = Room.find(filteredParams["room_id"])
-
     # Le "by" n'importe pas car c'est forcément un admin ou owner ou superAdmin qui l'a mute, et un tel mute vaut pour tout le monde
     if RoomMute.where(room: @room, user: current_user).exists?
       res_with_error("You're currently muted", :bad_request)
       return false
     end 
-
     @room_message = RoomMessage.create(filteredParams)
     respond_to do |format|
       if @room_message.save
-        
-        # TEST
-        puts "------------------"
-        puts @room.id
-        puts "room_channel_#{@room.id}"
-        puts @room_message.message
-        puts current_user
-        puts "------------------"
-
-        #RoomChannel.broadcast_to "room_channel_#{@room.id}", content: @room_message.message, user: current_user
-        # ActionCable.server.broadcast "room_channel_#{@room.id}", content: @room_message.message, user: current_user
         ActionCable.server.broadcast "room_channel", type: "room_message", description: "create-message", user: current_user
-        # TEST
-        # ActionCable.server.broadcast "room_channel", content: @room_message.message
-
-        # ACTION CABLE STEP
-        # output = {"type": "message", "content": @room_message.as_json}
-        # RoomChannel.broadcast_to @room,  output
-
         format.html { redirect_to @room_message, notice: 'Room message was successfully created.' }
         format.json { render :show, status: :created, location: @room_message }
       else

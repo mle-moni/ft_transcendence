@@ -40,7 +40,7 @@ AppClasses.Views.ShowRoom = class extends Backbone.View {
 			return m.id === this.room_id;
 		})[0] || null;
 
-		if (currentRoom && !App.utils.assertRoomCurrentUserIsMember(attributes, currentRoom) && !App.utils.assertRoomCurrentUserIsAdminOrOwnerOrSuperAdmin(attributes, currentRoom) ) {
+		if (currentRoom && !App.utils.assertRoomCurrentUserIsMember(attributes, currentRoom)) {
 			location.hash = '#room';
 			return (false);
 		}
