@@ -1,29 +1,22 @@
 AppClasses.Views.ShowRoom = class extends Backbone.View {
 	constructor(opts) {
-
 		opts.events = {
 			"submit #sendRoomMessageForm": "submit",
 		}
-
         super(opts);
         this.room_id = opts.room_id;
 		this.tagName = "div";
 		this.template = App.templates["room/show"];
-		
 		this.listenTo(this.model, "change add", this.updateRender);
 		this.listenTo(App.collections.allUsers, "add remove", this.updateRender);
-
 		this.model.fetch();
 		this.rooms = null;
 		this.updateRender();
-
 	}
 	
 	submit(e) {
 		e.preventDefault();
-
-		if (e.currentTarget.message.value == "")
-		{
+		if (e.currentTarget.message.value == "") {
 			// App.toast.message("You cannot send empty message", { duration: 2000, style: App.toastStyle });
 			return ;
 		}
@@ -32,7 +25,6 @@ AppClasses.Views.ShowRoom = class extends Backbone.View {
 			App.toast.success("Message sent", { duration: 1000, style: App.toastStyle });
 			this.model.fetch();
 			location.hash = `#rooms/` + this.room_id;
-
 		})
 		.fail((e) => {
 			App.utils.toastError(e);
@@ -48,13 +40,18 @@ AppClasses.Views.ShowRoom = class extends Backbone.View {
 			return m.id === this.room_id;
 		})[0] || null;
 
+		if (currentRoom && !App.utils.assertRoomCurrentUserIsMember(attributes, currentRoom) && !App.utils.assertRoomCurrentUserIsAdminOrOwnerOrSuperAdmin(attributes, currentRoom) ) {
+			location.hash = '#room';
+			return (false);
+		}
+
 		if (currentRoom) {
 			var roomMessages = currentRoom.room_messages;
 			roomMessages.reverse();
 			var members = [...currentRoom.members, ...currentRoom.admins];	
 			currentRoom.bans.forEach(roomBanRecord => {
 				if (roomBanRecord.user_id == attributes.id) {
-					location.hash = `#room`;
+					location.hash = '#room';
 					return (false);
 				}
 			});

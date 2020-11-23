@@ -39,7 +39,7 @@ AppClasses.Views.Room = class extends Backbone.View {
 		App.utils.formAjax("/api/rooms/joinPrivate.json", selectorFormID)
 		.done(res => {
 			App.toast.success("Good Password", { duration: 2000, style: App.toastStyle });
-			location.hash = `#rooms/` + roomID;
+			// location.hash = `#rooms/` + roomID;
 		})
 		.fail((e) => {
 			App.utils.toastError(e);
@@ -58,7 +58,7 @@ AppClasses.Views.Room = class extends Backbone.View {
 		App.utils.formAjax("/api/rooms/joinPublic.json", selectorFormID)
 		.done(res => {
 			App.toast.success("Room Joined !", { duration: 1500, style: App.toastStyle });
-			location.hash = `#rooms/` + roomID;
+			// location.hash = `#rooms/` + roomID;
 		})
 		.fail((e) => {
 			App.utils.toastError(e);

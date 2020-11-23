@@ -58,8 +58,13 @@ AppClasses.Views.EditRoom = class extends Backbone.View {
 	}
 
 	updateRender() {
-		const u = App.models.user;
-		const room = this.model.findWhere({id: this.room_id}); 
+		const u = App.models.user || null;
+		const room = this.model.findWhere({id: this.room_id}) || null; 
+
+		if (u && room && !App.utils.assertRoomCurrentUserIsOwnerOrSuperAdmin(u.attributes, room.attributes)) {
+			location.hash = '#room';
+			return (false);
+		}
 
 		/* Give Data to the room form template */
 		this.$el.html(this.template({ 

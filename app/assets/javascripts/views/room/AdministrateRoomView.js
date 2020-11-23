@@ -156,6 +156,11 @@ AppClasses.Views.AdministrateRoom = class extends Backbone.View {
 			return m.id === this.room_id;
 		})[0] || null;
 
+		if (!App.utils.assertRoomCurrentUserIsAdminOrOwnerOrSuperAdmin(attributes, currentRoom)) {
+			location.hash = '#room';
+			return (false);
+		}
+
 		var members = null;
 		var admins = null;
 		var mutesTabIDs = []
