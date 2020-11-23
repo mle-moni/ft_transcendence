@@ -4,7 +4,8 @@ AppClasses.Models.User = Backbone.Model.extend({
 		email: "",
 		image: "",
 		two_factor: false,
-		guild_id: null
+		guild_id: null,
+		blocked: null
 	},
 	isOwner: (guild) => {
 		if (!guild) {

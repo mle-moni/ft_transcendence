@@ -9,6 +9,8 @@ class User < ApplicationRecord
   # Attention à la syntaxe : room_link_members (table) vs rooms_as_member (relation)
   has_many :room_link_admins
 	has_many :rooms_as_admin, :through => :room_link_admins, :source => :room
+  # -------- Chat / DM / User Relations -------
+  has_many :blocked, class_name: "Block", dependent: :destroy
   # ---------- ---------- ---------- ----------
 
   # friends relation setup
@@ -55,7 +57,8 @@ class User < ApplicationRecord
       friends: usr.friends,
       invites: usr.invites,
       last_seen: usr.last_seen,
-      admin: usr.admin
+      admin: usr.admin,
+      blocked: usr.blocked
     }
   end
 

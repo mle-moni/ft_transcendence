@@ -9,6 +9,8 @@ class ProfileController < ApplicationController
 	end
 
 	def get
+		puts current_user.blocked
+		puts "====="
 		respond_to do |format|
 			format.html { redirect_to "/#profile", notice: 'Profile infos updated' }
 			format.json { render json: User.clean(current_user), status: :ok }
@@ -71,7 +73,38 @@ class ProfileController < ApplicationController
 		save_user
 	end
 
+	def handleBlock
+		filteredParams = params.permit(:targetUserID, :typeAction)
+		targetUser = User.find(filteredParams["targetUserID"])
+		if !targetUser
+			res_with_error("Unknow User", :bad_request)
+			return false
+		end
+		if filteredParams["typeAction"] == "block" && !Block.where(user: current_user, toward: targetUser).exists?
+				@newBlock = Block.create(user: current_user, toward: targetUser)
+		elsif filteredParams["typeAction"] == "unblock" && Block.where(user: current_user, toward: targetUser).exists?
+				Block.where(user: current_user, toward: targetUser).destroy_all
+		else
+			res_with_error("Action not saved", :bad_request)
+			return false
+		end
+		respond_to do |format|
+			# TODO : broadcast to room and others channels
+			# ActionCable.server.broadcast "room_channel", type: "rooms", description: "A user has been banned", user: current_user
+			format.html { redirect_to "/#profiles", notice: 'Done' }
+			format.json { head :no_content }
+		end
+	end 
+
 	private
+
+	def res_with_error(msg, error)
+		respond_to do |format|
+		  format.html { redirect_to "/", alert: "#{msg}" }
+		  format.json { render json: {alert: "#{msg}"}, status: error }
+		end
+	end
+  
 
 	# TODO better HTTP codes: https://gist.github.com/mlanett/a31c340b132ddefa9cca
 	def update_error(msg)

@@ -11,6 +11,8 @@ AppClasses.Views.ShowRoom = class extends Backbone.View {
 		this.listenTo(App.collections.allUsers, "add remove", this.updateRender);
 		this.model.fetch();
 		this.rooms = null;
+		// For fetching blocked tables linked to user model
+		App.models.user.update(App.models.user);
 		this.updateRender();
 	}
 	
@@ -40,14 +42,29 @@ AppClasses.Views.ShowRoom = class extends Backbone.View {
 			return m.id === this.room_id;
 		})[0] || null;
 
-		if (currentRoom && !App.utils.assertRoomCurrentUserIsMember(attributes, currentRoom)) {
+		// Uri Protection : assert current user is member, or admin owner superAdmin
+		if (attributes && currentRoom && !App.utils.assertRoomCurrentUserIsMember(attributes, currentRoom)) {
 			location.hash = '#room';
 			return (false);
+		}
+
+		// Don't display blocked users messages to currentUser
+		var tabBlockedUsersIDs = [];
+		if (attributes.blocked) {
+			attributes.blocked.forEach(block => {
+				tabBlockedUsersIDs.push(block.toward_id);
+			})
 		}
 
 		if (currentRoom) {
 			var roomMessages = currentRoom.room_messages;
 			roomMessages.reverse();
+
+			// Filter block user message
+			roomMessages = roomMessages.filter(message => {
+				return !tabBlockedUsersIDs.includes(message.user_id);
+			})
+			// Filter bans
 			var members = [...currentRoom.members, ...currentRoom.admins];	
 			currentRoom.bans.forEach(roomBanRecord => {
 				if (roomBanRecord.user_id == attributes.id) {

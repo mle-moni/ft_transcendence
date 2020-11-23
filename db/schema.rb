@@ -10,10 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_22_221359) do
+ActiveRecord::Schema.define(version: 2020_11_23_140408) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "blocks", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "toward_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["toward_id"], name: "index_blocks_on_toward_id"
+    t.index ["user_id"], name: "index_blocks_on_user_id"
+  end
 
   create_table "direct_chats", force: :cascade do |t|
     t.bigint "user1_id"
@@ -152,6 +161,7 @@ ActiveRecord::Schema.define(version: 2020_11_22_221359) do
     t.index ["uid"], name: "index_users_on_uid"
   end
 
+  add_foreign_key "blocks", "users", column: "toward_id"
   add_foreign_key "friendships", "users"
   add_foreign_key "friendships", "users", column: "friend_id"
   add_foreign_key "room_bans", "users", column: "by_id"
