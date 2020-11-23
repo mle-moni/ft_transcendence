@@ -9,7 +9,7 @@ class FriendsController < ApplicationController
 			format.html { redirect_to "/", notice: '^^' }
 			format.json { render json: User.all.to_json(
 				only: 
-					[:id, :nickname, :email, :image, :guild_validated, :guild_id, :last_seen, :admin, :banned]
+					[:id, :nickname, :image, :guild_validated, :guild_id, :last_seen]
 				), status: :ok
 			}
 		end

@@ -58,6 +58,17 @@ class User < ApplicationRecord
       admin: usr.admin
     }
   end
+
+  def self.strict_clean(usr)
+		new_user = {
+      id: usr.id,
+      nickname: usr.nickname,
+      image: usr.image,
+      guild_validated: usr.guild_validated,
+      guild_id: usr.guild_id,
+      last_seen: usr.last_seen
+    }
+  end
   
   def self.reset_guild(usr)
     usr.guild_id = nil

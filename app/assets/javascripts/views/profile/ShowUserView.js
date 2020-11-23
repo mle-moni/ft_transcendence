@@ -14,7 +14,7 @@ AppClasses.Views.ShowUser = class extends Backbone.View {
 	updateRender() {
 		const user = this.model.findWhere({id: this.user_id});
 		const userJSON = user ? user.toJSON() : null;
-		const guild = userJSON ? this.guilds.findWhere({id: userJSON.guild_id}) : null;
+		const guild = userJSON && userJSON.guild_validated ? this.guilds.findWhere({id: userJSON.guild_id}) : null;
 		const guildJSON = guild ? guild.toJSON() : null;
 		this.$el.html(this.template({
 			user: userJSON,

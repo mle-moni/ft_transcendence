@@ -7,4 +7,17 @@ class Guild < ApplicationRecord
 	validates :name, uniqueness: true
 	validates :anagram, uniqueness: true
 
+	def self.clean(guild)
+		newguild = {
+			id: guild.id,
+			name: guild.name,
+			anagram: guild.anagram,
+			points: guild.points,
+			owner: User.strict_clean(guild.owner),
+			users: guild.users.map { |usr| User.strict_clean(usr) },
+			officers: guild.officers.map { |usr| User.strict_clean(usr) },
+			requests: guild.requests.map { |usr| User.strict_clean(usr) }
+		}
+	end
+
 end

@@ -23,7 +23,10 @@ AppClasses.Views.ProfileEdit = class extends Backbone.View {
 		});
 		return (false);
 	}
-	updateRender() {
+	updateRender(changes) {
+		if (changes && App.utils.onlyThoseAttrsChanged(changes.changed, ["last_seen"])) {
+			return (this);
+		}
 		this.$el.html(this.template({
 			user: this.model.attributes,
 			token: $('meta[name="csrf-token"]').attr('content')
