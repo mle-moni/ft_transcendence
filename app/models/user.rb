@@ -11,6 +11,13 @@ class User < ApplicationRecord
   # get the users that sent me a friend request
   has_many :invites, :through => :invitations, class_name: 'User', :source => :user
   
+  # game history:
+  has_many :wins, :class_name => 'Match', :foreign_key => 'winner_id'
+  has_many :loses, :class_name => 'Match', :foreign_key => 'loser_id'
+  def matches
+    wins + loses
+  end
+  
   validates :nickname, uniqueness: true
   validates :email, uniqueness: true # as long as it's needed for game rooms
 
@@ -58,7 +65,8 @@ class User < ApplicationRecord
       image: usr.image,
       guild_validated: usr.guild_validated,
       guild_id: usr.guild_id,
-      last_seen: usr.last_seen
+      last_seen: usr.last_seen,
+      matches: usr.matches
     }
   end
   

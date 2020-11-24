@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_21_224739) do
+ActiveRecord::Schema.define(version: 2020_11_21_230541) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -36,6 +36,17 @@ ActiveRecord::Schema.define(version: 2020_11_21_224739) do
     t.integer "points", default: 0
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "matches", force: :cascade do |t|
+    t.integer "winner_score"
+    t.integer "loser_score"
+    t.bigint "winner_id", null: false
+    t.bigint "loser_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["loser_id"], name: "index_matches_on_loser_id"
+    t.index ["winner_id"], name: "index_matches_on_winner_id"
   end
 
   create_table "matchmakings", force: :cascade do |t|
@@ -78,5 +89,7 @@ ActiveRecord::Schema.define(version: 2020_11_21_224739) do
 
   add_foreign_key "friendships", "users"
   add_foreign_key "friendships", "users", column: "friend_id"
+  add_foreign_key "matches", "users", column: "loser_id"
+  add_foreign_key "matches", "users", column: "winner_id"
   add_foreign_key "users", "guilds"
 end
