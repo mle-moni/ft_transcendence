@@ -89,6 +89,7 @@ GEM
       devise (~> 4.0)
       railties (< 6.1)
       rotp (~> 2.0)
+    elo_rating (1.0.0)
     encryptor (3.0.0)
     erubi (1.9.0)
     execjs (2.7.0)
@@ -271,6 +272,7 @@ DEPENDENCIES
   capybara (>= 2.15)
   devise
   devise-two-factor
+  elo_rating (~> 1.0)
   handlebars_assets
   jbuilder (~> 2.7)
   listen (~> 3.2)
