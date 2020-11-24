@@ -19,7 +19,7 @@ end
 
 class Game < ApplicationRecord
 	def self.start(player1, player2, match_id)
-		left, right = [player1, player2].shuffle
+		left, right = [player1, player2]
 
 		ActionCable.server.broadcast "player_#{right}", { action: 'game_start', msg: 'r', match_room_id: match_id }
 		ActionCable.server.broadcast "player_#{left}", { action: 'game_start', msg: 'l', match_room_id: match_id }
@@ -74,6 +74,7 @@ class Game < ApplicationRecord
 							puts right_user.elo
 							puts left_user.elo
 						end
+						Match.create({ winner: right_user, loser: left_user, winner_score: r_score, loser_score: l_score })
 						break
 					elsif l_score == 11
 						sleep(2)
@@ -91,6 +92,7 @@ class Game < ApplicationRecord
 							puts right_user.elo
 							puts left_user.elo
 						end
+						Match.create({ winner: left_user, loser: right_user, winner_score: l_score, loser_score: r_score })
 						break
 					end
 					start_lp = Time.now
@@ -101,7 +103,10 @@ class Game < ApplicationRecord
 					when 'u'
 						pos_l = [pos_l - 1 * speed, -0.750].max
 					when 'quit'
+						puts "bbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+						puts "bbbbbbbbbbbbbbbbbbbbbbbbbbbb"
 						ActionCable.server.broadcast room_name, { s: 'end', lv: 'l' }
+						Match.create({ winner: right_user, loser: left_user, winner_score: r_score, loser_score: l_score })
 						break;
 					end
 					cur_act_r = Redis.current.get(room_name + '_r')
@@ -111,7 +116,10 @@ class Game < ApplicationRecord
 					when 'u'
 						pos_r = [pos_r - 1 * speed, -0.750].max
 					when 'quit'
+						puts "aaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+						puts "aaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 						ActionCable.server.broadcast room_name, { s: 'end', lv: 'r' }
+						Match.create({ winner: left_user, loser: right_user, winner_score: l_score, loser_score: r_score })
 						break
 					end
 			
