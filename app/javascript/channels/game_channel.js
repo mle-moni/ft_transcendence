@@ -156,6 +156,9 @@ function subscription_loop() {
                 this.keyboard["up"] = false;
                 this.keyboard["down"] = false;
               });
+
+              const UID = document.getElementById("UID");
+              UID.innerHTML = `You have the ${this.role} paddle`
             },
 
             disconnected() {
