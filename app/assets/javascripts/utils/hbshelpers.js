@@ -49,3 +49,35 @@ Handlebars.registerHelper('ifOr', function(aBoolean, bValue, bTested, options) {
         return options.fn(this);
     return options.inverse(this);
 });
+
+Handlebars.registerHelper('ifDm', function(userID, otherUserID, dmRooms, options) {
+
+    console.log("dmRooms.length");
+    console.log(dmRooms.length);
+    console.log(dmRooms);
+    for (var count = 0; count < dmRooms.length; count++)
+    {
+        if ((userID == dmRooms[count].attributes.user1_id
+            && otherUserID == dmRooms[count].attributes.user2_id)
+            || (userID == dmRooms[count].attributes.user2_id
+            && otherUserID == dmRooms[count].attributes.user1_id))
+            return options.fn(this);
+    }
+    return options.inverse(this);
+});
+
+Handlebars.registerHelper('findDmRoom', function(userID, otherUserID, dmRooms) {
+
+    console.log("dmRooms.length");
+    console.log(dmRooms.length);
+    console.log(dmRooms);
+    for (var count = 0; count < dmRooms.length; count++)
+    {
+        if ((userID == dmRooms[count].attributes.user1_id
+            && otherUserID == dmRooms[count].attributes.user2_id)
+            || (userID == dmRooms[count].attributes.user2_id
+            && otherUserID == dmRooms[count].attributes.user1_id))
+            return dmRooms[count].attributes.id;
+    }
+    return null;
+});

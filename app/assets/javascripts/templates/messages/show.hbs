@@ -1,0 +1,26 @@
+<div id="userID" value="{{currentUser.id}}"></div>
+
+<div class="container">
+    <div class="row">
+        <div class="col" style="justify-content: center;">
+            <br>
+            <a class="btn btn-primary" href="#messages" role="button"> Back </a>
+            <br>
+            <br>
+            <div class="sectionTitle"> <strong>Send a message</strong> </div><br>
+            <form id="sendRoomMessageForm" action="/api/chat_messages.json" accept-charset="UTF-8"
+                method="POST">
+                <input type="hidden" name="authenticity_token" value="{{token}}">
+                {{!-- Room Data --}}
+                <input class="form-control" placeholder="Message" type="text" id="message" name="chat_message[message]">
+                <input type="hidden" id="roomOwner" name="chat_message[from_id]" value="{{currentUser.id}}">
+                <input type="hidden" id="roomID" name="chat_message[direct_chat_id]" value="{{chatID}}">
+                <br>
+                <input class="btn btn-success" type="submit" value="Send">
+                <br>
+            </form>
+
+        </div>
+    </div>
+
+</div>

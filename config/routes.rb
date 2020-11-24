@@ -29,6 +29,7 @@ Rails.application.routes.draw do
     post '/rooms/demoteAdmin', to: 'rooms#demoteAdmin'
 
     resources :direct_chats
+    resources :chat_messages
 
     # ------
     

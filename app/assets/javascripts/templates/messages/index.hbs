@@ -1,0 +1,48 @@
+<h1>INDEX DM</h1>
+<br><br>
+<h1>Users : </h1>
+<br>
+{{#each allUsers}}
+
+    <p>{{attributes.nickname}}</p>
+
+    {{#ifDm ../userID attributes.id ../dmRooms.models}}
+
+        <a class="btn btn-success btn-sm" href="#messages/{{#findDmRoom ../userID attributes.id ../dmRooms.models}}{{/findDmRoom}}">Open</a>
+
+        {{!-- <form class="joinDM" id="joinDM-{{attributes.id}}" href="/api/direct_chats/{{#findDmRoom ../userID attributes.id ../dmRooms.models}}{{/findDmRoom}}" accept-charset="UTF-8">
+        <input type="hidden" name="authenticity_token" value="{{../token}}">
+        <input type="hidden" name="dmRoom[first_user_id]" value="{{../userID}}">
+        <input type="hidden" name="dmRoom[second_user_id]" value="{{attributes.id}}">
+        <input type="hidden" name="dmRoom[dmRoomID]" value="{{#findDmRoom ../userID attributes.id ../dmRooms.models}}{{/findDmRoom}}">
+        
+
+        <input class="btn btn-primary" type="submit" value="JOIN">
+        </form> --}}
+        
+    {{else}}
+        <form class="createDM" id="createDM-{{attributes.id}}" action="/api/direct_chats.json" accept-charset="UTF-8" method="POST">
+        <input type="hidden" name="authenticity_token" value="{{../token}}">
+        <input type="hidden" name="dmRoom[first_user_id]" value="{{../userID}}">
+        <input type="hidden" name="dmRoom[second_user_id]" value="{{attributes.id}}">
+
+        <input class="btn btn-primary" type="submit" value="CREATE">
+        
+        </form>
+    {{/ifDm}}
+
+    <p>-------------------</p>
+
+
+
+
+
+
+
+
+
+
+
+
+    <br>
+{{/each}}

@@ -4,12 +4,14 @@ class DirectChatsController < ApplicationController
   # GET /direct_chats
   # GET /direct_chats.json
   def index
+    puts "GET CALLED"
     @direct_chats = DirectChat.all
   end
 
   # GET /direct_chats/1
   # GET /direct_chats/1.json
   def show
+    puts params
   end
 
   # GET /direct_chats/new
@@ -24,7 +26,24 @@ class DirectChatsController < ApplicationController
   # POST /direct_chats
   # POST /direct_chats.json
   def create
-    @direct_chat = DirectChat.new(direct_chat_params)
+    puts "FONCTION CREATE"
+    puts params
+    filteredParams = params.require(:dmRoom).permit(:first_user_id, :second_user_id)
+    puts"----- user id 1 -------"
+    puts filteredParams["first_user_id"]
+    puts"----- user id 2 -------"
+    puts filteredParams["second_user_id"]
+
+
+    first_user = User.find(filteredParams["first_user_id"])
+    second_user = User.find(filteredParams["second_user_id"])
+    puts"-----"
+    puts first_user.inspect
+    puts"-----"
+    puts second_user.inspect
+    puts"-----"
+    puts "AVANT NEW"
+    @direct_chat = DirectChat.new(user1_id: filteredParams["first_user_id"], user2_id: filteredParams["second_user_id"])
 
     respond_to do |format|
       if @direct_chat.save
@@ -71,4 +90,11 @@ class DirectChatsController < ApplicationController
     def direct_chat_params
       params.fetch(:direct_chat, {})
     end
+end
+
+def res_with_error(msg, error)
+  respond_to do |format|
+    format.html { redirect_to "/", alert: "#{msg}" }
+    format.json { render json: {alert: "#{msg}"}, status: error }
+  end
 end
