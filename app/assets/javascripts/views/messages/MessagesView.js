@@ -2,7 +2,7 @@ AppClasses.Views.DirectMessages = class extends Backbone.View {
 	constructor(opts) {
 		opts.events = {
             "submit .createDM": "createDM",
-            "submit .joinDM": "joinDM",
+            // "submit .joinDM": "joinDM",
 		}
 		super(opts);
 
@@ -24,52 +24,34 @@ AppClasses.Views.DirectMessages = class extends Backbone.View {
 
     createDM(e) {
 		e.preventDefault();
-        console.log(e)
-		// Here publicRoomJoinForm-X must match the view's form ID
+
         const selectorFormID = "#" + e.currentTarget.id
-        console.log(e.currentTarget.id);
-        
-        console.log("click")
-        console.log(e)
-        App.utils.formAjax("/api/direct_chats.json", selectorFormID)
+		App.utils.formAjax("/api/direct_chats.json", selectorFormID)
 		.done(res => {
 			App.toast.success("Room created !", { duration: 1500, style: App.toastStyle });
-			location.hash = `#messages`;
+			location.hash = "#messages/" + res.id;
 		})
 		.fail((e) => {
 			App.utils.toastError(e);
 		});
-		// In case of some fields have been filed
-		$(".privateRoomAuthFormField").each(function() {
-			$( this ).val("");
-		})
 		return (false);
     }
 
-    joinDM(e) {
-		e.preventDefault();
-        console.log(e)
-		// Here publicRoomJoinForm-X must match the view's form ID
-        const selectorFormID = "#" + e.currentTarget.id;
-        const dmRoomID = e.currentTarget.dmRoomID.value;
+    // joinDM(e) {
+	// 	e.preventDefault();
 
-        console.log(e.currentTarget.id);
-
-        console.log(e)
-        App.utils.formAjax(`/api/direct_chats/${dmRoomID}.json`, selectorFormID)
-		.done(res => {
-			App.toast.success("Room join !", { duration: 1500, style: App.toastStyle });
-			location.hash = "#messages/" + dmRoomID;
-		})
-		.fail((e) => {
-			App.utils.toastError(e);
-		});
-		// In case of some fields have been filed
-		$(".privateRoomAuthFormField").each(function() {
-			$( this ).val("");
-		})
-		return (false);
-    }
+    //     const selectorFormID = "#" + e.currentTarget.id;
+    //     const dmRoomID = e.currentTarget.dmRoomID.value;
+    //     App.utils.formAjax(`/api/direct_chats/${dmRoomID}.json`, selectorFormID)
+	// 	.done(res => {
+	// 		App.toast.success("Room join !", { duration: 1500, style: App.toastStyle });
+	// 		location.hash = "#messages/" + dmRoomID;
+	// 	})
+	// 	.fail((e) => {
+	// 		App.utils.toastError(e);
+	// 	});
+	// 	return (false);
+    // }
 
     updateRender() {
 
