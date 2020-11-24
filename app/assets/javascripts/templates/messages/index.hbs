@@ -4,12 +4,11 @@
 <br>
 {{#each allUsers}}
 
-    <p>{{attributes.nickname}}</p>
 
     {{#ifDm ../userID attributes.id ../dmRooms.models}}
 
-        <a class="btn btn-success btn-sm" href="#messages/{{#findDmRoom ../userID attributes.id ../dmRooms.models}}{{/findDmRoom}}">{{attributes.nickname}}</a>
-        
+        <a class="btn btn-success" href="#messages/{{#findDmRoom ../userID attributes.id ../dmRooms.models}}{{/findDmRoom}}">{{attributes.nickname}}</a>
+        <br>
     {{else}}
         <form class="createDM" id="createDM-{{attributes.id}}" action="/api/direct_chats.json" accept-charset="UTF-8" method="POST">
         <input type="hidden" name="authenticity_token" value="{{../token}}">
@@ -20,19 +19,5 @@
         
         </form>
     {{/ifDm}}
-
-    <p>-------------------</p>
-
-
-
-
-
-
-
-
-
-
-
-
     <br>
 {{/each}}

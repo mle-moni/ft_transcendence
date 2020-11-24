@@ -14,12 +14,75 @@
                 {{!-- Room Data --}}
                 <input class="form-control" placeholder="Message" type="text" id="message" name="chat_message[message]">
                 <input type="hidden" id="roomOwner" name="chat_message[from_id]" value="{{currentUser.id}}">
-                <input type="hidden" id="roomID" name="chat_message[direct_chat_id]" value="{{chatID}}">
+                <input type="hidden" id="roomID" name="chat_message[dmchat_id]" value="{{chatID}}">
                 <br>
                 <input class="btn btn-success" type="submit" value="Send">
                 <br>
             </form>
 
+        </div>
+    </div>
+
+<br><br>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+
+                <ul class="list-group">
+
+                    <div class="chat" data-channel-subscribe="room" data-room-id="{{currentRoom.id}}">
+                        {{#each roomMessages}}
+
+                        {{#when user_id "noteq" ../currentUser.id}}
+                        <li style="background-color:lightskyblue" class="list-group-item">
+
+                            <div class"otherMessage">
+                                <img src="{{#getUserAttributes ../members user_id "image"}}{{/getUserAttributes}}"
+                                    alt="Avatar" class="avatar">
+
+                                <div style="min-width: 60px; display: inline-block">
+                                    <a style="display: inline-block;"
+                                        href="#profiles/ {{#getUserAttributes ../members user_id "id"}}{{/getUserAttributes}}">
+                                        {{#getUserAttributes ../members user_id "nickname"}}{{/getUserAttributes}}
+                                    </a>
+
+                                </div>
+
+                                <p style="display: inline; font-style: italic" data-role="message-text">
+                                    {{message}}
+                                </p>
+                            </div>
+
+                        </li>
+                        <br>
+                        {{/when}}
+
+                        {{#when user_id "eq" ../currentUser.id}}
+                        <li style="background-color: #fffdd0;" class="list-group-item">
+
+                            <div class"ownMessage">
+                                <img src="{{../currentUser.image}}" alt="Avatar" class="avatar">
+
+                                <div style="min-width: 60px; display: inline-block">
+                                    You
+                                </div>
+
+                                <p style="display: inline; font-style: italic" data-role="message-text">
+                                    {{message}}
+                                </p>
+                            </div>
+
+                        </li>
+                        <br>
+                        {{/when}}
+
+                        {{/each}}
+                    </div>
+
+                </ul>
+
+
+            </div>
         </div>
     </div>
 

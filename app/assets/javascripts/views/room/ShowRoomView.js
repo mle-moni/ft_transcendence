@@ -46,6 +46,7 @@ AppClasses.Views.ShowRoom = class extends Backbone.View {
 		}
 
 		if (currentRoom) {
+			console.log(currentRoom);
 			var roomMessages = currentRoom.room_messages;
 			roomMessages.reverse();
 			var members = [...currentRoom.members, ...currentRoom.admins];	

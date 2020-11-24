@@ -4,7 +4,6 @@ class ChatMessagesController < ApplicationController
     # GET /chat_messages.json
     def index
         @chat_messages = DirectMessage.all
-        puts @chat_message
     end
 
     # GET /chat_messages/1
@@ -24,23 +23,23 @@ class ChatMessagesController < ApplicationController
     # POST /chat_messages
     # POST /chat_messages.json
     def create
-        filteredParams = params.require(:chat_message).permit(:message, :from_id, :direct_chat_id)
+        filteredParams = params.require(:chat_message).permit(:message, :from_id, :dmchat_id)
         puts filteredParams
-        #@chat = DirectChat.find(filteredParams["direct_chat_id"])
+        #@chat = DirectChat.find(filteredParams["dmchat_id"])
         # Le "by" n'importe pas car c'est forcément un admin ou owner ou superAdmin qui l'a mute, et un tel mute vaut pour tout le monde
         # if RoomMute.where(room: @room, user: current_user).exists?
         # res_with_error("You're currently muted", :bad_request)
         # return false
         # end 
         user = User.find(filteredParams["from_id"])
-        dc = DirectChat.find(filteredParams["direct_chat_id"])
+        dc = DirectChat.find(filteredParams["dmchat_id"])
 
         @chat_message = DirectMessage.create(message: filteredParams["message"], from: user, dmchat: dc)
         respond_to do |format|
             if @chat_message.save
                 # ActionCable.server.broadcast "room_channel", type: "chat_message", description: "create-message", user: current_user
                 format.html { redirect_to @chat_message, notice: 'Room message was successfully created.' }
-                format.json { render :show, status: :created, location: @chat_message }
+                format.json { head :no_content }
             else
                 format.html { render :new }
                 format.json { render json: @chat_message.errors, status: :unprocessable_entity }
