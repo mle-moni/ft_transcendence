@@ -36,12 +36,14 @@ AppClasses.Views.AllProfiles = class extends Backbone.View {
 
 		const data = this.model.toJSON();
 		var blockByCurrentUser = [];
-		
+
 		this.model.toJSON().forEach(user => {
-			user.blocked.forEach(block => {
-				if (block.user_id == attributes.id)
-					blockByCurrentUser.push(block);
-			})
+			if (user.blocked) {
+				user.blocked.forEach(block => {
+					if (block.user_id == attributes.id)
+						blockByCurrentUser.push(block);
+				})
+			}
 		});
 
 		var blockedTabIDs = [];
