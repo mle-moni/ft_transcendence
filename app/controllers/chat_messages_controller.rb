@@ -32,7 +32,10 @@ class ChatMessagesController < ApplicationController
         # res_with_error("You're currently muted", :bad_request)
         # return false
         # end 
-        @chat_message = DirectMessage.create(filteredParams)
+        user = User.find(filteredParams["from_id"])
+        dc = DirectChat.find(filteredParams["direct_chat_id"])
+
+        @chat_message = DirectMessage.create(message: filteredParams["message"], from: user, dmchat: dc)
         respond_to do |format|
             if @chat_message.save
                 # ActionCable.server.broadcast "room_channel", type: "chat_message", description: "create-message", user: current_user
