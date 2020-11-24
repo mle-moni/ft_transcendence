@@ -1,29 +1,43 @@
-<form class="edit_user" id="edit_user" action="/profile/edit" 
-	accept-charset="UTF-8" method="POST" enctype="multipart/form-data">
-	<input type="hidden" name="authenticity_token" value="{{token}}">
+<div class="margin25Div">
 
-	<input type="hidden" name="id" value="{{user.id}}">
+	<form class="edit_user" id="edit_user" action="/profile/edit" accept-charset="UTF-8" method="POST"
+		enctype="multipart/form-data">
+		<input type="hidden" name="authenticity_token" value="{{token}}">
 
-	<div class="field">
-		<label for="user_nickname">Nickname</label><br>
-		<input autocomplete="nickname" type="text" value="{{user.nickname}}" name="nickname" id="user_nickname">
-	</div>
+		<input type="hidden" name="id" value="{{user.id}}">
 
-	<div class="field">
-		<label for="user_email">Email</label><br>
-		<input autocomplete="email" type="email" value="{{user.email}}" name="email" id="user_email">
-	</div>
+		<div class="field">
+			<label for="user_nickname">Nickname</label><br>
+			<input class="form-control-sm" autocomplete="nickname" type="text" value="{{user.nickname}}" name="nickname"
+				id="user_nickname">
+		</div>
 
-	<img height="100px" src="{{user.image}}" id="userImageEdit">
-	<div class="field">
-		<label for="user_image">Image</label><br>
-		<input type="file" name="image" id="user_image" onchange="App.utils.changeImg(this, 'userImageEdit')">
-	</div>
-	
-	<div class="actions">
-		<input type="submit" name="commit" value="Update">
-	</div>
-</form>
-<a href="#profile/auth">Change authentication settings</a>
-<br>
-<a href="javascript:history.back()">Back</a>
+		<div class="field"><br>
+			<label for="user_email">Email</label><br>
+			<input class="form-control-sm" autocomplete="email" type="email" value="{{user.email}}" name="email"
+				id="user_email">
+		</div>
+
+		<br>
+		<img height="100px" src="{{user.image}}" id="userImageEdit">
+		<br>
+		<div class="field">
+			<br>
+			<label for="user_image">Image</label><br>
+			<input class="form-control-sm" type="file" name="image" id="user_image"
+				onchange="App.utils.changeImg(this, 'userImageEdit')">
+		</div>
+		<br>
+		<div class="actions">
+			<input class="btn btn-success" type="submit" name="commit" value="Update">
+		</div>
+	</form>
+	<br>
+	<hr>
+	<br>
+	<a class="btn btn-primary" href="#profile/auth">Change authentication settings</a>
+	<br>
+	<br>
+	<a class="btn btn-info" ref="javascript:history.back()">Back</a>
+
+</div>

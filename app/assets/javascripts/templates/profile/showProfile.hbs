@@ -1,13 +1,32 @@
+<div class="margin25Div">
+
+
+	
 {{#if user}}
+
+<h3>
+	<u>
 {{user.nickname}}
+
+	</u>
+
+</h3>
+<br>
 <br>
 <img src="{{user.image}}" style="max-height: 200px;">
 <br>
-<h3>Guild</h3>
+<h3>
+	<br>
+	<u>
+	Guild
+
+	</u>
+	</h3>
 	{{#if guild}}
-	<a href="#guilds/{{guild.id}}">{{guild.name}}</a>
+	<br>
+	<a class="btn btn-success" href="#guilds/{{guild.id}}">{{guild.name}}</a>
 	{{else}}
-	this user has no guild
+	This user has no guild
 	{{/if}}
 <br>
 <br>
@@ -15,7 +34,11 @@
 <h1>This user does not seem to exist</h1>
 <br>
 {{/if}}
-
-<a href="#profiles">Users list</a>
 <br>
-<a href="#">Home</a>
+<br>
+<a class="btn btn-primary" href="#profiles">Users list</a>
+<br>
+<br>
+<a class="btn btn-info" href="#">Home</a>
+
+</div>

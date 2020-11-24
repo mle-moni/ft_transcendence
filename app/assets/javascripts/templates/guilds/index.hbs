@@ -1,14 +1,25 @@
-<h1>List of guilds</h1>
-<br>
-{{#each guilds}}
-    <div>
-		<h2>{{name}}, {{points}} points</h2>
-		<a style="font-size: 14px;" href="#guilds/{{id}}">profile page</a>
-		<br>
+<div class="margin25Div">
+
+
+	<u>
+		<h3>List of guilds</h3>
+	</u>
+	<br>
+	{{#each guilds}}
+	<div>
+		<h2> {{name}} </h2>
+		<p>{{points}} points</p>
+		<a style="font-size: 14px;" class="btn btn-primary" href="#guilds/{{id}}">Profile Page</a>
+
 	</div>
-{{/each}}
+	{{/each}}
+
 <br>
-<br>
-<a href="#guilds/mine">My guild</a>
-<br>
-<a href="#">Home</a>
+	<hr>
+	<br>
+	<a class="btn btn-success" href="#guilds/mine">My Guild</a>
+	<br><br>
+	<a class="btn btn-info" href="#">Home</a>
+
+
+</div>

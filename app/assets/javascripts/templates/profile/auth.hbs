@@ -1,49 +1,55 @@
-<form id="edit_pwd" action="/profile/password" accept-charset="UTF-8" method="POST">
-	<input type="hidden" name="authenticity_token" value="{{token}}">
+<div class="margin25Div">
 
-	<input type="hidden" name="id" value="{{user.id}}">
-	
-	<div class="field">
-		<label for="password1">Password</label>
-		<em>(6 characters minimum)</em>
-		<br>
-		<input type="password" name="password" id="password1">
-	</div>
+	<form id="edit_pwd" action="/profile/password" accept-charset="UTF-8" method="POST">
+		<input type="hidden" name="authenticity_token" value="{{token}}">
 
-	<div class="field">
-		<label for="password2">Retype password</label><br>
-		<input type="password" id="password2">
-	</div>
+		<input type="hidden" name="id" value="{{user.id}}">
 
-	<div class="actions">
-		<input type="submit" name="commit" value="Change password">
-	</div>
-</form>
+		<div class="field">
+			<label for="password1">Password</label>
+			<em>(6 characters minimum)</em>
+			<br>
+			<input class="form-control-sm" type="password" name="password" id="password1">
+		</div>
 
-<br>
+		<div class="field"><br>
+			<label for="password2">Confirm password</label><br>
+			<input class="form-control-sm" type="password" id="password2">
+		</div><br>
 
-{{#if user.two_factor}}
+		<div class="actions">
+			<input class="btn btn-primary" type="submit" name="commit" value="Change password">
+		</div>
+	</form>
+
+	<br>
+	<br>
+
+	{{#if user.two_factor}}
 	<form id="disable2fa" method="POST" action="{{links.disable2fa}}">
-		<input type="hidden" name="authenticity_token" value="{{token}}">	
-		<input type="submit" value="Disable two factor auth">
+		<input type="hidden" name="authenticity_token" value="{{token}}">
+		<input class="btn btn-warning" type="submit" value="Disable two factor auth">
 	</form>
-{{else}}
+	{{else}}
 	<form id="enable2fa" method="POST" action="{{links.enable2fa}}">
-		<input type="hidden" name="authenticity_token" value="{{token}}">	
-		<input type="submit" value="Enable two factor auth">
+		<input type="hidden" name="authenticity_token" value="{{token}}">
+		<input class="btn btn-success" type="submit" value="Enable two factor auth">
 	</form>
-{{/if}}
-<br>
-{{#if user.two_factor}}
-<p>Scan this QR code with your authenticator app</p>
-<img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data={{links.authenticator}}">
-{{/if}}
-<br>
-<a href="javascript:history.back()">Back</a>
+	{{/if}}
+	<br>
+	{{#if user.two_factor}}
+	<p>Scan this QR code with your authenticator app</p>
+	<img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data={{links.authenticator}}">
+	{{/if}}
+	<br>
+	<a class="btn btn-info" href="javascript:history.back()">Back</a>
 
-<form style="display: none;" id="automaticReconnection" action="/users/sign_in" accept-charset="UTF-8" method="POST">
-	<input type="hidden" name="authenticity_token" value="{{token}}">
-	<input autocomplete="email" type="email" value="{{user.email}}" name="user[email]">
-	<input autocomplete="current-password" type="password" name="user[password]" id="autoRecoPwd">
-	<input type="submit" name="commit" value="Log in">
-</form>
+	<form style="display: none;" id="automaticReconnection" action="/users/sign_in" accept-charset="UTF-8"
+		method="POST">
+		<input type="hidden" name="authenticity_token" value="{{token}}">
+		<input autocomplete="email" type="email" value="{{user.email}}" name="user[email]">
+		<input autocomplete="current-password" type="password" name="user[password]" id="autoRecoPwd">
+		<input type="submit" name="commit" value="Log in">
+	</form>
+
+</div>

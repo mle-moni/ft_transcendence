@@ -1,54 +1,76 @@
-{{#if guild }}
-<h2>name: {{guild.name}}</h2>
-<h3>anagram: {{guild.anagram}}</h3>
-<h3>points: {{guild.points}}</h3>
-<h3>users:</h3>
-<ul>
-	{{#each guild.users}}
-	<li>{{nickname}}</li>
-	{{/each}}
-</ul>
+<div class="margin25Div">
 
-{{#if officerRights}}
-<h3>Accept requests:</h3>
-<ul>
-	{{#each guild.requests}}
-	<li class="acceptRequestGuild">
-		{{nickname}}
-		<span class="nodisplay">{{id}}</span>
-	</li>
-	{{/each}}
-</ul>
-{{/if}}
 
-{{#if isInGuild}}
-<form method="POST" id="quitGuildForm">
-	<input type="hidden" name="authenticity_token" value="{{token}}">
-	<input type="submit" value="Quit guild">
-</form>
-{{else}}
-<form method="POST" id="joinGuildForm">
-	<input type="hidden" name="authenticity_token" value="{{token}}">
-	<input type="hidden" name="id" value="{{guild.id}}">
-	<input type="submit" value="Send join request">
-</form>
-{{/if}}
-{{else}}
-<h1>This guild does not seem to exist</h1>
-<br>
-{{/if}}
 
-{{#if owner }}
-<a href="#guilds/edit">Edit</a>
-<br>
-{{/if}}
+	{{#if guild }}
+	<div style="min-width: 100px; display: inline-block;">   Name </div> 
+		<p style="font-size: 20px; display: inline-block;">	: &nbsp; {{guild.name}} </p>
+		<br>
+	<div style="min-width: 100px;  display: inline-block;">   Anagram </div> 
+		<p style="font-size: 20px; display: inline-block;">	: &nbsp; {{guild.anagram}} </p>
+		<br>
+	<div style="min-width: 100px;  display: inline-block;">   Points </div>
+		<p style="font-size: 20px; display: inline-block;">	: &nbsp; {{guild.points}} </p>
+		<br>
 
-<a href="#guilds">Guilds list</a>
-<br>
-<a href="#">Home</a>
+	<div>Users</div><br>
 
-<form style="display: none;" method="POST" id="acceptRequestForm">
-	<input type="hidden" name="authenticity_token" value="{{token}}">
-	<input type="hidden" name="id" value="" id="acceptRequestIDField">
-	<input type="submit" value="Send join request">
-</form>
+	<ul>
+		{{#each guild.users}}
+		<li>{{nickname}}</li>
+		<br>
+		{{/each}}
+	</ul>
+
+	<br><hr><br>
+
+	{{#if officerRights}}
+	<p> <strong>Accept requests </strong></p>
+	<ul>
+		{{#each guild.requests}}
+		<li class="acceptRequestGuild">
+			{{nickname}}
+			<span class="nodisplay">{{id}}</span>
+		</li>
+		{{/each}}
+	</ul>
+	{{/if}}
+
+	<br><hr><br>
+
+	{{#if isInGuild}}
+	<form method="POST" id="quitGuildForm">
+		<input type="hidden" name="authenticity_token" value="{{token}}">
+		<input class="btn btn-danger" type="submit" value="Quit guild">
+	</form>
+	<br>
+	{{else}}
+	<form method="POST" id="joinGuildForm">
+		<input type="hidden" name="authenticity_token" value="{{token}}">
+		<input type="hidden" name="id" value="{{guild.id}}">
+		<input class="btn btn-primary" type="submit" value="Send join request">
+	</form>
+	<br>
+	{{/if}}
+	{{else}}
+	<h1>This guild does not seem to exist</h1>
+	<br><br>
+	{{/if}}
+
+	{{#if owner }}
+	<a class="btn btn-info" href="#guilds/edit">Edit</a>
+	<br><br>
+	{{/if}}
+
+	<a class="btn btn-success" href="#guilds">Guilds list</a>
+	<br><br>
+	<a class="btn btn-secondary" href="#">Home</a>
+	<br><br>
+	<form style="display: none;" method="POST" id="acceptRequestForm">
+		<input type="hidden" name="authenticity_token" value="{{token}}">
+		<input type="hidden" name="id" value="" id="acceptRequestIDField">
+		<input class="btn btn-success" type="submit" value="Send join request">
+	</form>
+
+
+</div>
