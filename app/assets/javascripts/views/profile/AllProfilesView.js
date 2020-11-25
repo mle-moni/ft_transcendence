@@ -8,8 +8,14 @@ AppClasses.Views.AllProfiles = class extends Backbone.View {
 		this.model.myFetch();
 	}
 	updateRender() {
+		const users = this.model.toJSON().sort((a, b) => {
+			return (b.elo - a.elo);
+		});
+		for (let i = 0; i < users.length; i++) {
+			users[i].rank = i + 1;
+		}
 		this.$el.html(this.template({
-			users: this.model.toJSON()
+			users
 		}));
 		return (this);
 	}
