@@ -7,22 +7,13 @@ AppClasses.Views.Conversations = class extends Backbone.View {
 
 		this.user = opts.user;
 		this.chatID = opts.chatID;
-		this.model = opts.model; //.findWhere({id: this.room_id});
-		this.lala = opts.messages;
+		this.model = opts.model;
+
 		this.listenTo(this.model, "change reset add remove", this.updateRender);
-		this.listenTo(this.lala, "change reset add remove", this.updateRender);
-		
-		this.lala.fetch();
 		this.model.fetch();
 
-		console.log("====");
-		console.log(this.model)
-		console.log(this.chatID);
-		console.log("====");
-		
 		this.tagName = "div";
         this.template = App.templates["messages/show"];
-
 		this.updateRender();
 
 	}
@@ -47,35 +38,34 @@ AppClasses.Views.Conversations = class extends Backbone.View {
 
     updateRender() {
 
+		var currentDMRoom = this.model ? this.model.toJSON() : null;
+		if (currentDMRoom)
+		{
+			currentDMRoom = _.filter(currentDMRoom, m => {
+				return m.id === this.chatID;
+			})[0] || null;
+		}
 
-		var test = this.model.findWhere({id: this.chatID});
-		console.log("---- test -----");
-		console.log(test)
-		if (test)
-			console.log(test.direct_messages);
-		console.log("---- lala -----");
-		console.log(this.lala)
-
-		console.log("---- current -----");
-		var pp = this.model;
-		var currentRoom = pp ? pp.toJSON() : null;
-		currentRoom = _.filter(currentRoom, m => {
-			return m.id === this.chatID;
-		})[0] || null;
-
-		if (currentRoom)
-			console.log(currentRoom.direct_messages)
-
-
-
-
-
-
-
+		var otherUser = null;
+		if (currentDMRoom)
+		{
+			var directMessages = currentDMRoom.direct_messages;
+			//directMessages.reverse();
+			var otherUserID = (this.user.id === currentDMRoom.user1_id) ? currentDMRoom.user2_id : currentDMRoom.user1_id;
+			var allUsers = App.collections.allUsers.models;
+			for (var count = 0; count < allUsers.length; count++)
+			{
+				if (allUsers[count].attributes.id == otherUserID)
+					otherUser = allUsers[count].attributes;
+			}
+		}
 
 		this.$el.html(this.template({
 			chatID: this.chatID,
-			currentUser: this.user,
+			currentUser: this.user.attributes,
+			otherUser: otherUser,
+			currentDMRoom: currentDMRoom,
+			directMessages: directMessages,
 			token: $('meta[name="csrf-token"]').attr('content')
 		}));
 		return (this);

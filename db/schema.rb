@@ -26,11 +26,11 @@ ActiveRecord::Schema.define(version: 2020_11_22_221359) do
 
   create_table "direct_messages", force: :cascade do |t|
     t.bigint "from_id"
-    t.bigint "dmchat_id"
+    t.bigint "direct_chat_id", null: false
     t.text "message"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["dmchat_id"], name: "index_direct_messages_on_dmchat_id"
+    t.index ["direct_chat_id"], name: "index_direct_messages_on_direct_chat_id"
     t.index ["from_id"], name: "index_direct_messages_on_from_id"
   end
 
@@ -153,7 +153,7 @@ ActiveRecord::Schema.define(version: 2020_11_22_221359) do
     t.index ["uid"], name: "index_users_on_uid"
   end
 
-  add_foreign_key "direct_messages", "direct_chats", column: "dmchat_id"
+  add_foreign_key "direct_messages", "direct_chats"
   add_foreign_key "friendships", "users"
   add_foreign_key "friendships", "users", column: "friend_id"
   add_foreign_key "room_bans", "users", column: "by_id"

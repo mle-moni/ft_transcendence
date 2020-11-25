@@ -2,7 +2,7 @@ AppClasses.Models.DirectMessages = Backbone.Model.extend({
 	defaults: {
 		message: "",
         from_id: null,
-        dmchat_id: null
+        direct_chat_id: null
     }
 });
 
