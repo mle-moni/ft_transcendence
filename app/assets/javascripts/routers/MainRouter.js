@@ -15,6 +15,7 @@ AppClasses.Routers.Main = class extends AppClasses.Routers.AbstractRouter {
 		
 		// Chat : Room & Messages
 		App.routers.rooms = new AppClasses.Routers.RoomRouter();
+		App.routers.messages = new AppClasses.Routers.DirectMessagesRouter();
 
 		// friends routes
 		App.routers.friends = new AppClasses.Routers.FriendsRouter();
@@ -33,7 +34,7 @@ AppClasses.Routers.Main = class extends AppClasses.Routers.AbstractRouter {
 				type: 'POST'
 			});
 			this.models.user.update(this.models.user);
-			this.collections.allUsers.myFetch();
+			this.collections.myFetch();
 			this.collections.guilds.fetch();
 		}, 1000 * seconds);
 	}

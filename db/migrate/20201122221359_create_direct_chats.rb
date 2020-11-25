@@ -7,7 +7,8 @@ class CreateDirectChats < ActiveRecord::Migration[6.0]
     end
     create_table :direct_messages do |t|
       t.references :from, references: :users
-      t.references :direct_chat
+      t.references :direct_chat, null: false, foreign_key: true
+      t.text :message
       t.timestamps
   end
   end

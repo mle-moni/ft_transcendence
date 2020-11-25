@@ -31,6 +31,7 @@ Rails.application.routes.draw do
     post '/handleBlock', to: 'profile#handleBlock'
 
     resources :direct_chats
+    resources :chat_messages
 
     # ------
     

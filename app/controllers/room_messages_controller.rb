@@ -31,7 +31,7 @@ class RoomMessagesController < ApplicationController
     if RoomMute.where(room: @room, user: current_user).exists?
       res_with_error("You're currently muted", :bad_request)
       return false
-    end 
+    end
     @room_message = RoomMessage.create(filteredParams)
     respond_to do |format|
       if @room_message.save
