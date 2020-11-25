@@ -28,7 +28,7 @@ AppClasses.Views.Conversations = class extends Backbone.View {
 		App.utils.formAjax("/api/chat_messages.json", "#sendRoomMessageForm")
 		.done(res => {
 			App.toast.success("Message sent", { duration: 1000, style: App.toastStyle });
-			location.reload();// = `#messages/` + this.chatID;
+			// location.reload();// = `#messages/` + this.chatID;
 		})
 		.fail((e) => {
 			App.utils.toastError(e);
@@ -46,23 +46,48 @@ AppClasses.Views.Conversations = class extends Backbone.View {
 			})[0] || null;
 		}
 
+		var currentUser = null;
+		if (this.user) currentUser = this.user.attributes;
+		
 		var otherUser = null;
 		if (currentDMRoom)
 		{
+			
 			var directMessages = currentDMRoom.direct_messages;
-			//directMessages.reverse();
+			directMessages = directMessages.reverse();
 			var otherUserID = (this.user.id === currentDMRoom.user1_id) ? currentDMRoom.user2_id : currentDMRoom.user1_id;
 			var allUsers = App.collections.allUsers.models;
 			for (var count = 0; count < allUsers.length; count++)
 			{
 				if (allUsers[count].attributes.id == otherUserID)
 					otherUser = allUsers[count].attributes;
+				else if (allUsers[count].attributes.id == currentUser.id)
+					currentUser = allUsers[count].attributes;
 			}
+
+			// Check if 
+			if (currentUser) {
+				// Assert that currentUser is one of the 2 user in the current DM room
+				if (currentDMRoom.user1_id != currentUser.id && currentDMRoom.user2_id != currentUser.id) {
+					location.hash = '#messages';
+					return (false);
+				}
+				// Assert currentUser have not been blocked by the other user
+				if (otherUser && otherUser.blocked) {
+					otherUser.blocked.forEach(block => {
+						if (block.toward_id == currentUser.id) {
+							location.hash = '#messages';
+							return (false);
+						}
+					});
+				}
+			}
+			
 		}
 
 		this.$el.html(this.template({
 			chatID: this.chatID,
-			currentUser: this.user.attributes,
+			currentUser: currentUser,
 			otherUser: otherUser,
 			currentDMRoom: currentDMRoom,
 			directMessages: directMessages,

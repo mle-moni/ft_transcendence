@@ -1,10 +1,8 @@
 import consumer from "./consumer"
 
-var sub = null;
-
-function manage_subscription() {
-    const in_room = document.getElementById("checkChatPresence")
-    if (in_room)
+function manageDirectChat() {
+    const in_dm = document.getElementById("checkChatPresence");
+    if (in_dm)
     {
         consumer.subscriptions.create({
           channel: "ChatChannel"
@@ -24,7 +22,6 @@ function manage_subscription() {
         received(data) {
           // Called when there's incoming data on the websocket for this channel
           console.log("Received DM");
-
           //TODO: condition suivant type
           //window.App.collections.allUsers.myFetch();
           window.App.collections.DirectMessagesRoom.fetch();
@@ -33,15 +30,25 @@ function manage_subscription() {
     }
 }
 
+
 $(window).on('popstate', e => {
-  setTimeout(manage_subscription, 50);
+  var detectChat = document.getElementById("checkChatPresence");
+  if (detectChat) { 
+    setTimeout(manageDirectChat, 250)
+  }
  });
 
 $(document).ready(function(){
-  setTimeout(manage_subscription, 50);
+  var detectChat = document.getElementById("checkChatPresence");
+  if (detectChat) { 
+    setTimeout(manageDirectChat, 250)
+  }
 });
 
 window.addEventListener("hashchange", e => {
-  console.log("You've change of route");
-  setTimeout(manage_subscription, 50);
+  var detectChat = document.getElementById("checkChatPresence");
+  if (detectChat) { 
+    setTimeout(manageDirectChat, 250)
+  }
 });
+

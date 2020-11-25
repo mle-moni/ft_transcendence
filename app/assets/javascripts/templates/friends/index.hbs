@@ -1,40 +1,54 @@
-<h1>Your friends</h1>
+<div class="margin25Div">
 
-{{#each user.friends}}
-<div>
-	{{nickname}}
-	({{print_status}})
-	<span class="clickToDeleteFriend pointer">
-		delete
-		<span class="nodisplay">{{id}}</span>
-	</span>
+	<p style="font-size: 24px;"> <strong> Your Friends 😃 </strong> </p><br>
+
+	{{#each user.friends}}
+	<div>
+		<strong> {{nickname}} </strong>
+		({{print_status}})
+		&nbsp;
+		<span class="clickToDeleteFriend pointer">
+			DELETE
+			<span class="nodisplay">{{id}}</span>
+		</span>
+	</div>
+	{{/each}}
+
+	<hr><br>
+
+	<p style="font-size: 20px;"> <strong> Friend Requests </strong> </p><br>
+
+	{{#each user.invites}}
+	<div>
+		• <strong> {{nickname}} </strong> :
+		&nbsp;
+		<span class="clickToAcceptFriend pointer">
+			ACCEPT
+			<span class="nodisplay">{{id}}</span>
+		</span>
+		&nbsp;
+		<span class="clickToRejectFriend pointer">
+			REJECT
+			<span class="nodisplay">{{id}}</span>
+		</span>
+	</div>
+	{{/each}}
+
+	<hr><br>
+
+	<p style="font-size: 20px;"> <strong> Add Friends </strong> </p>
+
+	<input autocomplete="off" type="text" name="" id="addFriend"><br>
+	<div id="userInputFriends">
+
+	</div>
+
+	<form style="display: none;" id="friendsForm" method="POST">
+		<input type="hidden" name="authenticity_token" value="{{token}}">
+		<input type="text" name="id" id="friendIDField">
+	</form>
+	<br>
+	<br>
+	<a class="btn btn-info" href="#">Home</a>
+
 </div>
-{{/each}}
-
-<h4>Friend requests:</h4>
-{{#each user.invites}}
-<div>
-	{{nickname}}:
-	<span class="clickToAcceptFriend pointer">
-		accept
-		<span class="nodisplay">{{id}}</span>
-	</span>
-	<span class="clickToRejectFriend pointer">
-		reject
-		<span class="nodisplay">{{id}}</span>
-	</span>
-</div>
-{{/each}}
-
-<h4>Add friends</h4>
-<input type="text" name="" id="addFriend">
-<div id="userInputFriends">
-
-</div>
-
-<form style="display: none;" id="friendsForm" method="POST">
-	<input type="hidden" name="authenticity_token" value="{{token}}">
-	<input type="text" name="id" id="friendIDField">
-</form>
-
-<a href="#">Home</a>

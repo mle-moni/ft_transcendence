@@ -37,27 +37,30 @@ AppClasses.Views.DirectMessages = class extends Backbone.View {
 		return (false);
     }
 
-    // joinDM(e) {
-	// 	e.preventDefault();
-
-    //     const selectorFormID = "#" + e.currentTarget.id;
-    //     const dmRoomID = e.currentTarget.dmRoomID.value;
-    //     App.utils.formAjax(`/api/direct_chats/${dmRoomID}.json`, selectorFormID)
-	// 	.done(res => {
-	// 		App.toast.success("Room join !", { duration: 1500, style: App.toastStyle });
-	// 		location.hash = "#messages/" + dmRoomID;
-	// 	})
-	// 	.fail((e) => {
-	// 		App.utils.toastError(e);
-	// 	});
-	// 	return (false);
-    // }
-
     updateRender() {
+		const { attributes } = App.models.user;
+		var data = this.allUsers || null;
 
-        //console.log(this.user)
+		if (data && attributes) {
+			data = data.models;
+			var currentUserBlock = data.find(user => {
+				return user.id == attributes.id;
+			})
+			if (currentUserBlock) {
+				currentUserBlock = currentUserBlock.attributes.blocked;
+				var blockedTabIDs = [];
+				currentUserBlock.forEach(block => {
+						blockedTabIDs.push(block.toward_id);
+				});
+			}
+			// Avoid current user to dm with himself and void allow to chat when blocked
+			data = data.filter(user => {
+				return (user.id != attributes.id && !blockedTabIDs.includes(user.id))
+			});
+		}
+	
 		this.$el.html(this.template({
-            allUsers: this.allUsers.models,
+            allUsers: data,
             userID: this.user.id,
             dmRooms: this.model,
             token: $('meta[name="csrf-token"]').attr('content'),

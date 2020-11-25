@@ -52,9 +52,6 @@ Handlebars.registerHelper('ifOr', function(aBoolean, bValue, bTested, options) {
 
 Handlebars.registerHelper('ifDm', function(userID, otherUserID, dmRooms, options) {
 
-    console.log("dmRooms.length");
-    console.log(dmRooms.length);
-    console.log(dmRooms);
     for (var count = 0; count < dmRooms.length; count++)
     {
         if ((userID == dmRooms[count].attributes.user1_id
@@ -68,9 +65,6 @@ Handlebars.registerHelper('ifDm', function(userID, otherUserID, dmRooms, options
 
 Handlebars.registerHelper('findDmRoom', function(userID, otherUserID, dmRooms) {
 
-    console.log("dmRooms.length");
-    console.log(dmRooms.length);
-    console.log(dmRooms);
     for (var count = 0; count < dmRooms.length; count++)
     {
         if ((userID == dmRooms[count].attributes.user1_id
