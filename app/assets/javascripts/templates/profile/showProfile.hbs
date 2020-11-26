@@ -1,68 +1,72 @@
 <div class="margin25Div">
 
 
-	
-{{#if user}}
 
-<h3>
-	<u>
-{{user.nickname}}
+	{{#if user}}
 
-	</u>
+	<h3>
+		<u>
+			{{user.nickname}}
 
-</h3>
-<br>
-<br>
-<img src="{{user.image}}" style="max-height: 200px;">
-<br>
-<h3>
-	<br>
-	<u>
-	Guild
+		</u>
 
-	</u>
 	</h3>
-	{{#if guild}}
 	<br>
-	<a class="btn btn-success" href="#guilds/{{guild.id}}">{{guild.name}}</a>
-	{{else}}
-	This user has no guild
-	{{/if}}
-<br>
-<br>
-
-<h3>Game history</h3>
-{{#each matches}}
-<article>
-	<h4>
-		{{#if won }}
-		Victory
-		{{else}}
-		Defeat
-		{{/if}}
-	</h4>
-	<h6>{{ dateStr }}</h6>
-	<p> {{ you }} VS <a href="#profiles/{{ enemy.id }}">{{ enemy.nickname }}</a> </p>
+	<br>
+	<img src="{{user.image}}" style="max-height: 200px;">
+	<br>
+	<u>
+		<h3>Elo</h3>
+	</u>
 	<p>
-		{{#if won }}
-		{{ winner_score }} - {{ loser_score }} 
+		<b>{{user.elo}}</b> points
+		<h3>
+			<br>
+			<u>
+				Guild
+			</u>
+		</h3>
+		{{#if guild}}
+		<br>
+		<a class="btn btn-success" href="#guilds/{{guild.id}}">{{guild.name}}</a>
 		{{else}}
-		{{ loser_score }} - {{ winner_score }} 
+		This user has no guild
 		{{/if}}
-	</p>
-	<hr>
-</article>
-{{/each}}
-<br>
-{{else}}
-<h1>This user does not seem to exist</h1>
-<br>
-{{/if}}
-<br>
-<br>
-<a class="btn btn-primary" href="#profiles">Users list</a>
-<br>
-<br>
-<a class="btn btn-info" href="#">Home</a>
+		<br>
+		<br>
+
+		 <u><h3>Game history</h3> </u>
+		{{#each matches}}
+		<article>
+			<h4>
+				{{#if won }}
+				Victory
+				{{else}}
+				Defeat
+				{{/if}}
+			</h4>
+			<h6>{{ dateStr }}</h6>
+			<p> {{ you }} VS <a href="#profiles/{{ enemy.id }}">{{ enemy.nickname }}</a> </p>
+			<p>
+				{{#if won }}
+				{{ winner_score }} - {{ loser_score }}
+				{{else}}
+				{{ loser_score }} - {{ winner_score }}
+				{{/if}}
+			</p>
+			<hr>
+		</article>
+		{{/each}}
+		<br>
+		{{else}}
+		<h1>This user does not seem to exist</h1>
+		<br>
+		{{/if}}
+		<br>
+		<br>
+		<a class="btn btn-primary" href="#profiles">Users list</a>
+		<br>
+		<br>
+		<a class="btn btn-info" href="#">Home</a>
 
 </div>

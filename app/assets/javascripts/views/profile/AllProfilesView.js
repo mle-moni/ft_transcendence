@@ -34,7 +34,7 @@ AppClasses.Views.AllProfiles = class extends Backbone.View {
 
 		const { attributes } = App.models.user;
 
-		const data = this.model.toJSON();
+		var data = this.model.toJSON();
 		var blockByCurrentUser = [];
 
 		this.model.toJSON().forEach(user => {
@@ -50,6 +50,13 @@ AppClasses.Views.AllProfiles = class extends Backbone.View {
 		blockByCurrentUser.forEach(block => {
 			blockedTabIDs.push(block.toward_id);
 		})
+
+		data = data.sort((a, b) => {
+			return (b.elo - a.elo);
+		});
+		for (let i = 0; i < data.length; i++) {
+			data[i].rank = i + 1;
+		}
 
 		this.$el.html(this.template({
 			currentUser: attributes,

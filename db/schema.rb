@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_23_140408) do
+ActiveRecord::Schema.define(version: 2020_11_25_103102) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -165,7 +165,7 @@ ActiveRecord::Schema.define(version: 2020_11_23_140408) do
     t.datetime "last_seen"
     t.boolean "admin", default: false
     t.boolean "banned", default: false
-    t.float "elo"
+    t.float "elo", default: 1000.0
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["guild_id"], name: "index_users_on_guild_id"
     t.index ["provider"], name: "index_users_on_provider"
