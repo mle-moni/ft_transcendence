@@ -56,7 +56,6 @@ AppClasses.Views.Conversations = class extends Backbone.View {
 
     updateRender() {
 
-		console.log("IPDATE RENDER")
 		var currentDMRoom = this.model ? this.model.toJSON() : null;
 		if (currentDMRoom) {
 			currentDMRoom = _.filter(currentDMRoom, m => {
@@ -68,25 +67,11 @@ AppClasses.Views.Conversations = class extends Backbone.View {
 		if (this.user) currentUser = this.user.attributes;
 	
 		var otherUser = null;
-		if (currentDMRoom)
-		{
-			console.log("IN ROOM ===>");
-			console.log(currentDMRoom.id)
-		}
-		else
-		{
-			console.log("NO ROOM")
-		}
-
-
+		var usersNonBlocked = null;
 		if (currentDMRoom)
 		{
 			var directMessages = currentDMRoom.direct_messages;
-			// console.log("directMessages bfore reverse ====> ")
-			// console.log(directMessages);
 			directMessages.reverse();
-			// console.log("directMessages ====> ")
-			// console.log(directMessages);
 			var otherUserID = (this.user.id === currentDMRoom.user1_id) ? currentDMRoom.user2_id : currentDMRoom.user1_id;
 			var allUsers = App.collections.allUsers.models;
 			for (var count = 0; count < allUsers.length; count++)
@@ -113,15 +98,25 @@ AppClasses.Views.Conversations = class extends Backbone.View {
 						}
 					});
 				}
+
+				var blocked = currentUser.blocked || null;
+				if (blocked) {
+					var blockedTabIDs = [];
+					blocked.forEach(block => {
+						blockedTabIDs.push(block.toward_id);
+					});
+					usersNonBlocked = this.allUsers.models.filter(user => {
+						return (user.id != currentUser.id && !blockedTabIDs.includes(user.id))
+					});
+				}
 			}
-			
 		}
 		// console.log("directMessages end ====> ")
 		// if (directMessages)
 		// 	console.log(directMessages);
 		this.$el.html(this.template({
 			dmRooms: this.model,
-			allUsers: this.allUsers.models,
+			allUsers: usersNonBlocked ? usersNonBlocked : this.allUsers.models,
 			userID: this.user.id,
 			//ADD
 			chatID: this.chatID,
