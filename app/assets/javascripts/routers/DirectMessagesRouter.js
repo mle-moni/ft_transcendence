@@ -3,7 +3,6 @@ AppClasses.Routers.DirectMessagesRouter = class extends AppClasses.Routers.Abstr
 		super(options);
         this.route("messages", "index");
         this.route("messages/:id", "conversation");
-
 		this.collections.DirectMessagesRoom = new AppClasses.Collections.DirectMessagesRoom();
 		this.collections.DirectMessages = new AppClasses.Collections.DirectMessages();
     }
@@ -17,14 +16,14 @@ AppClasses.Routers.DirectMessagesRouter = class extends AppClasses.Routers.Abstr
 		});
     }
 
-    conversation(room_id) {
-		const r_id = parseInt(room_id);
+    conversation(chatID) {
 		const user = this.models.user;
-		this.viewWithRenderParam("conversation", "Conversations", user, {
+		const cID = parseInt(chatID);
+		this.viewWithRenderParam("conversation", "Conversations", cID, {
             model: this.collections.DirectMessagesRoom,
-			chatID: r_id,
 			messages: this.collections.DirectMessages,
-			user: user
+			user: user,
+			chatID: cID
 		});
     }
     

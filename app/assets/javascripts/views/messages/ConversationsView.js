@@ -4,22 +4,18 @@ AppClasses.Views.Conversations = class extends Backbone.View {
 			"submit #sendRoomMessageForm": "submit",
 		}
 		super(opts);
-
-		this.user = opts.user;
+		this.user = App.models.user;
 		this.chatID = opts.chatID;
 		this.model = opts.model;
-
 		this.listenTo(this.model, "change reset add remove", this.updateRender);
 		this.model.fetch();
-
 		this.tagName = "div";
         this.template = App.templates["messages/show"];
 		this.updateRender();
 
 	}
 	
-	submit(e) 
-	{
+	submit(e)  {
 		e.preventDefault();
 		if (e.currentTarget.message.value == "") {
 			// App.toast.message("You cannot send empty message", { duration: 2000, style: App.toastStyle });
@@ -39,8 +35,7 @@ AppClasses.Views.Conversations = class extends Backbone.View {
     updateRender() {
 
 		var currentDMRoom = this.model ? this.model.toJSON() : null;
-		if (currentDMRoom)
-		{
+		if (currentDMRoom) {
 			currentDMRoom = _.filter(currentDMRoom, m => {
 				return m.id === this.chatID;
 			})[0] || null;
@@ -93,10 +88,15 @@ AppClasses.Views.Conversations = class extends Backbone.View {
 			directMessages: directMessages,
 			token: $('meta[name="csrf-token"]').attr('content')
 		}));
+		this.delegateEvents();
 		return (this);
     }
     
-	render() {
+	render(chatID) {
+		if (this.chatID != chatID) {
+			this.chatID = chatID;
+			this.updateRender();
+		}
 		this.model.fetch();
 		this.delegateEvents();
 		return (this);
