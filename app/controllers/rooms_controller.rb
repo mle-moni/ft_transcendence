@@ -226,6 +226,11 @@ class RoomsController < ApplicationController
         filteredParams.delete(key)
       end
     end
+
+    if !filteredParams["name"]
+      res_with_error("Empty Room Name", :bad_request)
+      return (false)
+    end
     
     respond_to do |format|
       if @room.update(filteredParams)

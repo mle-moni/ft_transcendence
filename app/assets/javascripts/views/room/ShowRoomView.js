@@ -60,10 +60,6 @@ AppClasses.Views.ShowRoom = class extends Backbone.View {
 			var roomMessages = currentRoom.room_messages;
 			roomMessages.reverse();
 
-			// Filter block user message
-			roomMessages = roomMessages.filter(message => {
-				return !tabBlockedUsersIDs.includes(message.user_id);
-			})
 			// Filter bans
 			var members = [...currentRoom.members, ...currentRoom.admins];	
 			currentRoom.bans.forEach(roomBanRecord => {
@@ -72,6 +68,12 @@ AppClasses.Views.ShowRoom = class extends Backbone.View {
 					return (false);
 				}
 			});
+
+			// Filter block user message
+			roomMessages = roomMessages.filter(message => {
+				return !tabBlockedUsersIDs.includes(message.user_id);
+			})
+		
 
 			// This snippet have to handle the case when an user has been kick so that he doesn't stay on the chat page
 			var idTab = [];
@@ -83,6 +85,7 @@ AppClasses.Views.ShowRoom = class extends Backbone.View {
 			})
 			if (!idTab.includes(attributes.id)) {
 				location.hash = '#room';
+				return false;
 			}
 
 		}

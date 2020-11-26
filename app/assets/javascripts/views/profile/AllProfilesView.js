@@ -21,11 +21,11 @@ AppClasses.Views.AllProfiles = class extends Backbone.View {
 		App.utils.formAjax("/api/handleBlock.json", selectorFormID)
 		.done(res => {
 			App.toast.success("Done", { duration: 2000, style: App.toastStyle });
-			location.reload();	// TMP
+			setTimeout(location.reload(), 50)
 		})
 		.fail((e) => {
 			App.utils.toastError(e);
-			location.reload();	// TMP
+			setTimeout(location.reload(), 50)
 		});
 		return (false);
 	}
