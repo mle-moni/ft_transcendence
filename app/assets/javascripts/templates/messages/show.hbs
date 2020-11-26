@@ -9,7 +9,7 @@
 
 
             {{!-- USER LIST --}}
-            <div class="col-4">
+            <div class="col-3">
             <div class="list-users">
                 {{#each allUsers}}
 
@@ -18,7 +18,7 @@
                     <img src="{{attributes.image}}" style="float: left" alt="Avatar" class="avatar">
                 
                     {{#ifDm ../userID attributes.id ../dmRooms.models }}
-                        <a class="btn" style="background-color: rgb(247, 247, 247);" href="#messages/{{#findDmRoom ../userID attributes.id ../dmRooms.models}}{{/findDmRoom}}">{{attributes.nickname}}</a>
+                        <a class="btn btn-outline-success btn-sm" style="background-color: rgb(247, 247, 247);" href="#messages/{{#findDmRoom ../userID attributes.id ../dmRooms.models}}{{/findDmRoom}}">{{attributes.nickname}}</a>
                         <br>
                     {{else}}
                         <form class="createDM" id="createDM-{{attributes.id}}" action="/api/direct_chats.json" accept-charset="UTF-8" method="POST">
@@ -43,7 +43,7 @@
 
 
             {{!-- CHATBOX --}}
-            <div class="col-8">
+            <div class="col-9">
                 <h3><a class="otherUserProfile" href="#profiles/{{otherUser.id}}">{{otherUser.nickname}} </a></h3>
                 <ul class="list-group">
 

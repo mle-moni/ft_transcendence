@@ -7,11 +7,8 @@ AppClasses.Views.Conversations = class extends Backbone.View {
 		super(opts);
 		this.user = App.models.user;
 		this.chatID = opts.chatID;
-		console.log("---- chat id ------")
-		console.log(this.chatID)
 		this.model = opts.model;
         this.allUsers = App.collections.allUsers;
-
 		this.listenTo(this.allUsers, "change reset add remove", this.updateRender);
 		this.listenTo(this.model, "change reset add remove", this.updateRender);
 		this.allUsers.myFetch();
@@ -111,9 +108,6 @@ AppClasses.Views.Conversations = class extends Backbone.View {
 				}
 			}
 		}
-		// console.log("directMessages end ====> ")
-		// if (directMessages)
-		// 	console.log(directMessages);
 		this.$el.html(this.template({
 			dmRooms: this.model,
 			allUsers: usersNonBlocked ? usersNonBlocked : this.allUsers.models,
