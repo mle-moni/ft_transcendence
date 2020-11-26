@@ -1,22 +1,33 @@
-
-<div class="margin25Div">
 <div id="checkChatPresence"></div>
-<br>
-<h1>Users : </h1>
-<br>
-{{#each allUsers}}
-    {{#ifDm ../userID attributes.id ../dmRooms.models}}
-        <a class="btn btn-success" href="#messages/{{#findDmRoom ../userID attributes.id ../dmRooms.models}}{{/findDmRoom}}">{{attributes.nickname}}</a>
-        <br>
-    {{else}}
-        <form class="createDM" id="createDM-{{attributes.id}}" action="/api/direct_chats.json" accept-charset="UTF-8" method="POST">
-        <input type="hidden" name="authenticity_token" value="{{../token}}">
-        <input type="hidden" name="dmRoom[first_user_id]" value="{{../userID}}">
-        <input type="hidden" name="dmRoom[second_user_id]" value="{{attributes.id}}">
-        <input class="btn btn-primary" type="submit" value="{{attributes.nickname}}">
-        </form>
-    {{/ifDm}}
-    <br>
-{{/each}}
 
-</div>
+    <div class="mycontainer">
+        <div class="row">
+            {{!-- USER LIST --}}
+            <div class="col-3">
+            <div class="list-users">
+                {{#each allUsers}}
+
+                <div class="list-users-item">
+
+                    <img src="{{attributes.image}}" style="float: left" alt="Avatar" class="avatar">
+
+                    {{#ifDm ../userID attributes.id ../dmRooms.models}}
+                        <a class="btn" style="background-color: rgb(247, 247, 247);" href="#messages/{{#findDmRoom ../userID attributes.id ../dmRooms.models}}{{/findDmRoom}}">{{attributes.nickname}}</a>
+                        <br>
+                    {{else}}
+                        <form class="createDM" id="createDM-{{attributes.id}}" action="/api/direct_chats.json" accept-charset="UTF-8" method="POST">
+                        <input type="hidden" name="authenticity_token" value="{{../token}}">
+                        <input type="hidden" name="dmRoom[first_user_id]" value="{{../userID}}">
+                        <input type="hidden" name="dmRoom[second_user_id]" value="{{attributes.id}}">
+
+                        <div style="overflow: hidden; padding-right: .5em;">
+                        <input class="btn" style="background-color: rgb(247, 247, 247);" type="submit" value="{{attributes.nickname}}">
+                        </div>
+                        
+                        </form>
+                    {{/ifDm}}
+                    <br>
+                </div>
+                {{/each}}
+            </div>
+            </div>
