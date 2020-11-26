@@ -23,7 +23,7 @@ function manageDirectChat() {
           // Called when there's incoming data on the websocket for this channel
           console.log("Received DM");
           //TODO: condition suivant type
-          //window.App.collections.allUsers.myFetch();
+          window.App.collections.allUsers.myFetch();
           window.App.collections.DirectMessagesRoom.fetch();
         }
       });

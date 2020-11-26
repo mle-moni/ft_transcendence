@@ -1,76 +1,93 @@
+{{!-- <div class="margin25Div"> --}}
 <div id="checkChatPresence"></div>
 <div id="userID" value="{{currentUser.id}}"></div>
 
-<div class="container">
-    <div class="row">
-        <div class="col" style="justify-content: center;">
-            <br>
-            <a class="btn btn-primary" href="#messages" role="button"> Back </a>
-            <br>
-            <br>
-            <div class="sectionTitle"> <strong>Send a message</strong> </div><br>
-            <form id="sendRoomMessageForm" action="/api/chat_messages.json" accept-charset="UTF-8"
-                method="POST">
-                <input type="hidden" name="authenticity_token" value="{{token}}">
-                {{!-- Room Data --}}
-                <input class="form-control" placeholder="Message" type="text" id="message" name="chat_message[message]">
-                <input type="hidden" id="roomOwner" name="chat_message[from_id]" value="{{currentUser.id}}">
-                <input type="hidden" id="roomID" name="chat_message[direct_chat_id]" value="{{chatID}}">
-                <br>
-                <input class="btn btn-success" type="submit" value="Send">
-                <br>
-            </form>
 
-        </div>
-    </div>
-
-<br><br>
-    <div class="container">
+    <div class="mycontainer">
         <div class="row">
-            <div class="col">
 
+
+
+            {{!-- USER LIST --}}
+            <div class="col-2">
+            <div class="list-users">
+                {{#each allUsers}}
+
+                <div class="list-users-item">
+
+                    <img src="{{attributes.image}}" style="float: left" alt="Avatar" class="avatar">
+                
+                    {{#ifDm ../userID attributes.id ../dmRooms.models }}
+                        <a class="btn" style="background-color: rgb(247, 247, 247);" href="#messages/{{#findDmRoom ../userID attributes.id ../dmRooms.models}}{{/findDmRoom}}">{{attributes.nickname}}</a>
+                        <br>
+                    {{else}}
+                        <form class="createDM" id="createDM-{{attributes.id}}" action="/api/direct_chats.json" accept-charset="UTF-8" method="POST">
+                        <input type="hidden" name="authenticity_token" value="{{../token}}">
+                        <input type="hidden" name="dmRoom[first_user_id]" value="{{../userID}}">
+                        <input type="hidden" name="dmRoom[second_user_id]" value="{{attributes.id}}">
+
+                        {{!-- <input class="btn btn-success" style="float: right" type="submit" value="Send">  --}}
+                        <div style="overflow: hidden; padding-right: .5em;">
+                        <input class="btn" style="background-color: rgb(247, 247, 247);" type="submit" value="{{attributes.nickname}}">
+                        </div>
+           
+                        </form>
+                
+                    {{/ifDm}}
+                    <br>
+                </div>
+                {{/each}}
+            </div>
+            </div>
+
+
+
+            {{!-- CHATBOX --}}
+            <div class="col-10">
+                <h3><a class="otherUserProfile" href="#profiles/{{otherUser.id}}">{{otherUser.nickname}} </a></h3>
                 <ul class="list-group">
 
-                    {{!-- <div class="chat" data-channel-subscribe="room" data-room-id="{{currentDMRoom.id}}"> --}}
+                    {{!-- MESSAGES --}}
                         {{#each directMessages}}
 
+                        {{!-- OTHER USER MESSAGES --}}
                         {{#when from_id "noteq" ../currentUser.id}}
-                        <li style="background-color:lightskyblue" class="list-group-item">
+                        <li class="list-group-item">
 
-                            <div class"otherMessage">
-                                <img src="{{../otherUser.image}}"
-                                    alt="Avatar" class="avatar">
+                            <div class="otherMessage">
 
-                                <div style="min-width: 60px; display: inline-block">
-                                    <a style="display: inline-block;"
+                                <img src="{{../otherUser.image}}" alt="Avatar" class="avatar">
+
+                                {{!-- <div class="userName">
+                                    <a
                                         href="#profiles/ {{../otherUser.id}}">
                                         {{../otherUser.nickname}}
                                     </a>
+                                </div> --}}
 
-                                </div>
+                                <p class="message" data-role="message-text">{{message}}</p>
 
-                                <p style="display: inline; font-style: italic" data-role="message-text">
-                                    {{message}}
-                                </p>
                             </div>
 
                         </li>
                         <br>
                         {{/when}}
 
+                        {{!-- MY MESSAGES --}}
                         {{#when from_id "eq" ../currentUser.id}}
-                        <li style="background-color: #fffdd0;" class="list-group-item">
+                        <li class="list-group-item">
 
-                            <div class"ownMessage">
-                                <img src="{{../currentUser.image}}" alt="Avatar" class="avatar">
+                            <div class="ownMessage">
 
-                                <div style="min-width: 60px; display: inline-block">
-                                    You
-                                </div>
-
-                                <p style="display: inline; font-style: italic" data-role="message-text">
+                                <p class="message" data-role="message-text">
                                     {{message}}
                                 </p>
+
+                                {{!-- <div class="userName">
+                                    You
+                                </div> --}}
+
+                                <img src="{{../currentUser.image}}" alt="Avatar" class="avatar">
                             </div>
 
                         </li>
@@ -78,9 +95,31 @@
                         {{/when}}
 
                         {{/each}}
-                    {{!-- </div> --}}
-
                 </ul>
+                        <div class="row">
+                            <div class="col" style="justify-content: center;">
+                                <br>
+                                <br>
+                                <form id="sendRoomMessageForm" action="/api/chat_messages.json" accept-charset="UTF-8"
+                                    method="POST" style="display: inline;">
+                                    <input type="hidden" name="authenticity_token" value="{{token}}">
+                                    {{!-- Room Data --}}
+                                    <input type="hidden" id="roomOwner" name="chat_message[from_id]" value="{{currentUser.id}}">
+                                    <input type="hidden" id="roomID" name="chat_message[direct_chat_id]" value="{{chatID}}">
+
+                                    <input class="btn" style="float: right; background-color:rgb(24, 119, 242); color:azure" type="submit" value="Send"> 
+                                    <div style="overflow: hidden; padding-right: .5em;">
+                                    <input style="width: 100%;" class="form-control" placeholder="Message" type="text" id="message" name="chat_message[message]">
+                                    </div>
+
+           
+                                    <br>
+                                </form>
+                            </div>
+                        </div>
+               
+
+        
 
 
             </div>
@@ -88,3 +127,5 @@
     </div>
 
 </div>
+
+{{!-- </div> --}}
