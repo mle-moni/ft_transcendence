@@ -34,7 +34,7 @@ AppClasses.Routers.Main = class extends AppClasses.Routers.AbstractRouter {
 				type: 'POST'
 			});
 			this.models.user.update(this.models.user);
-			this.collections.myFetch();
+			this.collections.allUsers.myFetch();
 			this.collections.guilds.fetch();
 		}, 1000 * seconds);
 	}

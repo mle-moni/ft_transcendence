@@ -23,3 +23,116 @@
 .margin25Div {
 	margin: 25px;
 }
+
+.mycontainer
+{
+	width: 95%;
+	height: 90%;
+	margin-top: 3%;
+	margin-left: 2%;
+	margin-right: 2%;
+	margin-bottom: 2%;
+	// border: 1px solid rgb(153, 153, 153);
+
+	.otherUserProfile
+	{
+		color: rgb(24, 119, 242);
+		text-decoration: none;
+	}
+
+	.avatar
+	{
+		border: 1px solid rgb(153, 153, 153);
+	}
+
+	.list-users
+	{
+		// border: 1px solid rgb(24, 119, 242);
+		// display: flex;
+		// width: 600px;
+		height: 80vh;
+		// justify-content: center;
+		overflow-y: scroll;
+		scrollbar-color: light;
+		scrollbar-width: none;
+
+		.list-users-item
+		{
+			justify-content: center;
+			.avatar
+			{
+				
+			}
+
+			.btn
+			{
+				margin-top: 1vh;
+				margin-left: 1vh;
+				border: 1px solid rgb(153, 153, 153);
+			}
+		}
+	}
+
+	.list-group {
+		// width: 600px;
+		height: 60vh; //50
+		// justify-content: center;
+
+
+		overflow-y: scroll;
+		scrollbar-color: light;
+		scrollbar-width: none;
+	
+		display: flex;
+	
+		flex-direction: column-reverse;
+		// overscroll-behavior-y: contain;
+		  // scroll-snap-type: y proximity;
+
+
+		.list-group-item
+		{
+			display: inline-block;
+			border-style: none;
+			background-color: rgb(255, 255, 255);
+	
+			.userName
+			{
+				min-width: 60px;
+				display: inline-block;
+			}
+	
+			.message
+			{
+				display: inline;
+				// font-style: italic;
+				vertical-align: middle;
+				padding: 10px;
+				border-radius: 15px;
+				margin-right: 1vh;
+			}
+	
+			.otherMessage
+			{
+				text-align: left;
+	
+				.message
+				{
+					background-color: rgb(247, 247, 247);
+				}
+			}
+	
+			.ownMessage
+			{
+				
+				text-align: right;
+				.message
+				{
+					background-color: rgb(24, 119, 242);
+					color:azure;
+				}
+			}
+	
+		}
+	}
+}

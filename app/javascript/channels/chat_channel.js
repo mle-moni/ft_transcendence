@@ -26,7 +26,7 @@ function manage_subscription() {
           console.log("Received DM");
 
           //TODO: condition suivant type
-          //window.App.collections.allUsers.myFetch();
+          window.App.collections.allUsers.myFetch();
           window.App.collections.DirectMessagesRoom.fetch();
         }
       });
@@ -43,5 +43,5 @@ $(document).ready(function(){
 
 window.addEventListener("hashchange", e => {
   console.log("You've change of route");
-  setTimeout(manage_subscription, 50);
+  setTimeout(manage_subscription, 250);
 });

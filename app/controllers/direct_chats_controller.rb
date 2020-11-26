@@ -47,6 +47,7 @@ class DirectChatsController < ApplicationController
 
     respond_to do |format|
       if @direct_chat.save
+        ActionCable.server.broadcast "chat_channel", type: "room", description: "create-room", user: current_user
         format.html { redirect_to @direct_chat, notice: 'Direct chat was successfully created.' }
         format.json { render :show, status: :created, location: @direct_chat }
       else
