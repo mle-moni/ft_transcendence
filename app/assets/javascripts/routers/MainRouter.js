@@ -22,7 +22,7 @@ AppClasses.Routers.Main = class extends AppClasses.Routers.AbstractRouter {
 		this.collections.allUsers = new AppClasses.Collections.AllUsers();
 
 		const seconds = 10; // update every N seconds
-		setInterval(() => {
+		/*setInterval(() => {
 			$.ajax({
 				url:  '/api/active',
 				data: { "authenticity_token": $('meta[name="csrf-token"]').attr('content') },
@@ -31,7 +31,7 @@ AppClasses.Routers.Main = class extends AppClasses.Routers.AbstractRouter {
 			this.models.user.update(this.models.user);
 			this.collections.allUsers.myFetch();
 			this.collections.guilds.fetch();
-		}, 1000 * seconds);
+		}, 1000 * seconds);*/
 	}
 	index() {
 		this.basicView("home", "Home", {model: this.models.user});

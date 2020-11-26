@@ -51,8 +51,8 @@ class Game < ApplicationRecord
 				r_score = 0
 				pos_l = 0
 				pos_r = 0
-				speed = 0.15
-				ball_speed = 0.03
+				speed = 0.07
+				ball_speed = 0.007
 				ball_x = 0
 				ball_y = 0
 				dir = [-1, 1].shuffle
@@ -60,8 +60,6 @@ class Game < ApplicationRecord
 				loop do
 					if r_score == 11
 						sleep(2)
-						puts "aaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-						puts "aaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 						ActionCable.server.broadcast room_name, { s: 'end' }
 						if is_ranked == true
 							match.add_player(rating: left_user.elo)
@@ -71,15 +69,15 @@ class Game < ApplicationRecord
 							left_user.save
 							right_user.elo = tmp[1]
 							right_user.save
-							puts right_user.elo
-							puts left_user.elo
+							if right_user.guild
+								right_user.guild.points += 1
+								right_user.guild.save
+							end
 						end
 						Match.create({ winner: right_user, loser: left_user, winner_score: r_score, loser_score: l_score })
 						break
 					elsif l_score == 11
 						sleep(2)
-						puts "aaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-						puts "aaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 						ActionCable.server.broadcast room_name, { s: 'end' }
 						if is_ranked == true
 							match.add_player(rating: right_user.elo)
@@ -89,8 +87,10 @@ class Game < ApplicationRecord
 							left_user.save
 							right_user.elo = tmp[0]
 							right_user.save
-							puts right_user.elo
-							puts left_user.elo
+							if left_user.guild
+								left_user.guild.points += 1
+								left_user.guild.save
+							end
 						end
 						Match.create({ winner: left_user, loser: right_user, winner_score: l_score, loser_score: r_score })
 						break
@@ -103,9 +103,20 @@ class Game < ApplicationRecord
 					when 'u'
 						pos_l = [pos_l - 1 * speed, -0.750].max
 					when 'quit'
-						puts "bbbbbbbbbbbbbbbbbbbbbbbbbbbb"
-						puts "bbbbbbbbbbbbbbbbbbbbbbbbbbbb"
 						ActionCable.server.broadcast room_name, { s: 'end', lv: 'l' }
+						if is_ranked == true
+							match.add_player(rating: right_user.elo)
+							match.add_player(rating: left_user.elo, winner: true)
+							tmp = match.updated_ratings
+							left_user.elo = tmp[1]
+							left_user.save
+							right_user.elo = tmp[0]
+							right_user.save
+							if left_user.guild
+								left_user.guild.points += 1
+								left_user.guild.save
+							end
+						end
 						Match.create({ winner: right_user, loser: left_user, winner_score: r_score, loser_score: l_score })
 						break;
 					end
@@ -116,9 +127,22 @@ class Game < ApplicationRecord
 					when 'u'
 						pos_r = [pos_r - 1 * speed, -0.750].max
 					when 'quit'
-						puts "aaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-						puts "aaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 						ActionCable.server.broadcast room_name, { s: 'end', lv: 'r' }
+						if is_ranked == true
+							match.add_player(rating: left_user.elo)
+							match.add_player(rating: right_user.elo, winner: true)
+							tmp = match.updated_ratings
+							left_user.elo = tmp[0]
+							left_user.save
+							right_user.elo = tmp[1]
+							right_user.save
+							puts right_user.elo
+							puts left_user.elo
+							if right_user.guild
+								right_user.guild.points += 1
+								right_user.guild.save
+							end
+						end
 						Match.create({ winner: left_user, loser: right_user, winner_score: l_score, loser_score: r_score })
 						break
 					end
@@ -129,10 +153,10 @@ class Game < ApplicationRecord
 					case act
 					when 5
 						l_score += 1
-						ball_speed = 0.03
+						ball_speed = 0.007
 					when 4
 						r_score += 1
-						ball_speed = 0.03
+						ball_speed = 0.007
 					end
 					case act
 					when 4..5
@@ -147,17 +171,17 @@ class Game < ApplicationRecord
 						dir[1] = -1 * dir[1]
 					when 1
 						dir = [[-1, -1], [-1, -0.5], [-1, 0], [-1, 0.5], [-1, 1]].shuffle()[0]
-						ball_speed *= 1.1
+						ball_speed *= 1.01
 					when 0
 						dir = [[1, -1], [1, -0.5], [1, 0], [1, 0.5], [1, 1]].shuffle()[0]
-						ball_speed *= 1.1
+						ball_speed *= 1.01
 					end
-					ball_speed = [ball_speed, 0.09].min
+					ball_speed = [ball_speed, 0.03].min
 					ActionCable.server.broadcast room_name, { s: 'g', l: pos_l, r: pos_r, bl: [ball_x, ball_y],
 																sl: l_score, sr: r_score }
 					Redis.current.set(room_name + '_l', nil);
 					Redis.current.set(room_name + '_r', nil);
-					sleep(0.075 - [(Time.now - start_lp).to_f, 0.075].min)
+					sleep(0.01)
 				end
 				puts 'end game'
 			end
