@@ -20,6 +20,9 @@ function manageRoomChat() {
         received(data) {
           // Called when there's incoming data on the websocket for this channel
           console.log("Received Room");
+          console.log(data);
+          console.log("---- Room");
+          
           window.App.collections.rooms.fetch();
           
         }
