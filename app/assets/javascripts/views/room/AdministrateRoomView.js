@@ -13,25 +13,19 @@ AppClasses.Views.AdministrateRoom = class extends Backbone.View {
 			// Global
 			"submit #destroyRoomForm": "destroyRoom",
 			"submit .roomKickForm": "kick"
-
 		}
-
         super(opts);
         this.room_id = opts.room_id;
 		this.tagName = "div";
 		this.template = App.templates["room/administrate"];
-		
 		this.listenTo(this.model, "change reset add remove", this.updateRender);
 		this.listenTo(App.collections.rooms, "change reset add remove", this.updateRender);
-		this.listenTo(App.collections.allUsers, "change reset add remove", this.updateRender);
-
+		// this.listenTo(App.collections.allUsers, "change reset add remove", this.updateRender);
 		this.model.fetch();
 		this.rooms = null;
 		this.superAdmin = false;
-
 		/* Here we decode base64 encoded URL to retrieve the status (Owner or Admin) passed through URL
 		(there might be easier way to pass that info ...) */
-
 		this.encodedStatusAdministrate = null;
 		this.statusAdministrate = null;
 		var status = window.location.href.substring(window.location.href.lastIndexOf('?') + 1);
@@ -62,12 +56,11 @@ AppClasses.Views.AdministrateRoom = class extends Backbone.View {
 	roomMuteBanHandler(e) {
 
 		e.preventDefault();
+		if (e.target.children.length < 3) return (false);
 		const roomID = e.target.children[1].value
 		const targetMemberID = e.target.children[2].value
-		
 		var urlAPI = null;
 		var selectorFormID = null;
-
 		switch (e.target.className) {
 			case "roomMuteMemberForm":
 				urlAPI = "/api/rooms/mute.json"
@@ -123,6 +116,7 @@ AppClasses.Views.AdministrateRoom = class extends Backbone.View {
 
 	destroyRoom(e) {
 		e.preventDefault();
+		if (e.target.children.length < 2) return (false);
 		const roomID = e.target.children[1].value
 		App.utils.formAjax("/api/rooms/" + roomID + ".json", "#destroyRoomForm")
 		.done(res => {
@@ -136,6 +130,7 @@ AppClasses.Views.AdministrateRoom = class extends Backbone.View {
 
 	kick(e) {
 		e.preventDefault();
+		if (e.target.children.length < 3) return (false);
 		const roomID = e.target.children[1].value;
 		const target = e.target.children[2].value;
 		App.utils.formAjax("/api/rooms/kick.json", "#roomKickForm-" + target)
@@ -169,12 +164,9 @@ AppClasses.Views.AdministrateRoom = class extends Backbone.View {
 		if (currentRoom) {
 			members		= currentRoom.members;
 			admins		= currentRoom.admins;
-
 			// Deletion of the current user in the admin view
-
 			members = members.filter(m => { return m.id != attributes.id; })
 			admins = admins.filter(a => { return a.id != attributes.id; })
-
 			// Here, record is the table RoomMute / RoomBan, not users
 			currentRoom.mutes.forEach(record => {
 				mutesTabIDs.push(record.user_id);
@@ -195,15 +187,13 @@ AppClasses.Views.AdministrateRoom = class extends Backbone.View {
 			admins = admins.filter(admin => {
 				return admin.id != currentRoom.owner_id;
 			})
-
 			if (this.statusAdministrate == "owner" || this.superAdmin)
 				membersPlusAdmins = [...members, ...admins];
 			else
 				membersPlusAdmins = members;
-		
 		}
 
-		if (attributes.admin == true)
+		if (attributes && attributes.admin == true)
 			this.statusAdministrate = "superAdmin";
 	
 		this.$el.html(this.template({

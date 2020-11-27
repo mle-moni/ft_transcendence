@@ -22,21 +22,19 @@ class RoomsController < ApplicationController
   def joinPublic
 
     @room = Room.find(params["room"]["room_id"])
-    if !@room
+    if !@room 
       res_with_error("Unknow Room", :bad_request)
       return (false)
     end
 
     # The 'if' shouldn't be needed since the "Join" action is offer only 1 time, but by prevention we keep it
     # Owner is admin with the differences vs other admin that he match the room owner_id
-
     if !current_user.rooms_as_member.include?(@room) && current_user.id != @room.owner_id
       @rlm = RoomLinkMember.new(room: @room, user: current_user)
       @rlm.save
     end
 
     respond_to do |format|
-
       ActionCable.server.broadcast "room_channel", type: "rooms", description: "join-public", user: current_user
       format.html { redirect_to rooms_url, notice: 'Room Joined !' }
       format.json { render json: {roomID: @room.id}, status: :ok }
@@ -44,7 +42,6 @@ class RoomsController < ApplicationController
   end
 
   def joinPrivate
-
     @room = Room.find(params["room"]["room_id"])
     if !@room
       res_with_error("Unknow Room", :bad_request)
@@ -56,7 +53,6 @@ class RoomsController < ApplicationController
       res_with_error("Wrong password !", :bad_request)
       return false
     end
-
     # The 'if' shouldn't be needed since the "Join" action is offer only 1 time, but by prevention we keep it
     if !current_user.rooms_as_member.include?(@room) && current_user.id != @room.owner_id
       @rlm = RoomLinkMember.new(room: @room, user: current_user)
@@ -64,7 +60,6 @@ class RoomsController < ApplicationController
     end
 
     respond_to do |format|
-
       ActionCable.server.broadcast "room_channel", type: "rooms", description: "join-private", user: current_user
       format.html { redirect_to rooms_url, notice: 'Room Joined !' }
       format.json { render json: {room: @room}, status: :ok }
@@ -77,14 +72,16 @@ class RoomsController < ApplicationController
     filteredParams = params.require(:room).permit(:id, :member)
     @room = Room.find(filteredParams["id"])
     newAdmin = User.find(filteredParams["member"])
-
+    if @room == nil || newAdmin == nil
+      res_with_error("Room or Targeted User invalid", :bad_request)
+      return false
+    end
     if !RoomLinkAdmin.where(user_id: filteredParams["member"], room_id: filteredParams["id"]).exists?
       add = RoomLinkAdmin.new(room: @room, user: newAdmin)
       add.save
       RoomLinkMember.where(user_id: filteredParams["member"], room_id: filteredParams["id"]).destroy_all
       ActionCable.server.broadcast "room_channel", type: "rooms", description: "promote-admin", user: current_user
     end
-
     respond_to do |format|
       format.html { redirect_to @room, notice: 'Admin promoted' }
       format.json { render :show, status: :created, location: @room }
@@ -92,11 +89,13 @@ class RoomsController < ApplicationController
   end
 
   def demoteAdmin
-  
     filteredParams = params.require(:room).permit(:id, :member)
     @room = Room.find(filteredParams["id"])
     admin = User.find(filteredParams["member"])
-
+    if @room == nil || admin == nil
+      res_with_error("Room or Targeted User invalid", :bad_request)
+      return false
+    end
     if admin.rooms_as_admin.include?(@room) && admin.id != @room.owner_id
       add = RoomLinkMember.new(room: @room, user: admin)
       add.save
@@ -117,6 +116,11 @@ class RoomsController < ApplicationController
     grade = filteredParams["userRoomGrade"]
     owner = User.find(filteredParams["owner_id"])
     @room = Room.find(filteredParams["room_id"])
+
+    if @room == nil
+      res_with_error("Room nvalid", :bad_request)
+      return false
+    end
 
     if grade == "Owner" || grade == "Admin"
       RoomLinkAdmin.where(user: current_user, room: @room).destroy_all
@@ -153,18 +157,14 @@ class RoomsController < ApplicationController
     
     # client side validation to add
     filteredParams = params.require(:room).permit(:name, :owner_id, :privacy, :password)
-
-
     if !["", "public", "private"].include?(filteredParams["privacy"])
       res_with_error("Privacy field must be either empty, public or private", :bad_request)
       return (false)
     end
-
     if filteredParams["name"].empty?
       res_with_error("Invalid parameters", :bad_request)
       return (false)
     end
-
     if filteredParams["privacy"] == "private"
       if filteredParams["password"].empty?
         res_with_error("None empty password required if the room is private", :bad_request)
@@ -176,8 +176,7 @@ class RoomsController < ApplicationController
     end
 
     @room = Room.create(filteredParams)
-
-    if !current_user.rooms_as_admin.include?(@room)
+    if @room && !current_user.rooms_as_admin.include?(@room)
       @rla = RoomLinkAdmin.new(room: @room, user: current_user)
       @rla.save
     end
@@ -199,9 +198,7 @@ class RoomsController < ApplicationController
   def update
 
     filteredParams = params.require(:room).permit(:name, :privacy, :password, :id)
-
     @room = Room.find(filteredParams["id"])
-
     if !["", "public", "private"].include?(filteredParams["privacy"])
       res_with_error("Privacy field must be either empty, public or private", :bad_request)
       return (false)
@@ -229,6 +226,11 @@ class RoomsController < ApplicationController
 
     if !filteredParams["name"]
       res_with_error("Empty Room Name", :bad_request)
+      return (false)
+    end
+
+    if @room == nil
+      res_with_error("Unknow Room", :bad_request)
       return (false)
     end
     
