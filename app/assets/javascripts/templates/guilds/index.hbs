@@ -1,9 +1,9 @@
-<h1>List of guilds</h1>
+<h1>Guild ladder</h1>
 <br>
 {{#each guilds}}
     <div>
-		<h2>{{name}}, {{points}} points</h2>
-		<a style="font-size: 14px;" href="#guilds/{{id}}">profile page</a>
+		<h2 style="display: inline;">{{rank}} | {{points}} points | </h2>
+		<a style="font-size: 20px;" href="#guilds/{{id}}">[{{anagram}}] {{name}}</a>
 		<br>
 	</div>
 {{/each}}

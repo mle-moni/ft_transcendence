@@ -8,8 +8,14 @@ AppClasses.Views.Guilds = class extends Backbone.View {
 		this.model.fetch();
 	}
 	updateRender() {
+		const guilds = this.model.toJSON().sort((a, b) => {
+			return (b.points - a.points);
+		});
+		for (let i = 0; i < guilds.length; i++) {
+			guilds[i].rank = i + 1;
+		}
 		this.$el.html(this.template({
-			guilds: this.model.toJSON()
+			guilds
 		}));
 		return (this);
 	}
