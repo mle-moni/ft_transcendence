@@ -12,16 +12,7 @@ class RoomsAdministrateController < ApplicationController
       res_with_error("Room or Targeted User invalid", :bad_request)
       return false
     end
-
-    # puts "-------"
-    # puts endDateTimeFormat
-    # Complètement WTF le timezone avec PGSQL
-    # Besoin de soustraire 1H car PGSQL est en UTC 0 peu importe les paramètres de la requête
     endDateTimeFormat = endDateTimeFormat - 1.hours
-    #  puts "-------"
-    #  puts endDateTimeFormat
-    #  puts "-------"
-    
     if endDateTimeFormat.past?
       res_with_error("You can't mute in the past", :bad_request)
       return false

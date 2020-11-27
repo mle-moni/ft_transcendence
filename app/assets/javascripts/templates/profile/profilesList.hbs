@@ -1,7 +1,6 @@
 <div class="allProfilesList">
-	<br>
-	<h3> <u>Users List </u>&nbsp; 🏆
-	</h3>
+	🏆&nbsp;  <p style="display: inline-block;font-size: 20px;"> <u>Leaderboard</u>&nbsp; 
+	</p>🏆
 	<br>
 
 	{{#each users}}
@@ -40,8 +39,22 @@
 		<br>
 		<div style="margin-top: 15px;">
 			&nbsp;&nbsp;
-			🏅 &nbsp; <p style="display: inline;font-size: 16px;"> <strong> Ladder rank </strong> : </p>
-			 <p style="display: inline;">{{rank}} | {{elo}} | </p>
+			  <p style="display: inline;font-size: 16px;"> <strong> Ladder rank </strong> : </p>
+			 <p style="display: inline;">
+				 &nbsp;
+				 {{#when rank "eq" 1}}
+				 🥇 &nbsp;
+				 {{/when}}
+				  {{#when rank "eq" 2}}
+				 🥈 &nbsp;
+				 {{/when}}
+				  {{#when rank "eq" 3}}
+				 🥉 &nbsp;
+				 {{/when}}
+				 {{rank}}
+				 
+				 
+				 | ELO {{elo}} | </p>
 			{{!-- <a style="font-size: 14px;" href="#profiles/{{id}}">{{nickname}}</a> --}}
 			<br><br>
 		</div>

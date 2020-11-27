@@ -104,7 +104,10 @@
 
         <div class="sectionTitle"> <u>Mutes and Bans</u> </div>
         <br>
+
+        {{!-- Here, membersPlusAdmins contains 'really' members + admins only if currentUser is owner or superAdmin, else it contains only members --}}
         {{#each membersPlusAdmins}}
+
         <div class="memberCard">
             • {{nickname}} &nbsp;
 

@@ -4,7 +4,7 @@
 <div class="editRoomView">
 
 
-	<p> <u> {{titleText}}</u> </p>
+	<p>  {{titleText}} <u> {{name}}</u> </p>
 
 	<form id="{{editID}}" action="/api/rooms/{{room_id}}.json" accept-charset="UTF-8" method="PUT">
 
@@ -35,6 +35,7 @@
 		<input type="hidden" name="authenticity_token" value="{{token}}">
 		<input placeholder="Type room name" class="form-control" type="text" id="confirmRoomName">
 		<br>
+		<input type="hidden" id="roomID" name="room[room_id]" value="{{room_id}}">
 		<input type="submit" class="btn btn-danger" value="Confirm room delete">
 	</form>
 

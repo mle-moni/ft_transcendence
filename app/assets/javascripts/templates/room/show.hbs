@@ -8,7 +8,7 @@
             <a class="btn btn-primary" href="#room" role="button"> Back </a>
             <br>
             <br>
-            <div class="sectionTitle"> <strong>Send a message</strong> </div><br>
+            <div class="sectionTitle"> <strong>Send a message to room <u> {{currentRoom.name}} </u></strong> </div><br>
             <form id="{{messageCreateForm.formID}}" action="/api/room_messages.json" accept-charset="UTF-8"
                 method="{{messageCreateForm.method}}">
                 <input type="hidden" name="authenticity_token" value="{{messageCreateForm.token}}">

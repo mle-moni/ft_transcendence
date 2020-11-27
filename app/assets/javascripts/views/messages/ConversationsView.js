@@ -9,7 +9,7 @@ AppClasses.Views.Conversations = class extends Backbone.View {
 		this.chatID = opts.chatID;
 		this.model = opts.model;
         this.allUsers = App.collections.allUsers;
-		this.listenTo(this.allUsers, "change reset add remove", this.updateRender);
+		this.listenTo(this.allUsers, "reset add remove", this.updateRender);
 		this.listenTo(this.model, "change reset add remove", this.updateRender);
 		this.allUsers.myFetch();
 		this.model.fetch();

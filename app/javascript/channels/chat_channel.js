@@ -1,12 +1,17 @@
 import consumer from "./consumer"
 
+// https://stackoverflow.com/questions/60050647/disconnect-and-unsubscribe-action-cable-on-rails-6?rq=1
+
 function manageDirectChat() {
-    const in_dm = document.getElementById("checkChatPresence");
-    if (in_dm)
-    {
-        consumer.subscriptions.create({
+
+    if (subDC) {
+      consumer.subscriptions.remove(subDC);
+    }
+
+    const inDM = document.getElementById("checkChatPresence");
+    if (inDM) {
+      var subDC = consumer.subscriptions.create({
           channel: "ChatChannel"
-          // room_id: $('.chat').attr('data-room-id')
         }, {
         connected() {
           // Called when the subscription is ready for use on the server
@@ -22,20 +27,19 @@ function manageDirectChat() {
         received(data) {
           // Called when there's incoming data on the websocket for this channel
           console.log("Received DM");
-          //TODO: condition suivant type
           window.App.collections.allUsers.myFetch();
-          window.App.collections.DirectMessagesRoom.fetch();
+          // window.App.collections.DirectMessagesRoom.fetch(); --> à reconfirmer
         }
       });
     }
 }
-
 
 $(window).on('popstate', e => {
   var detectChat = document.getElementById("checkChatPresence");
   if (detectChat) { 
     setTimeout(manageDirectChat, 250)
   }
+  // ELSE ?
  });
 
 $(document).ready(function(){
@@ -43,6 +47,7 @@ $(document).ready(function(){
   if (detectChat) { 
     setTimeout(manageDirectChat, 250)
   }
+  // ELSE ?
 });
 
 window.addEventListener("hashchange", e => {
@@ -50,5 +55,6 @@ window.addEventListener("hashchange", e => {
   if (detectChat) { 
     setTimeout(manageDirectChat, 250)
   }
+  // ELSE ?
 });
 

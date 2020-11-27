@@ -195,7 +195,11 @@ AppClasses.Views.AdministrateRoom = class extends Backbone.View {
 			admins = admins.filter(admin => {
 				return admin.id != currentRoom.owner_id;
 			})
-			membersPlusAdmins = [...members, ...admins];
+
+			if (this.statusAdministrate == "owner" || this.superAdmin)
+				membersPlusAdmins = [...members, ...admins];
+			else
+				membersPlusAdmins = members;
 		
 		}
 

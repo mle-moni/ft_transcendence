@@ -1,12 +1,13 @@
 import consumer from "./consumer"
 
 function manageRoomChat() {
-    const in_room = document.getElementById("checkRoomPresence");
-    if (in_room)
-    {
-        consumer.subscriptions.create({
+    if (subRoom) {
+      consumer.subscriptions.remove(subDC);
+    }
+    const inRoom = document.getElementById("checkRoomPresence");
+    if (inRoom) {
+      var subRoom = consumer.subscriptions.create({
           channel: "RoomChannel"
-          // room_id: $('.chat').attr('data-room-id')
         }, {
         connected() {
           // Called when the subscription is ready for use on the server
@@ -15,6 +16,7 @@ function manageRoomChat() {
         },
     
         disconnected() {
+          App.cable.subscriptions.remove(this)
           // Called when the subscription has been terminated by the server
           console.log("Disconnected Room");
         },
@@ -22,9 +24,8 @@ function manageRoomChat() {
         received(data) {
           // Called when there's incoming data on the websocket for this channel
           console.log("Received Room");
-          //TODO: condition suivant type
           window.App.collections.rooms.fetch();
-          window.App.collections.allUsers.myFetch();
+          // window.App.collections.allUsers.myFetch(); ---> à reconfirmer
           
         }
       });
@@ -38,13 +39,15 @@ $(window).on('popstate', e => {
   if (detectRoom) { 
     setTimeout(manageRoomChat, 250)
   }
- });
+  // ELSE ?
+});
 
 $(document).ready(function(){
   var detectRoom = document.getElementById("checkRoomPresence")
   if (detectRoom) { 
     setTimeout(manageRoomChat, 250)
   }
+  // ELSE ?
 });
 
 window.addEventListener("hashchange", e => {
@@ -52,4 +55,5 @@ window.addEventListener("hashchange", e => {
   if (detectRoom) { 
     setTimeout(manageRoomChat, 250)
   }
+  // ELSE ?
 });

@@ -58,16 +58,16 @@ AppClasses.Views.EditRoom = class extends Backbone.View {
 	updateRender() {
 		const u = App.models.user || null;
 		const room = this.model.findWhere({id: this.room_id}) || null; 
-
+		var name = null;
+		if (room) name = room.attributes.name || null;
 		if (u && room && !App.utils.assertRoomCurrentUserIsOwnerOrSuperAdmin(u.attributes, room.attributes)) {
 			location.hash = '#room';
 			return (false);
 		}
-
 		/* Give Data to the room form template */
 		this.$el.html(this.template({ 
 			user: u,
-			titleText: "Edit a chat room",
+			titleText: "Edit Room",
 			EditText: "Edit the room",
 			editID: "editRoomForm",
 			DeleteButton: "displayDeleteForm",
@@ -75,6 +75,7 @@ AppClasses.Views.EditRoom = class extends Backbone.View {
 			deleteID: "deleteRoomForm",
 			room_id: this.room_id,
 			room: room,
+			name: name,
 			token: $('meta[name="csrf-token"]').attr('content')
 		}));
 		/* Tell BB to remove after submit */

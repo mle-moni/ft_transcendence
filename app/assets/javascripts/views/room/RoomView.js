@@ -40,6 +40,7 @@ AppClasses.Views.Room = class extends Backbone.View {
 		.done(res => {
 			App.toast.success("Good Password", { duration: 2000, style: App.toastStyle });
 			// location.hash = `#rooms/` + roomID;
+			// location.reload();
 		})
 		.fail((e) => {
 			App.utils.toastError(e);
@@ -59,6 +60,7 @@ AppClasses.Views.Room = class extends Backbone.View {
 		.done(res => {
 			App.toast.success("Room Joined !", { duration: 1500, style: App.toastStyle });
 			// location.hash = `#rooms/` + roomID;
+			// location.reload();
 		})
 		.fail((e) => {
 			App.utils.toastError(e);
@@ -94,8 +96,22 @@ AppClasses.Views.Room = class extends Backbone.View {
 		var roomJoinedAsOwner = [];
 		var roomJoinedAsRoomAdmin = [];
 		var roomJoinedAsMember = [];
-		const data = this.model.toJSON();
+		var data = this.model.toJSON();
 
+		// Delete room from which current user is banned
+		var currentUserBannedFromRoomsIDs = []; 
+		if (attributes) {
+			data.forEach(room => {
+				if (room.bans.length > 0) {
+					room.bans.forEach(ban => {
+						if (ban.user_id == attributes.id) currentUserBannedFromRoomsIDs.push(ban.room_id);
+					})
+				}
+			});
+		}
+		data = data.filter(room => !currentUserBannedFromRoomsIDs.includes(room.id));
+
+		// Filter administred rooms
 		data.forEach(room => {
 			if (room.admins.length > 0) {
 				room.admins.forEach(admin => {
@@ -106,6 +122,7 @@ AppClasses.Views.Room = class extends Backbone.View {
 				}
 			)}
 		});
+		// Filter members rooms
 		data.forEach(room => {
 			if (room.members.length > 0) {
 				room.members.forEach(member => {
@@ -116,6 +133,7 @@ AppClasses.Views.Room = class extends Backbone.View {
 				}
 			)}
 		});
+		// Filter owned rooms
 		data.forEach(room => {
 			if (room.owner_id === userID) {
 				tabID.push(room.id);
@@ -123,14 +141,17 @@ AppClasses.Views.Room = class extends Backbone.View {
 			}
 		})
 
-
+		// Delete duplicate between owned and administrate rooms
 		tabID = [...new Set(tabID)];
 		roomJoinedAsRoomAdmin = roomJoinedAsRoomAdmin.filter(roomAdministred => {
 			return roomAdministred.owner_id != userID;
 		})
+		// The remain rooms are not joined, we filter them
 		var notJoinedRooms = data.filter(function(room) {
 			return !tabID.includes(room.id);
 		});
+
+
 		
 		this.$el.html(this.template({
 			roomJoinedAsOwner: roomJoinedAsOwner,
