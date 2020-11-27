@@ -8,7 +8,6 @@ AppClasses.Views.ShowRoom = class extends Backbone.View {
 		this.tagName = "div";
 		this.template = App.templates["room/show"];
 		this.listenTo(this.model, "change add", this.updateRender);
-		this.listenTo(App.collections.allUsers, "add remove", this.updateRender);
 		this.model.fetch();
 		this.rooms = null;
 		// For fetching blocked tables linked to user model
@@ -18,10 +17,8 @@ AppClasses.Views.ShowRoom = class extends Backbone.View {
 	
 	submit(e) {
 		e.preventDefault();
-		if (e.currentTarget.message.value == "") {
-			// App.toast.message("You cannot send empty message", { duration: 2000, style: App.toastStyle });
+		if (!e.currentTarget.message || (e.currentTarget.message && e.currentTarget.message.value == ""))
 			return ;
-		}
 		App.utils.formAjax("/api/room_messages.json", "#sendRoomMessageForm")
 		.done(res => {
 			App.toast.success("Message sent", { duration: 1000, style: App.toastStyle });
