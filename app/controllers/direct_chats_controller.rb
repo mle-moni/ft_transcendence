@@ -4,7 +4,6 @@ class DirectChatsController < ApplicationController
   # GET /direct_chats
   # GET /direct_chats.json
   def index
-    puts "GET CALLED"
     @direct_chats = DirectChat.all
   end
 
@@ -26,25 +25,14 @@ class DirectChatsController < ApplicationController
   # POST /direct_chats
   # POST /direct_chats.json
   def create
-    puts "FONCTION CREATE"
-    puts params
     filteredParams = params.require(:dmRoom).permit(:first_user_id, :second_user_id)
-    puts"----- user id 1 -------"
-    puts filteredParams["first_user_id"]
-    puts"----- user id 2 -------"
-    puts filteredParams["second_user_id"]
-
-
     first_user = User.find(filteredParams["first_user_id"])
     second_user = User.find(filteredParams["second_user_id"])
-    puts"-----"
-    puts first_user.inspect
-    puts"-----"
-    puts second_user.inspect
-    puts"-----"
-    puts "AVANT NEW"
+    if !first_user || !second_user
+      res_with_error("Unknow User", :bad_request)
+      return (false)
+    end 
     @direct_chat = DirectChat.new(user1_id: filteredParams["first_user_id"], user2_id: filteredParams["second_user_id"])
-
     respond_to do |format|
       if @direct_chat.save
         ActionCable.server.broadcast "chat_channel", type: "room", description: "create-room", user: current_user

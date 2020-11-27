@@ -24,7 +24,6 @@ class ChatMessagesController < ApplicationController
     # POST /chat_messages.json
     def create
         filteredParams = params.require(:chat_message).permit(:message, :from_id, :direct_chat_id)
-        puts filteredParams
         #@chat = DirectChat.find(filteredParams["direct_chat_id"])
         # Le "by" n'importe pas car c'est forcément un admin ou owner ou superAdmin qui l'a mute, et un tel mute vaut pour tout le monde
         # if RoomMute.where(room: @room, user: current_user).exists?
@@ -33,7 +32,10 @@ class ChatMessagesController < ApplicationController
         # end 
         user = User.find(filteredParams["from_id"])
         dc = DirectChat.find(filteredParams["direct_chat_id"])
-
+        if !user || !dc
+            res_with_error("Unknow DirectChat or User", :bad_request)
+            return (false)
+        end
         @chat_message = DirectMessage.create(message: filteredParams["message"], from: user, direct_chat: dc)
         respond_to do |format|
             if @chat_message.save
@@ -52,7 +54,6 @@ class ChatMessagesController < ApplicationController
     def update
         respond_to do |format|
         if @chat_message.update(chat_message_params)
-
             format.html { redirect_to @chat_message, notice: 'Room message was successfully updated.' }
             format.json { render :show, status: :ok, location: @chat_message }
         else
@@ -76,7 +77,7 @@ class ChatMessagesController < ApplicationController
 
         # Only allow a list of trusted parameters through.
         def chat_message_params
-        params.require(:chat_message).permit(:user_id, :room_id)
+            params.require(:chat_message).permit(:user_id, :room_id)
         end
 
         def res_with_error(msg, error)

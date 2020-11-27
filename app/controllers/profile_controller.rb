@@ -9,8 +9,6 @@ class ProfileController < ApplicationController
 	end
 
 	def get
-		puts current_user.blocked
-		puts "====="
 		respond_to do |format|
 			format.html { redirect_to "/#profile", notice: 'Profile infos updated' }
 			format.json { render json: User.clean(current_user), status: :ok }
@@ -20,7 +18,6 @@ class ProfileController < ApplicationController
 	def disable_otp
 		current_user.otp_required_for_login = false
 		current_user.save!
-		
 		respond_to do |format|
 			format.html { redirect_to "/#profile", notice: 'Two factor auth disabled' }
 			format.json { render json: {msg: "Two factor auth successfully disabled"}, status: :ok }
@@ -89,8 +86,6 @@ class ProfileController < ApplicationController
 			return false
 		end
 		respond_to do |format|
-			# TODO : broadcast to room and others channels
-			# ActionCable.server.broadcast "room_channel", type: "rooms", description: "A user has been banned", user: current_user
 			format.html { redirect_to "/#profiles", notice: 'Done' }
 			format.json { head :no_content }
 		end

@@ -20,7 +20,6 @@ AppClasses.Routers.RoomRouter = class extends AppClasses.Routers.AbstractRouter 
 	}
 
 	newRoom() {
-		// TODO : brancher à cable l'ajout d'une room
 		this.basicView("newRoom", "NewRoom", {model: this.models.user});
 	}
 

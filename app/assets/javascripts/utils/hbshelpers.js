@@ -19,6 +19,8 @@ Handlebars.registerHelper( "when",function(operand_1, operator, operand_2, optio
 /* Example : {{#getUserAttributes ../members user_id "image"}} */
 
 Handlebars.registerHelper('getUserAttributes', function(collection, id, attribute) {
+    if (!collection || !id || !attribute)
+        return null;
     var collectionLength = collection.length;
     for (var i = 0; i < collectionLength; i++) {
         if (collection[i].id === id) {
@@ -29,14 +31,14 @@ Handlebars.registerHelper('getUserAttributes', function(collection, id, attribut
 });
 
 Handlebars.registerHelper('ifIn', function(elem, list, options) {
-    if (list.indexOf(elem) > -1) {
+    if (list && list.indexOf(elem) > -1) {
       return options.fn(this);
     }
     return options.inverse(this);
 });
 
 Handlebars.registerHelper('ifNotIn', function(elem, list, options) {
-    if (list.indexOf(elem) == -1) {
+    if (list && list.indexOf(elem) == -1) {
       return options.fn(this);
     }
     return options.inverse(this);
@@ -52,6 +54,8 @@ Handlebars.registerHelper('ifOr', function(aBoolean, bValue, bTested, options) {
 
 Handlebars.registerHelper('ifDm', function(userID, otherUserID, dmRooms, options) {
 
+    if (!userID || !otherUserID || !dmRooms)
+        return null;
     for (var count = 0; count < dmRooms.length; count++)
     {
         if ((userID == dmRooms[count].attributes.user1_id
@@ -65,8 +69,9 @@ Handlebars.registerHelper('ifDm', function(userID, otherUserID, dmRooms, options
 
 Handlebars.registerHelper('findDmRoom', function(userID, otherUserID, dmRooms) {
 
-    for (var count = 0; count < dmRooms.length; count++)
-    {
+    if (!userID || !otherUserID || !dmRooms)
+        return null;
+    for (var count = 0; count < dmRooms.length; count++) {
         if ((userID == dmRooms[count].attributes.user1_id
             && otherUserID == dmRooms[count].attributes.user2_id)
             || (userID == dmRooms[count].attributes.user2_id

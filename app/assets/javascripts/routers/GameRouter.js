@@ -10,6 +10,5 @@ AppClasses.Routers.GameRouter = class extends AppClasses.Routers.AbstractRouter 
 	}
 	show(room_id) {
 		this.viewWithRenderParam("gamePlay", "GamePlay", room_id, { room_id })
-		console.log(room_id);
 	}
 }

@@ -28,7 +28,7 @@ class RoomMessagesController < ApplicationController
     filteredParams = params.require(:room_message).permit(:message, :user_id, :room_id)
     @room = Room.find(filteredParams["room_id"])
     # Le "by" n'importe pas car c'est forcément un admin ou owner ou superAdmin qui l'a mute, et un tel mute vaut pour tout le monde
-    if RoomMute.where(room: @room, user: current_user).exists?
+    if @room && RoomMute.where(room: @room, user: current_user).exists?
       res_with_error("You're currently muted", :bad_request)
       return false
     end
