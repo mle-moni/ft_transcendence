@@ -2,14 +2,16 @@
 
 
 	<br>
-	<p style="font-size: 20px;"> <u> <strong> List of guilds </strong></u>  &nbsp; ⚛ </p>
+	<p style="font-size: 20px;"> <u> <strong> Guild Ladder </strong></u>  &nbsp; ⚛ </p>
 
 	<br>
 	{{#each guilds}}
 	<div>
 		<h2> {{name}} </h2>
 		<p>{{points}} points</p>
-		<a style="font-size: 14px;" class="btn btn-primary" href="#guilds/{{id}}">Profile Page</a>
+		<p>Rank {{rank}}</p>
+
+		<a style="font-size: 14px;" class="btn btn-primary" href="#guilds/{{id}}">[{{anagram}}] {{name}}</a>
 
 	</div>
 	{{/each}}

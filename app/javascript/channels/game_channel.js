@@ -25,6 +25,12 @@ function clear() {
 
 function subscription_loop() {
   const ingameelement = document.getElementById("in_game_id")
+  let ranked = true;
+  const ranked_el = document.getElementById("ranked")
+
+  if (ranked_el === null)
+    ranked = false;
+
   if (ingameelement === null) {
     consumer.subscriptions.subscriptions.forEach(sub => {
       // console.log(sub);
@@ -123,7 +129,7 @@ function subscription_loop() {
               this.role = data.msg;
               this.room = data.match_room_id;
               console.log("your role is : " + this.role);
-              this.perform("start_game", {action: "wait", room_id: this.room, player: this.role}); // default action
+              this.perform("start_game", {action: "wait", room_id: this.room, player: this.role, is_ranked: ranked }); // default action
               document.addEventListener("keydown",  event => {
                 switch (event.keyCode) {
                   case 90 || 38:
@@ -150,6 +156,9 @@ function subscription_loop() {
                 this.keyboard["up"] = false;
                 this.keyboard["down"] = false;
               });
+
+              const UID = document.getElementById("UID");
+              UID.innerHTML = `You have the ${this.role} paddle`
             },
 
             disconnected() {
