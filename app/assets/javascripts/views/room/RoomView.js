@@ -76,9 +76,8 @@ AppClasses.Views.Room = class extends Backbone.View {
 	updateRender() {
 
 		const { attributes } = App.models.user;
-		if (attributes)
-			const userID = attributes.id;
-		
+		var userID = null;
+		if (attributes) userID = attributes.id;
 		var tabID = [];
 		var roomJoinedAsOwner = [];
 		var roomJoinedAsRoomAdmin = [];

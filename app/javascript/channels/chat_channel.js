@@ -24,27 +24,18 @@ function manageDirectChat() {
           // Called when there's incoming data on the websocket for this channel
           console.log("Received DM");
           window.App.collections.DirectMessagesRoom.fetch();
+          // window.App.collections.allUsers.myfetch();
+
         }
       });
     } else {
-      // console.log("Not in ChatChannel");
       consumer.subscriptions.subscriptions.forEach(sub => {
         if (sub.identifier && sub.identifier.includes("ChatChannel")) {
-          // console.log("Removed ChatChannel");
           consumer.subscriptions.remove(sub);
         }
       })
     }
 }
-
-// 250 to be sure that the view is fully rendered before checking '#checkRoomPresence' in manageRoomChat()
-// popstate = prev / after buttons
-// .ready = refresh
-// haschange = change route
-
-$(window).on('popstate', e => {
-    setTimeout(manageDirectChat, 250)
- });
 
 $(document).ready(function(){
     setTimeout(manageDirectChat, 250)

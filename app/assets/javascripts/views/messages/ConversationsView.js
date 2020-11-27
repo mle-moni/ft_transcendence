@@ -10,12 +10,17 @@ AppClasses.Views.Conversations = class extends Backbone.View {
 		this.model = opts.model;
         this.allUsers = App.collections.allUsers;
 		this.listenTo(this.model, "change reset add remove", this.updateRender);
+        this.listenTo(App.collections.allUsers, "change reset add remove", this.filterUpdateRender);
 		this.allUsers.myFetch();
 		this.model.fetch();
 		this.tagName = "div";
         this.template = App.templates["messages/show"];
 		this.updateRender();
+	}
 
+	filterUpdateRender() {
+		if (this.allUsers != App.collections.allUsers)
+			this.updateRender();
 	}
 
     createDM(e) {

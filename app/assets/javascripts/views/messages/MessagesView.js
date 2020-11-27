@@ -1,23 +1,19 @@
 AppClasses.Views.DirectMessages = class extends Backbone.View {
 	constructor(opts) {
 		opts.events = {
-            "submit .createDM": "createDM",
-            // "submit .joinDM": "joinDM",
+			"submit .createDM": "createDM"
 		}
 		super(opts);
-
 		this.tagName = "div";
         this.template = App.templates["messages/index"];
         this.user = opts.user;
         this.model = opts.model;
-
-        this.listenTo(this.model, "change reset add remove", this.updateRender);
-
-        this.allUsers = App.collections.allUsers;
+		this.listenTo(this.model, "change reset add remove", this.updateRender);
+        this.listenTo(App.collections.allUsers, "change reset add remove", this.updateRender);
+		this.allUsers = App.collections.allUsers;
         this.allUsers.myFetch();
         this.model.fetch();
 		this.updateRender();
-
     }
 
     createDM(e) {
@@ -37,7 +33,7 @@ AppClasses.Views.DirectMessages = class extends Backbone.View {
 
     updateRender() {
 		const { attributes } = App.models.user;
-		var data = this.allUsers || null;
+		var data = this.allUsers;
 
 		if (data && attributes) {
 			data = data.models;
