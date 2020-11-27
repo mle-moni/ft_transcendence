@@ -4,38 +4,25 @@ AppClasses.Views.Room = class extends Backbone.View {
 			"submit .privateRoomAuthForm": "submitPasswordPrivateRoom",
 			"submit .publicRoomJoinForm": "submitJoinPublicRoom",
 			"submit .roomQuitForm": "roomQuitForm"
-
 		}
 		super(opts);
 		this.tagName = "div";
 		this.template = App.templates["room/index"];
 
-
-
 		this.listenTo(this.model, "change reset add remove", this.updateRender);
 		this.listenTo(App.collections.rooms, "change reset add remove", this.updateRender);
-
 
 		this.model.fetch();
 		this.rooms = null;
 		this.updateRender();
 
-
 	}
-
-	// LOGS Usefull
-	// console.log(e.target.children[2].value);
-	// var formElements=document.getElementById("privateRoomAuthForm").elements;    
-	// var postData={};
-	// for (var i=0; i<formElements.length; i++)
-	// 	if (formElements[i].type!="submit")//we dont want to include the submit-buttom
-	// 		postData[formElements[i].name]=formElements[i].value;
-	// console.log(postData);
 
 	submitPasswordPrivateRoom(e) {
 		e.preventDefault();
-		const roomID = e.target.children[3].value
-		const selectorFormID = "#privateRoomAuthForm-" + roomID
+		if (e.target.children.length < 4) return (false);
+		const roomID = e.target.children[3].value;
+		const selectorFormID = "#privateRoomAuthForm-" + roomID;
 		App.utils.formAjax("/api/rooms/joinPrivate.json", selectorFormID)
 		.done(res => {
 			App.toast.success("Good Password", { duration: 2000, style: App.toastStyle });
@@ -53,6 +40,7 @@ AppClasses.Views.Room = class extends Backbone.View {
 
 	submitJoinPublicRoom(e) {
 		e.preventDefault();
+		if (e.target.children.length < 2) return (false);
 		const roomID = e.target.children[1].value
 		// Here publicRoomJoinForm-X must match the view's form ID
 		const selectorFormID = "#publicRoomJoinForm-" + roomID
@@ -73,10 +61,8 @@ AppClasses.Views.Room = class extends Backbone.View {
 	}
 
 	roomQuitForm(e) {
-		// $(`#roomQuitForm-${roomID}`).each(function(index, element) {
-		// 	console.log(element); // Should be uniq !
-		// })
 		e.preventDefault();
+		if (e.target.children.length < 2) return (false);
 		const roomID = e.target.children[1].value
 		const selectorFormID = "#roomQuitForm-" + roomID;
 		App.utils.formAjax("/api/rooms/quit.json", selectorFormID)
@@ -90,7 +76,8 @@ AppClasses.Views.Room = class extends Backbone.View {
 	updateRender() {
 
 		const { attributes } = App.models.user;
-		const userID = attributes.id;
+		if (attributes)
+			const userID = attributes.id;
 		
 		var tabID = [];
 		var roomJoinedAsOwner = [];

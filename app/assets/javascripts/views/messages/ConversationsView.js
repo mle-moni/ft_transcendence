@@ -9,7 +9,6 @@ AppClasses.Views.Conversations = class extends Backbone.View {
 		this.chatID = opts.chatID;
 		this.model = opts.model;
         this.allUsers = App.collections.allUsers;
-		this.listenTo(this.allUsers, "reset add remove", this.updateRender);
 		this.listenTo(this.model, "change reset add remove", this.updateRender);
 		this.allUsers.myFetch();
 		this.model.fetch();
@@ -21,8 +20,8 @@ AppClasses.Views.Conversations = class extends Backbone.View {
 
     createDM(e) {
 		e.preventDefault();
-
-        const selectorFormID = "#" + e.currentTarget.id
+		var selectorFormID = "";
+		if (e.currentTarget) selectorFormID = "#" + e.currentTarget.id;
 		App.utils.formAjax("/api/direct_chats.json", selectorFormID)
 		.done(res => {
 			App.toast.success("Room created !", { duration: 1500, style: App.toastStyle });
@@ -36,14 +35,11 @@ AppClasses.Views.Conversations = class extends Backbone.View {
 	
 	submit(e)  {
 		e.preventDefault();
-		if (e.currentTarget.message.value == "") {
-			// App.toast.message("You cannot send empty message", { duration: 2000, style: App.toastStyle });
+		if (!e.currentTarget.message || (e.currentTarget.message && e.currentTarget.message.value == ""))
 			return ;
-		}
 		App.utils.formAjax("/api/chat_messages.json", "#sendRoomMessageForm")
 		.done(res => {
 			App.toast.success("Message sent", { duration: 1000, style: App.toastStyle });
-			// location.reload();// = `#messages/` + this.chatID;
 		})
 		.fail((e) => {
 			App.utils.toastError(e);
@@ -78,7 +74,6 @@ AppClasses.Views.Conversations = class extends Backbone.View {
 				else if (allUsers[count].attributes.id == currentUser.id)
 					currentUser = allUsers[count].attributes;
 			}
-
 			// Check if 
 			if (currentUser) {
 				// Assert that currentUser is one of the 2 user in the current DM room
@@ -95,7 +90,6 @@ AppClasses.Views.Conversations = class extends Backbone.View {
 						}
 					});
 				}
-
 				var blocked = currentUser.blocked || null;
 				if (blocked) {
 					var blockedTabIDs = [];

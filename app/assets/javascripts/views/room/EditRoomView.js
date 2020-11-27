@@ -12,7 +12,6 @@ AppClasses.Views.EditRoom = class extends Backbone.View {
 		this.tagName = "div";
 		this.template = App.templates["room/edit"];
 
-		this.listenTo(this.model, "change reset add remove", this.updateRender);
 		this.listenTo(App.collections.rooms, "change reset add remove", this.updateRender);
 
 		this.model.fetch();
@@ -40,7 +39,7 @@ AppClasses.Views.EditRoom = class extends Backbone.View {
 	delete(e) {
 		e.preventDefault();
 		const room = this.model.findWhere({id: this.room_id});
-		if (room.get("name") != $("#confirmRoomName")[0].value) {
+		if (room && room.get("name") != $("#confirmRoomName")[0].value) {
 			App.toast.message("Rooms names don't match", { duration: 2000, style: App.toastStyle });
 			return ;
 		}

@@ -11,8 +11,6 @@ AppClasses.Views.DirectMessages = class extends Backbone.View {
         this.user = opts.user;
         this.model = opts.model;
 
-
-		this.listenTo(App.collections.allUsers, "change reset add remove", this.updateRender);
         this.listenTo(this.model, "change reset add remove", this.updateRender);
 
         this.allUsers = App.collections.allUsers;
@@ -24,8 +22,8 @@ AppClasses.Views.DirectMessages = class extends Backbone.View {
 
     createDM(e) {
 		e.preventDefault();
-
-        const selectorFormID = "#" + e.currentTarget.id
+		var selectorFormID = "";
+		if (e.currentTarget) selectorFormID = "#" + e.currentTarget.id;
 		App.utils.formAjax("/api/direct_chats.json", selectorFormID)
 		.done(res => {
 			App.toast.success("Room created !", { duration: 1500, style: App.toastStyle });
