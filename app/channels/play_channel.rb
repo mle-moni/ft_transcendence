@@ -19,6 +19,6 @@ class PlayChannel < ApplicationCable::Channel
     return unless Redis.current.get("#{data['room_id']}_has_start").blank?
 
     Redis.current.set("#{data['room_id']}_has_start", 'ok')
-    Game.start_game("play_channel_#{data['room_id']}")
+    Game.start_game("play_channel_#{data['room_id']}", data['is_ranked'])
   end
 end
