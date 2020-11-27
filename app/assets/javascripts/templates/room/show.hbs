@@ -35,7 +35,7 @@
                         {{#each roomMessages}}
 
                         {{#when user_id "noteq" ../currentUser.id}}
-                        <li style="background-color:lightskyblue" class="list-group-item">
+                        <li style="background-color:lightskyblue; word-wrap: break-word;" class="list-group-item">
 
                             <div class"otherMessage">
                                 <img src="{{#getUserAttributes ../members user_id "image"}}{{/getUserAttributes}}"
@@ -59,7 +59,7 @@
                         {{/when}}
 
                         {{#when user_id "eq" ../currentUser.id}}
-                        <li style="background-color: #fffdd0;" class="list-group-item">
+                        <li style="background-color: #fffdd0; word-wrap: break-word;" class="list-group-item">
 
                             <div class"ownMessage">
                                 <img src="{{../currentUser.image}}" alt="Avatar" class="avatar">
