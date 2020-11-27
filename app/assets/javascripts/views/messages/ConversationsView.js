@@ -10,17 +10,12 @@ AppClasses.Views.Conversations = class extends Backbone.View {
 		this.model = opts.model;
         this.allUsers = App.collections.allUsers;
 		this.listenTo(this.model, "change reset add remove", this.updateRender);
-        this.listenTo(App.collections.allUsers, "change reset add remove", this.filterUpdateRender);
+        this.listenTo(App.collections.allUsers, "change reset add remove", this.updateRender);
 		this.allUsers.myFetch();
 		this.model.fetch();
 		this.tagName = "div";
         this.template = App.templates["messages/show"];
 		this.updateRender();
-	}
-
-	filterUpdateRender() {
-		if (this.allUsers != App.collections.allUsers)
-			this.updateRender();
 	}
 
     createDM(e) {
@@ -52,8 +47,11 @@ AppClasses.Views.Conversations = class extends Backbone.View {
 		return (false);
 	}
 
-    updateRender() {
+    updateRender(changes) {
 
+		if (changes && App.utils.onlyThoseAttrsChanged(changes.changed, ["last_seen"])) {
+			return (this);
+		}
 		var currentDMRoom = this.model ? this.model.toJSON() : null;
 		if (currentDMRoom) {
 			currentDMRoom = _.filter(currentDMRoom, m => {

@@ -8,10 +8,7 @@ AppClasses.Views.Room = class extends Backbone.View {
 		super(opts);
 		this.tagName = "div";
 		this.template = App.templates["room/index"];
-
-		this.listenTo(this.model, "change reset add remove", this.updateRender);
 		this.listenTo(App.collections.rooms, "change reset add remove", this.updateRender);
-
 		this.model.fetch();
 		this.rooms = null;
 		this.updateRender();
