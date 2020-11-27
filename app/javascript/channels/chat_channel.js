@@ -4,10 +4,6 @@ import consumer from "./consumer"
 
 function manageDirectChat() {
 
-    if (subDC) {
-      consumer.subscriptions.remove(subDC);
-    }
-
     const inDM = document.getElementById("checkChatPresence");
     if (inDM) {
       var subDC = consumer.subscriptions.create({
@@ -27,34 +23,34 @@ function manageDirectChat() {
         received(data) {
           // Called when there's incoming data on the websocket for this channel
           console.log("Received DM");
-          window.App.collections.allUsers.myFetch();
-          // window.App.collections.DirectMessagesRoom.fetch(); --> à reconfirmer
+          window.App.collections.DirectMessagesRoom.fetch();
         }
       });
+    } else {
+      // console.log("Not in ChatChannel");
+      consumer.subscriptions.subscriptions.forEach(sub => {
+        if (sub.identifier && sub.identifier.includes("ChatChannel")) {
+          // console.log("Removed ChatChannel");
+          consumer.subscriptions.remove(sub);
+        }
+      })
     }
 }
 
+// 250 to be sure that the view is fully rendered before checking '#checkRoomPresence' in manageRoomChat()
+// popstate = prev / after buttons
+// .ready = refresh
+// haschange = change route
+
 $(window).on('popstate', e => {
-  var detectChat = document.getElementById("checkChatPresence");
-  if (detectChat) { 
     setTimeout(manageDirectChat, 250)
-  }
-  // ELSE ?
  });
 
 $(document).ready(function(){
-  var detectChat = document.getElementById("checkChatPresence");
-  if (detectChat) { 
     setTimeout(manageDirectChat, 250)
-  }
-  // ELSE ?
 });
 
 window.addEventListener("hashchange", e => {
-  var detectChat = document.getElementById("checkChatPresence");
-  if (detectChat) { 
     setTimeout(manageDirectChat, 250)
-  }
-  // ELSE ?
 });
 
