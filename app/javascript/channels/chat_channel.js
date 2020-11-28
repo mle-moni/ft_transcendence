@@ -1,6 +1,6 @@
 import consumer from "./consumer"
 
-// https://stackoverflow.com/questions/60050647/disconnect-and-unsubscribe-action-cable-on-rails-6?rq=1
+var subDirectChatPreviousDataReceived = null;
 
 function manageDirectChat() {
 
@@ -12,7 +12,6 @@ function manageDirectChat() {
         connected() {
           // Called when the subscription is ready for use on the server
           // console.log("Connected DM");
-          //console.log("room_id = " + room_id.toString());
         },
     
         disconnected() {
@@ -22,9 +21,14 @@ function manageDirectChat() {
     
         received(data) {
           // Called when there's incoming data on the websocket for this channel
-          // console.log("Received DM");
-          window.App.collections.DirectMessagesRoom.fetch();
-          // window.App.collections.allUsers.myfetch();
+          if (subDirectChatPreviousDataReceived != data) {
+            // console.log("Received DM - New Data - Fetching");
+            window.App.collections.DirectMessagesRoom.fetch();
+            subDirectChatPreviousDataReceived = data;
+          }
+          // else {
+          //   console.log("Received DM - Identic Data - No Fetch");
+          // }
 
         }
       });
