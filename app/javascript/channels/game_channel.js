@@ -50,8 +50,8 @@ let canvas = null;
 let ball = {
   x: 0.0,
   y: 0.0,
-  radius: 6,
-  color: 'white',
+  radius: 5,
+  color: `rgb(255, 165, 0)`,
   draw: function(ctx) {
     ctx.beginPath();
     ctx.arc(((this.x + 1) / 2) * canvas.width, ((this.y + 1) / 2) * canvas.height, this.radius, 0, Math.PI*2, true);
@@ -76,7 +76,7 @@ class Game {
     this.consumer = consumer;
     currentTime = Date.now();
     this.stop = false;
-    this.ball_speed = 0.4;
+    this.ball_speed = 0.45;
     this.paddle_speed = 1.4;
     this.score_left = score_left;
     this.score_right = score_right;
@@ -156,6 +156,10 @@ function update_datas(data) {
     // console.log("request processed")
 }
 
+function magnitude(vec) {
+  return Math.sqrt(vec[0]*vec[0] + vec[1]*vec[1]);
+}
+
 function game_loop() {
   if (game.stop)
     return;
@@ -174,19 +178,23 @@ function game_loop() {
     else if (game.right_action == "d")
       game.player_right = Math.min(game.player_right + game.paddle_speed * delta, 0.9)
 
-    ball.x += game.ball_dir[0] * game.ball_speed * delta
-    ball.y += game.ball_dir[1] * game.ball_speed * delta
+    let magn = magnitude(game.ball_dir);
+
+    if (magn != 0) {
+      ball.x += (game.ball_dir[0] / magn) * game.ball_speed * delta
+      ball.y += (game.ball_dir[1] / magn) * game.ball_speed * delta
+    }
 
     var act = game.ball_collision();
     if (act == 5) {
       game.score_left += 1;
-      game.ball_speed = 0.4;
+      game.ball_speed = 0.45;
       ball.x = 0;
       ball.y = 0;
       game.ball_dir = [game.poss_dir[Math.round(Math.random())], getRandomBetween(-1, 1)];
     } else if (act == 4) {
       game.score_right += 1;
-      game.ball_speed = 0.4;
+      game.ball_speed = 0.45;
       ball.x = 0;
       ball.y = 0;
       game.ball_dir = [game.poss_dir[Math.round(Math.random())], getRandomBetween(-1, 1)];
@@ -204,7 +212,7 @@ function game_loop() {
       game.ball_speed *= 1.05;
     }
 
-    game.ball_speed = Math.min(game.ball_speed, 1);
+    game.ball_speed = Math.min(game.ball_speed, 1.2);
 
   }
 
@@ -336,6 +344,8 @@ function subscription_loop() {
             disconnected() {
               // Called when the subscription has been terminated by the server
               console.log("I am disconnected of the room");
+              ball.x = 0.0;
+              ball.y = 0.0;
               this.perform("quit", {room_name: game.room_name, player: this.role}); // default action
               console.log("perform ok");
               ctx = null;
