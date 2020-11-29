@@ -1,0 +1,29 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  start: 2020-11-29 15:53:01
+  end: 2020-11-29 15:53:01
+  prize: 1
+  mods: false
+  time_to_answer: 1
+  ladder: false
+  tournament: false
+  duel: false
+  winner: 
+  validated: 
+  guild1: one
+  guild2: one
+
+two:
+  start: 2020-11-29 15:53:01
+  end: 2020-11-29 15:53:01
+  prize: 1
+  mods: false
+  time_to_answer: 1
+  ladder: false
+  tournament: false
+  duel: false
+  winner: 
+  validated: 
+  guild1: two
+  guild2: two
