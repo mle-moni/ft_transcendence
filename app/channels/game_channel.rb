@@ -8,6 +8,9 @@ class GameChannel < ApplicationCable::Channel
     if Redis.current.get('matches') == current_user
       Redis.current.set('matches', nil)
     end
+    if Redis.current.get('matches_ranked') == current_user
+      Redis.current.set('matches_ranked', nil)
+    end
     # Any cleanup needed when channel is unsubscribed
   end
 end

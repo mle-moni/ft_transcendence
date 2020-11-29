@@ -5,7 +5,7 @@ class Matchmaking < ApplicationRecord
 		puts is_ranked
 
 		if is_ranked
-			if !Redis.current.get('matches_ranked').blank? && Redis.current.get('matches_ranked') != player_mail
+			if !Redis.current.get('matches_ranked').blank? && Redis.current.get('matches_ranked') != nil && Redis.current.get('matches_ranked') != player_mail
 				@current_match_id = 0
 				opponent = Redis.current.get('matches_ranked')
 				if Redis.current.get('match_id').blank? || Redis.current.get('match_id').to_i >= 999_999
