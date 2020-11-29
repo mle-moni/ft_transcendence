@@ -1,7 +1,7 @@
 class GameChannel < ApplicationCable::Channel
   def subscribed
     stream_from "player_#{ current_user }"
-    Matchmaking.create(current_user)
+    Matchmaking.create(current_user, params[:is_ranked])
   end
 
   def unsubscribed

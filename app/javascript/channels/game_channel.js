@@ -4,9 +4,15 @@ let game = null;
 
 let currentTime = Date.now();
 
+const score_max = 11;
+
 let keyboard = {
   up: false,
   down: false
+}
+
+function getRandomBetween(min, max) {
+  return Math.random() * (max - min) + min;
 }
 
 document.addEventListener("keydown",  event => {
@@ -70,15 +76,20 @@ class Game {
     this.consumer = consumer;
     currentTime = Date.now();
     this.stop = false;
-    this.ball_speed = 0.7;
-    this.paddle_speed = 1.1;
+    this.ball_speed = 0.4;
+    this.paddle_speed = 1.4;
     this.score_left = score_left;
     this.score_right = score_right;
-    this.poss_dir = [[-1, -1], [-1, -0.5], [-1, 0], [-1, 0.5], [-1, 1], [1, -1], [1, -0.5], [1, 0], [1, 0.5], [1, 1]];
-    this.ball_dir = this.poss_dir[Math.floor(Math.random() * this.poss_dir.length)];
-    this.poss_dir_left = [[1, -1], [1, -0.5], [1, 0], [1, 0.5], [1, 1]];
-    this.poss_dir_right = [[-1, -1], [-1, -0.5], [-1, 0], [-1, 0.5], [-1, 1]];
-    this.fps = 60;
+    this.poss_dir = [1, -1];
+    this.ball_dir = [this.poss_dir[Math.round(Math.random())], getRandomBetween(-1, 1)];
+    this.fps = 45;
+  }
+
+  check_end() {
+    if (this.score_right == score_max)
+      this.consumer.perform("end_the_game", {room_name: this.room_name});
+    if (this.score_left == score_max)
+      this.consumer.perform("end_the_game", {room_name: this.room_name});
   }
 
   send_datas() {
@@ -95,12 +106,12 @@ class Game {
   }
 
   draw_datas() {
-    let pad_h = canvas.height / 4;
+    let pad_h = canvas.height / 10;
     ctx.fillStyle = "white";
     clear();
-    let l_y = (canvas.height / 2) + (canvas.height / 2) * (this.player_left - 0.250);
+    let l_y = (canvas.height / 2) + (canvas.height / 2) * (this.player_left - 0.1);
     ctx.fillRect((canvas.width * 0.075) - 10, l_y, 10, pad_h);
-    let r_y = (canvas.height / 2) + (canvas.height / 2) * (this.player_right - 0.250);
+    let r_y = (canvas.height / 2) + (canvas.height / 2) * (this.player_right - 0.1);
     ctx.fillRect((canvas.width * 0.925), r_y, 10, pad_h);
     ctx.font = "42px Arial";
     ctx.fillStyle = "white";
@@ -109,21 +120,6 @@ class Game {
     
     ctx.fillRect((canvas.width * 0.495), 0, (canvas.width * 0.01), canvas.height);
     ball.draw(ctx);
-  }
-
-  game_must_end() {
-    let must_end = false;
-    if (this.consumer.role == 'r') {
-      if (this.left_action == 'quit' || this.right_action == 'quit' || this.score_left == 11 || this.score_right == 11) {
-        must_end = true;
-        this.consumer.perform("end_the_game", {}) // TODO !!
-      }
-    } else {
-      if (this.left_action == 'quit' || this.right_action == 'quit') {
-        must_end = true;
-      }
-    } 
-    return must_end;
   }
 
   ball_collision() {
@@ -135,9 +131,9 @@ class Game {
       return 3;
     } else if (ball.y <= -1) {
       return 2;
-    } else if (this.ball_dir[0] > 0 && ball.x >= 0.85 && ball.x <= 0.88 && ball.y >= this.player_right - 0.250 && ball.y <= this.player_right + 0.250) {
+    } else if (this.ball_dir[0] > 0 && ball.x >= 0.82 && ball.x <= 0.9 && ball.y >= this.player_right - 0.1 && ball.y <= this.player_right + 0.1) {
       return 1;
-    } else if (this.ball_dir[0] < 0 && ball.x <= -0.85 && ball.x >= -0.88 && ball.y >= this.player_left - 0.250 && ball.y <= this.player_left + 0.250) {
+    } else if (this.ball_dir[0] < 0 && ball.x <= -0.82 && ball.x >= -0.9 && ball.y >= this.player_left - 0.1 && ball.y <= this.player_left + 0.1) {
       return 0;
     }
     return -1;
@@ -167,33 +163,33 @@ function game_loop() {
   var delta = (now - currentTime) / 1000;
   currentTime = now;
 
-  if (game.consumer.role == 'r') {
+  if (game.consumer.role == 'r' && game.score_left != score_max && game.score_right != score_max) {
     if (game.left_action == "u")
-      game.player_left = Math.max(game.player_left - game.paddle_speed * delta, -0.750)
+      game.player_left = Math.max(game.player_left - game.paddle_speed * delta, -0.9)
     else if (game.left_action == "d")
-      game.player_left = Math.min(game.player_left + game.paddle_speed * delta, 0.750)
+      game.player_left = Math.min(game.player_left + game.paddle_speed * delta, 0.9)
     
     if (game.right_action == "u")
-      game.player_right = Math.max(game.player_right - game.paddle_speed * delta, -0.750)
+      game.player_right = Math.max(game.player_right - game.paddle_speed * delta, -0.9)
     else if (game.right_action == "d")
-      game.player_right = Math.min(game.player_right + game.paddle_speed * delta, 0.750)
-    
+      game.player_right = Math.min(game.player_right + game.paddle_speed * delta, 0.9)
+
     ball.x += game.ball_dir[0] * game.ball_speed * delta
     ball.y += game.ball_dir[1] * game.ball_speed * delta
 
     var act = game.ball_collision();
     if (act == 5) {
       game.score_left += 1;
-      game.ball_speed = 0.7;
+      game.ball_speed = 0.4;
       ball.x = 0;
       ball.y = 0;
-      game.ball_dir = game.poss_dir[Math.floor(Math.random() * game.poss_dir.length)];
+      game.ball_dir = [game.poss_dir[Math.round(Math.random())], getRandomBetween(-1, 1)];
     } else if (act == 4) {
       game.score_right += 1;
-      game.ball_speed = 0.7;
+      game.ball_speed = 0.4;
       ball.x = 0;
       ball.y = 0;
-      game.ball_dir = game.poss_dir[Math.floor(Math.random() * game.poss_dir.length)];
+      game.ball_dir = [game.poss_dir[Math.round(Math.random())], getRandomBetween(-1, 1)];
     } else if (act == 3) {
       ball.y = 0.95;
       game.ball_dir[1] = -1 * game.ball_dir[1];
@@ -201,31 +197,27 @@ function game_loop() {
       ball.y = -0.95;
       game.ball_dir[1] = -1 * game.ball_dir[1];
     } else if (act == 1) { // * Bounce right
-      game.ball_dir = game.poss_dir_right[Math.floor(Math.random() * game.poss_dir_right.length)];
+      game.ball_dir = [-1, getRandomBetween(-1.5, 1.5)];
       game.ball_speed *= 1.05;
     } else if (act == 0) { // * Bounce left
-      game.ball_dir = game.poss_dir_left[Math.floor(Math.random() * game.poss_dir_left.length)];
+      game.ball_dir = [1, getRandomBetween(-1.5, 1.5)];
       game.ball_speed *= 1.05;
     }
 
-    game.ball_speed = Math.min(game.ball_speed, 0.3);
+    game.ball_speed = Math.min(game.ball_speed, 1);
+
   }
-  
+
+  game.check_end();
   game.draw_datas();
   game.send_datas();
-
-  if (game.game_must_end()) {
-    setTimeout(function() {
-      game.stop = true;
-    }, 2000);
-  }
 
   //console.log("1 frame");
   if (game.consumer.role == 'r') {
     setTimeout(function () {
       game.consumer.perform("get_datas", {room_name: game.room_name})
     }, 1000 / game.fps)
-  }
+  } 
 }
 
 function subscription_loop() {
@@ -244,10 +236,12 @@ function subscription_loop() {
     })
   } else {
     let is_a_player = false;
+
     consumer.subscriptions.subscriptions.forEach(sub => {
       if (JSON.parse(sub.identifier)["channel"] === "PlayChannel")
         is_a_player = true;
     })
+
     console.log("the consummer is a player ? " + is_a_player)
     /*if (!is_a_player) {
       let match_id = ingameelement.dataset.id;
@@ -305,7 +299,7 @@ function subscription_loop() {
 
   const element = document.getElementById("game_page_id")
   if (element !== null) {
-    consumer.subscriptions.create("GameChannel", {
+    consumer.subscriptions.create({channel: "GameChannel", is_ranked: ranked}, {
       connected() {
         console.log("this is streaming from the game channel");
       },
@@ -335,7 +329,6 @@ function subscription_loop() {
               ctx = canvas.getContext('2d');
               const UID = document.getElementById("UID");
               UID.innerHTML = `You have the ${this.role} paddle`
-              let tmp = [[-1, -1], [-1, -0.5], [-1, 0], [-1, 0.5], [-1, 1], [1, -1], [1, -0.5], [1, 0], [1, 0.5], [1, 1]];
               game = new Game(this.room, ctx, 0, 0, 0, 0, this)
               game_loop(game);
             },
@@ -343,17 +336,22 @@ function subscription_loop() {
             disconnected() {
               // Called when the subscription has been terminated by the server
               console.log("I am disconnected of the room");
-              this.perform("take_turn", {input: "quit", room_id: this.room, player: this.role}); // default action
+              this.perform("quit", {room_name: game.room_name, player: this.role}); // default action
+              console.log("perform ok");
               ctx = null;
               canvas = null;
             },
 
             received(data_nest) {
               // console.log(data_nest);
+              if (data_nest['action'] == 'quit' || game.left_action == "quit" || game.right_action == "quit")
+                location.hash = "#";
               if (data_nest['ball_speed'] != null) {
                 update_datas(data_nest)
                 game_loop(game);
               }
+
+              // if don't work use a set Interval avec une variable action has been played to check if data has been received in a certain time
             }
           });
         }

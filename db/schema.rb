@@ -10,10 +10,38 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_21_230541) do
+ActiveRecord::Schema.define(version: 2020_11_25_103102) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "blocks", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "toward_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["toward_id"], name: "index_blocks_on_toward_id"
+    t.index ["user_id"], name: "index_blocks_on_user_id"
+  end
+
+  create_table "direct_chats", force: :cascade do |t|
+    t.bigint "user1_id"
+    t.bigint "user2_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user1_id"], name: "index_direct_chats_on_user1_id"
+    t.index ["user2_id"], name: "index_direct_chats_on_user2_id"
+  end
+
+  create_table "direct_messages", force: :cascade do |t|
+    t.bigint "from_id"
+    t.bigint "direct_chat_id", null: false
+    t.text "message"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["direct_chat_id"], name: "index_direct_messages_on_direct_chat_id"
+    t.index ["from_id"], name: "index_direct_messages_on_from_id"
+  end
 
   create_table "friendships", force: :cascade do |t|
     t.bigint "user_id", null: false
@@ -54,6 +82,64 @@ ActiveRecord::Schema.define(version: 2020_11_21_230541) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "room_bans", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "room_id"
+    t.datetime "endTime"
+    t.bigint "by_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["by_id"], name: "index_room_bans_on_by_id"
+    t.index ["room_id"], name: "index_room_bans_on_room_id"
+    t.index ["user_id"], name: "index_room_bans_on_user_id"
+  end
+
+  create_table "room_link_admins", force: :cascade do |t|
+    t.bigint "room_id"
+    t.bigint "user_id"
+    t.index ["room_id"], name: "index_room_link_admins_on_room_id"
+    t.index ["user_id"], name: "index_room_link_admins_on_user_id"
+  end
+
+  create_table "room_link_members", force: :cascade do |t|
+    t.bigint "room_id"
+    t.bigint "user_id"
+    t.index ["room_id"], name: "index_room_link_members_on_room_id"
+    t.index ["user_id"], name: "index_room_link_members_on_user_id"
+  end
+
+  create_table "room_messages", force: :cascade do |t|
+    t.text "message"
+    t.bigint "user_id", null: false
+    t.bigint "room_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["room_id"], name: "index_room_messages_on_room_id"
+    t.index ["user_id"], name: "index_room_messages_on_user_id"
+  end
+
+  create_table "room_mutes", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "room_id"
+    t.datetime "endTime"
+    t.bigint "by_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["by_id"], name: "index_room_mutes_on_by_id"
+    t.index ["room_id"], name: "index_room_mutes_on_room_id"
+    t.index ["user_id"], name: "index_room_mutes_on_user_id"
+  end
+
+  create_table "rooms", force: :cascade do |t|
+    t.string "name"
+    t.string "privacy"
+    t.string "password"
+    t.bigint "owner_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["owner_id"], name: "index_rooms_on_owner_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -79,7 +165,7 @@ ActiveRecord::Schema.define(version: 2020_11_21_230541) do
     t.datetime "last_seen"
     t.boolean "admin", default: false
     t.boolean "banned", default: false
-    t.float "elo", default: 0.0
+    t.float "elo", default: 1000.0
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["guild_id"], name: "index_users_on_guild_id"
     t.index ["provider"], name: "index_users_on_provider"
@@ -87,9 +173,16 @@ ActiveRecord::Schema.define(version: 2020_11_21_230541) do
     t.index ["uid"], name: "index_users_on_uid"
   end
 
+  add_foreign_key "blocks", "users", column: "toward_id"
+  add_foreign_key "direct_messages", "direct_chats"
   add_foreign_key "friendships", "users"
   add_foreign_key "friendships", "users", column: "friend_id"
   add_foreign_key "matches", "users", column: "loser_id"
   add_foreign_key "matches", "users", column: "winner_id"
+  add_foreign_key "room_bans", "users", column: "by_id"
+  add_foreign_key "room_messages", "rooms"
+  add_foreign_key "room_messages", "users"
+  add_foreign_key "room_mutes", "users", column: "by_id"
+  add_foreign_key "rooms", "users", column: "owner_id"
   add_foreign_key "users", "guilds"
 end

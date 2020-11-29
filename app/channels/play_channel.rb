@@ -5,17 +5,16 @@ class PlayChannel < ApplicationCable::Channel
 
   def unsubscribed
     # Any cleanup needed when channel is unsubscribed
+    ActionCable.server.broadcast "play_channel_#{params[:game_room_id]}", {action: 'quit'}
   end
 
   def take_turn(data)
     game = $games[data['room_name']];
-    if (data['player'] == 'l') 
-      last = game[:left_action];
-      return if last == 'quit'; # ingore input after leaving (can occure when a user spam an input while is leaving)
+    if (data['player'] == 'l')
+      return if game[:right_action] == 'quit'; # ingore input after leaving (can occure when a user spam an input while is leaving)
       game[:left_action] = data['input'];
     elsif (data['player'] == 'r')
-      last = game[:right_action];
-      return if last == 'quit';
+      return if game[:right_action] == 'quit';
       game[:right_action] = data['input']; 
     end
   end
@@ -42,7 +41,11 @@ class PlayChannel < ApplicationCable::Channel
     ActionCable.server.broadcast data['room_name'], $games[data['room_name']];
   end
 
+  def quit(data)
+    ActionCable.server.broadcast data['room_name'], {action: 'quit'}
+  end
+
   def end_the_game(data)
-    
+    ActionCable.server.broadcast data['room_name'], {action: 'quit'}
   end
 end
