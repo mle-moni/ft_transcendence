@@ -1,6 +1,11 @@
 import consumer from "./consumer"
 
+// https://www.xspdf.com/resolution/50834632.html
+
+var subRoomPreviousDataReceived = null;
+
 function manageRoomChat() {
+
     const inRoom = document.getElementById("checkRoomPresence");
     if (inRoom) {
       var subRoom = consumer.subscriptions.create({
@@ -18,9 +23,14 @@ function manageRoomChat() {
     
         received(data) {
           // Called when there's incoming data on the websocket for this channel
-          // console.log("Received Room");
-          window.App.collections.rooms.fetch();
-          // window.App.collections.allUsers.myfetch();
+          if (subRoomPreviousDataReceived != data) {
+            // console.log("Received Room - New Data - Fetching");
+            window.App.collections.rooms.fetch();
+            subRoomPreviousDataReceived = data;
+          }
+          // else {
+          //   console.log("Received Room - Identic Data - No Fetch");
+          // }
 
         }
       });
