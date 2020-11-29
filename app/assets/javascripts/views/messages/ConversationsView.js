@@ -10,7 +10,7 @@ AppClasses.Views.Conversations = class extends Backbone.View {
 		this.model = opts.model;
         this.allUsers = App.collections.allUsers;
 		this.listenTo(this.model, "change reset add remove", this.updateRender);
-        this.listenTo(App.collections.allUsers, "change reset add remove", this.updateRender);
+		this.listenTo(App.collections.allUsers, "change reset add remove", this.updateRender);
 		this.allUsers.myFetch();
 		this.model.fetch();
 		this.tagName = "div";
@@ -67,7 +67,6 @@ AppClasses.Views.Conversations = class extends Backbone.View {
 		if (currentDMRoom)
 		{
 			var directMessages = currentDMRoom.direct_messages;
-			directMessages.reverse();
 			var otherUserID = (this.user.id === currentDMRoom.user1_id) ? currentDMRoom.user2_id : currentDMRoom.user1_id;
 			var allUsers = App.collections.allUsers.models;
 			for (var count = 0; count < allUsers.length; count++)
@@ -117,6 +116,10 @@ AppClasses.Views.Conversations = class extends Backbone.View {
 			directMessages: directMessages,
 			token: $('meta[name="csrf-token"]').attr('content')
 		}));
+		// var myElement = document.getElementById('list-message');
+		// if (myElement) myElement.scroll(0, 100000000);
+
+
 		this.delegateEvents();
 		return (this);
     }

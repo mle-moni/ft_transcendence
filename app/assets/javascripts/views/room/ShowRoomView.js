@@ -55,7 +55,6 @@ AppClasses.Views.ShowRoom = class extends Backbone.View {
 
 		if (currentRoom) {
 			var roomMessages = currentRoom.room_messages;
-			roomMessages.reverse();
 
 			// Filter bans
 			var members = [...currentRoom.members, ...currentRoom.admins];	
@@ -70,6 +69,7 @@ AppClasses.Views.ShowRoom = class extends Backbone.View {
 			roomMessages = roomMessages.filter(message => {
 				return !tabBlockedUsersIDs.includes(message.user_id);
 			})
+
 
 			// This snippet have to handle the case when an user has been kick so that he doesn't stay on the chat page
 			var idTab = [];

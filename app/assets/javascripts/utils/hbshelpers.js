@@ -80,3 +80,23 @@ Handlebars.registerHelper('findDmRoom', function(userID, otherUserID, dmRooms) {
     }
     return null;
 });
+
+Handlebars.registerHelper('ifCurrentDmRoom', function(userID, otherUserID, dmRooms, thisChatID, options) {
+
+    if (!userID || !otherUserID || !dmRooms || !thisChatID)
+        return null;
+    for (var count = 0; count < dmRooms.length; count++)
+    {
+        if ((userID == dmRooms[count].attributes.user1_id
+            && otherUserID == dmRooms[count].attributes.user2_id)
+            || (userID == dmRooms[count].attributes.user2_id
+            && otherUserID == dmRooms[count].attributes.user1_id))
+        {
+            if (dmRooms[count].attributes.id == thisChatID)
+                return options.fn(this);
+            else
+                return options.inverse(this);
+        }
+    }
+    return options.inverse(this);
+});

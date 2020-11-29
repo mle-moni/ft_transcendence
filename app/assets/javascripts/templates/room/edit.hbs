@@ -11,12 +11,12 @@
 		<input type="hidden" name="authenticity_token" value="{{token}}">
 
 		{{!-- Room Data --}}
-		<input class="form-control" type="text" id="roomName" placeholder="Room Name" name="room[name]">
+		<input class="form-control" type="text" autocomplete="off" id="roomName" placeholder="Room Name" name="room[name]">
 
 		<br>
-		<input class="form-control" type="text" id="roomPrivacy" placeholder="Room Privacy" name="room[privacy]">
+		<input class="form-control" type="text" autocomplete="off" id="roomPrivacy" placeholder="Room Privacy" name="room[privacy]">
 		<br>
-		<input class="form-control" type="text" id="roomPassword" placeholder="Room Password" name="room[password]">
+		<input class="form-control" type="text" autocomplete="off" id="roomPassword" placeholder="Room Password" name="room[password]">
 
 		<input type="hidden" name="room[id]" value="{{room_id}}">
 
@@ -33,7 +33,7 @@
 	<form style="display: none;" id="{{deleteID}}" method="DELETE">
 		<br>
 		<input type="hidden" name="authenticity_token" value="{{token}}">
-		<input placeholder="Type room name" class="form-control" type="text" id="confirmRoomName">
+		<input placeholder="Type room name" class="form-control" type="text" autocomplete="off" id="confirmRoomName">
 		<br>
 		<input type="hidden" id="roomID" name="room[room_id]" value="{{room_id}}">
 		<input type="submit" class="btn btn-danger" value="Confirm room delete">
