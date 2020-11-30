@@ -2,7 +2,7 @@ AppClasses.Views.Conversations = class extends Backbone.View {
 	constructor(opts) {
 		opts.events = {
 			"submit #sendRoomMessageForm": "submit",
-			"submit .createDM": "createDM"
+			// "submit .createDM": "createDM"
 		}
 		super(opts);
 		this.user = App.models.user;
@@ -18,20 +18,20 @@ AppClasses.Views.Conversations = class extends Backbone.View {
 		this.updateRender();
 	}
 
-    createDM(e) {
-		e.preventDefault();
-		var selectorFormID = "";
-		if (e.currentTarget) selectorFormID = "#" + e.currentTarget.id;
-		App.utils.formAjax("/api/direct_chats.json", selectorFormID)
-		.done(res => {
-			App.toast.success("Room created !", { duration: 1500, style: App.toastStyle });
-			location.hash = "#messages/" + res.id;
-		})
-		.fail((e) => {
-			App.utils.toastError(e);
-		});
-		return (false);
-    }
+    // createDM(e) {
+	// 	e.preventDefault();
+	// 	var selectorFormID = "";
+	// 	if (e.currentTarget) selectorFormID = "#" + e.currentTarget.id;
+	// 	App.utils.formAjax("/api/direct_chats.json", selectorFormID)
+	// 	.done(res => {
+	// 		App.toast.success("Room created !", { duration: 1500, style: App.toastStyle });
+	// 		location.hash = "#messages/" + res.id;
+	// 	})
+	// 	.fail((e) => {
+	// 		App.utils.toastError(e);
+	// 	});
+	// 	return (false);
+    // }
 	
 	submit(e)  {
 		e.preventDefault();

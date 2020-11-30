@@ -10,15 +10,16 @@
 
     <div class="mycontainer">
         <div class="row">
-
+            <div class="col-1">
+            <a class="btn btn-primary" href="#messages" role="button" > Back </a>
+            </div>
             {{!-- USER LIST --}}
-            <div class="col-3">
+            {{!-- <div class="col-3">
             <div class="list-users">
                 {{#each allUsers}}
 
                 <div class="list-users-item">
                     <img src="{{attributes.image}}" style="float: left" alt="Avatar" class="avatar">
-                 {{!-- style="background-color: rgb(247, 247, 247);" --}}
                     {{#ifDm ../userID attributes.id ../dmRooms.models }}
                         {{#ifCurrentDmRoom ../userID attributes.id ../dmRooms.models ../chatID  }}
                         <a class="btn btn-outline-success btn-sm"
@@ -43,11 +44,11 @@
                 </div>
                 {{/each}}
             </div>
-            </div>
+            </div> --}}
 
 
             {{!-- CHATBOX --}}
-            <div class="col-9">
+            <div class="col-10">
                 <h3><a class="otherUserProfile" href="#profiles/{{otherUser.id}}">{{otherUser.nickname}} </a></h3>
                 <ul class="list-group" id="list-message">
 
