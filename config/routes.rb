@@ -41,6 +41,7 @@ Rails.application.routes.draw do
     post '/friends/reject'
     post '/friends/destroy'
     post '/friends/get_all'
+    post '/friends/last_seen'
     # profile actions
     post 'profile/get'
     post 'active', to: 'profile#active'

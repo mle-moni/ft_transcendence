@@ -5,7 +5,7 @@ AppClasses.Views.Home = class extends Backbone.View {
 		this.template = App.templates["home/index"];
 		this.updateRender();
 	}
-	updateRender(changes) {
+	updateRender() {
 		this.$el.html(this.template({}));
 		return (this);
 	}

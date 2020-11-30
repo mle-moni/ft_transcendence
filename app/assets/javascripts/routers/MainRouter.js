@@ -24,6 +24,7 @@ AppClasses.Routers.Main = class extends AppClasses.Routers.AbstractRouter {
 
 		// create all models needed by multiple routes
 		this.models.user = new AppClasses.Models.User(App.data.user);
+		this.models.last_seen = new AppClasses.Models.User(App.data.user);
 		this.collections.allUsers = new AppClasses.Collections.AllUsers();
 
 		const seconds = 10; // update every N seconds
@@ -34,6 +35,7 @@ AppClasses.Routers.Main = class extends AppClasses.Routers.AbstractRouter {
 				type: 'POST'
 			});
 			this.models.user.update(this.models.user);
+			this.models.last_seen.updateLastSeen(this.models.last_seen);
 			this.collections.allUsers.myFetch();
 			this.collections.guilds.fetch();
 		}, 1000 * seconds);

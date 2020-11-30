@@ -31,11 +31,7 @@ AppClasses.Views.DirectMessages = class extends Backbone.View {
 		return (false);
     }
 
-    updateRender(changes) {
-
-		if (changes && App.utils.onlyThoseAttrsChanged(changes.changed, ["last_seen"])) {
-			return (this);
-		}
+    updateRender() {
 
 		const { attributes } = App.models.user;
 		var data = this.allUsers;
