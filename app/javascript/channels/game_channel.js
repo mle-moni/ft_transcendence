@@ -219,10 +219,11 @@ function game_loop() {
 
   }
 
-  game.send_datas();
+  if (game.consumer.role != 'v') {
+    game.send_datas();
+    game.check_end();  
+  }
   game.draw_datas();
-  game.check_end();
-
   //console.log("1 frame");
   if (game.consumer.role == 'r') {
     setTimeout(function () {
@@ -254,58 +255,43 @@ function subscription_loop() {
     })
 
     console.log("the consummer is a player ? " + is_a_player)
-    /*if (!is_a_player) {
+    if (!is_a_player) {
       let match_id = ingameelement.dataset.id;
-      consumer.subscriptions.create({channel: "PlayChannel", game_room_id: match_id}, {
-        pad_h: null,
+      consumer.subscriptions.create({channel: "PlayChannel", game_room_id: match_id, role: 'v'}, {
+        room: undefined,
         connected() {
           // Called when the subscription is ready for use on the server
-          this.role = "viewer"
-          console.log("your role is : " + this.role); pad_h: null
+          this.role = 'v';
+          this.room = `play_channel_${match_id}`;
+          console.log("your role is : " + this.role);
+          console.log(this.room);
+          canvas = document.getElementById("myCanvas");
+          ctx = canvas.getContext('2d');
+          game = new Game(this.room, ctx, 0, 0, 0, 0, this)
+          game_loop(game);
         },
 
         disconnected() {
           // Called when the subscription has been terminated by the server
           console.log("I am disconnected of the room");
+          ball.x = 0.0;
+          ball.y = 0.0;
+          ctx = null;
+          canvas = null;
         },
 
         received(data_nest) {
-          // Called when there's incoming data on the websocket for this channel
-          if (data_nest.s == 'end') {
-            ctx = null;
-            canvas = null;
+          // console.log(data_nest);
+          if (data_nest['action'] == 'quit')
             location.hash = "#";
-            return ;
+          if (data_nest['ball_speed'] != null) {
+            update_datas(data_nest)
+            game_loop(game);
           }
-          if (canvas === null) {
-            canvas = document.getElementById("myCanvas");
-          } else if (ctx === null) {
-            ctx = canvas.getContext('2d');
-            this.pad_h = canvas.height / 4;
-          } else {
-            ctx.fillStyle = "white";
-            clear();
-            // pads
-            let l_y = (canvas.height / 2) + (canvas.height / 2) * (data_nest.l - 0.250);
-            ctx.fillRect((canvas.width * 0.055), l_y, 10, this.pad_h);
-            let r_y = (canvas.height / 2) + (canvas.height / 2) * (data_nest.r - 0.250);
-            ctx.fillRect((canvas.width * 0.93), r_y, 10, this.pad_h);
-            let centerX = ((data_nest.bl[0] + 1) / 2) * canvas.width;
-            let centerY = ((data_nest.bl[1] + 1) / 2) * canvas.height;
-            ball.x = centerX;
-            ball.y = centerY;
-            ctx.font = "42px Arial";
-            ctx.fillStyle = "white";
-            ctx.fillText(data_nest.sl.toString(), canvas.width / 3, 60);
-            ctx.fillText(data_nest.sr.toString(), (canvas.width / 3) * 2, 60);
-            // demarcation
-            ctx.fillRect((canvas.width * 0.495), 0, (canvas.width * 0.01), canvas.height);
-            // ball
-            ball.draw(ctx);
-          }
+          // if don't work use a set Interval avec une variable action has been played to check if data has been received in a certain time
         }
       });
-    }*/
+    }
   }
 
   const element = document.getElementById("game_page_id")

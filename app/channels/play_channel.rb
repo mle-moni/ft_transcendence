@@ -4,40 +4,42 @@ class PlayChannel < ApplicationCable::Channel
   end
 
   def unsubscribed
-    room_name = "play_channel_#{params[:game_room_id]}";
-    # Any cleanup needed when channel is unsubscribed
-    if (Redis.current.get("game_#{room_name}_end?") == "no") # if not already ended, end the game with actual player has loser (he left the game)
-      Redis.current.set("game_#{room_name}_end?", "yes");
+    if (params[:role] != "v")
+      room_name = "play_channel_#{params[:game_room_id]}";
+      # Any cleanup needed when channel is unsubscribed
+      if (Redis.current.get("game_#{room_name}_end?") == "no") # if not already ended, end the game with actual player has loser (he left the game)
+        Redis.current.set("game_#{room_name}_end?", "yes");
 
-      if (params[:role] == 'r')
-        current_user = User.find_by(email: Redis.current.get("#{room_name}_r"))
-        other_user = User.find_by(email: Redis.current.get("#{room_name}_l"))
-        current_score = $games[room_name][:right_score]
-        other_score = $games[room_name][:left_score]
-      else
-        current_user = User.find_by(email: Redis.current.get("#{room_name}_l"))
-        other_user = User.find_by(email: Redis.current.get("#{room_name}_r"))
-        current_score = $games[room_name][:left_score]
-        other_score = $games[room_name][:right_score]
-      end
-
-      if ($games[room_name][:is_ranked] == true)
-        match = EloRating::Match.new
-
-        match.add_player(rating: current_user.elo)
-        match.add_player(rating: other_user.elo, winner: true)
-        tmp = match.updated_ratings
-        current_user.elo = tmp[0]
-        other_user.elo = tmp[1]
-        if other_user.guild
-          other_user.guild.points += 1
-          other_user.guild.save
+        if (params[:role] == 'r')
+          current_user = User.find_by(email: Redis.current.get("#{room_name}_r"))
+          other_user = User.find_by(email: Redis.current.get("#{room_name}_l"))
+          current_score = $games[room_name][:right_score]
+          other_score = $games[room_name][:left_score]
+        else
+          current_user = User.find_by(email: Redis.current.get("#{room_name}_l"))
+          other_user = User.find_by(email: Redis.current.get("#{room_name}_r"))
+          current_score = $games[room_name][:left_score]
+          other_score = $games[room_name][:right_score]
         end
-        current_user.save
-        other_user.save
+
+        if ($games[room_name][:is_ranked] == true)
+          match = EloRating::Match.new
+
+          match.add_player(rating: current_user.elo)
+          match.add_player(rating: other_user.elo, winner: true)
+          tmp = match.updated_ratings
+          current_user.elo = tmp[0]
+          other_user.elo = tmp[1]
+          if other_user.guild
+            other_user.guild.points += 1
+            other_user.guild.save
+          end
+          current_user.save
+          other_user.save
+        end
+        Match.create(winner: other_user, loser: current_user, winner_score: other_score, loser_score: current_score);
+        ActionCable.server.broadcast room_name, {action: 'quit'}
       end
-      Match.create(winner: other_user, loser: current_user, winner_score: other_score, loser_score: current_score);
-      ActionCable.server.broadcast room_name, {action: 'quit'}
     end
   end
 
