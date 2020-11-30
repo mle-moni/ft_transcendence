@@ -25,9 +25,7 @@ class Game < ApplicationRecord
 		}
 		$games[room_name] = game
 
-		puts "ok1"
 		Redis.current.set("game_#{room_name}_end?", "no");
-		puts "ok2"
 
 		puts "Game started with data :"
 		puts room_name, is_ranked

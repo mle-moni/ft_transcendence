@@ -4,7 +4,7 @@ let game = null;
 
 let currentTime = Date.now();
 
-const score_max = 3; // ! DONT FORGET TO RESET TO 11
+const score_max = 11;
 
 let keyboard = {
   up: false,
