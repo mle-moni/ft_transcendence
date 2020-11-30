@@ -53,6 +53,7 @@ AppClasses.Views.Friends = class extends Backbone.View {
 			token: $('meta[name="csrf-token"]').attr('content'),
 			allUsers: App.collections.allUsers.toJSON()
 		}));
+		// this.$el.find("#onlineInfos").html(template({}));
 		return (this);
 	}
 	render() {
