@@ -14,14 +14,28 @@ class Room < ApplicationRecord
   has_many :bans, class_name: "RoomBan", dependent: :destroy
   has_many :mutes, class_name: "RoomMute", dependent: :destroy
 
-  # NB :
-  # create_table :room_link_members do |t|
-  #   t.belongs_to :room, index: true
-  #   t.belongs_to :user, index: true
-  # end
-  # S'il y avait eu l'index: :false tel que create_table :room_link_members, index: :false do |t|
-  # alors il n'y aurait pas eu d'ID sur chaque record de la table mais surtout,
-  # il naurait pas été possible de call destroy sur les record car les callback (si dependent: destroy) de destroy se base sur cet id,
-  # à l'inverse de delete_all qui ne call pas de callback
-  
+  def self.cleanFetch(room, current_user)
+    newRoom = {
+      id: room.id,
+      name: room.name,
+      privacy: room.privacy,
+      password: room.password,
+      owner_id: room.owner.id,
+      members: room.members,
+      admins: room.admins,
+      bans: room.bans,
+      mutes: room.mutes,
+      created_at: room.created_at,
+      updated_at: room.updated_at,
+      room_messages: RoomMessage.none
+    }
+    # If user is admin or is member/admin/owner and is'nt ban, we respond with full message
+    if current_user.admin || (room.members && room.members.include?(current_user)) || (room.admins && room.admins.include?(current_user))
+      if !room.bans || (room.bans && !room.bans.include?(room.bans.find_by(user: current_user, room: room.id)))
+        newRoom[:room_messages] = room.room_messages
+      end 
+    end
+    return newRoom
+  end
+
 end
