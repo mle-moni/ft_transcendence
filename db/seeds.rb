@@ -17,16 +17,17 @@ end
 # Recreate rooms each time too
 # Encrypted Passwords : bob - jo - kim
 
-[
-	{email: "bob@bob.bob", encrypted_password: "$2b$10$hTWyjJ2M0cXVfbWZVDafZeA4Y3Q5BgmE3y8jhlaLEIe5kOH0Mrh0y", reset_password_token: nil, reset_password_sent_at: nil, remember_created_at: nil, created_at: "2020-11-06 17:27:29", updated_at: "2020-11-06 17:27:57", nickname: "Bob", provider: nil, uid: nil, image: "https://images-na.ssl-images-amazon.com/images/I/51vy0hxKhtL._AC_SX425_.jpg"},
-	{email: "jo@jo.jo", encrypted_password: "$2b$10$cTBNkgVpymjQUnmzcIOp..7LV89qUcA8oncTqPgm8Mhz7SU6.9SA2", reset_password_token: nil, reset_password_sent_at: nil, remember_created_at: nil, created_at: "2020-11-06 17:27:29", updated_at: "2020-11-06 17:27:57", nickname: "Jo", provider: nil, uid: nil, image: "https://images-na.ssl-images-amazon.com/images/I/81dIf1bhapL._AC_SY355_.jpg"},
-	{email: "kim@kim.kim", encrypted_password: "$2b$10$vlVG7aTb89HFydKlSMocCO1FHF.aut2CHeDT1VTRVk8BZyyyF8knO", reset_password_token: nil, reset_password_sent_at: nil, remember_created_at: nil, created_at: "2020-11-06 17:27:29", updated_at: "2020-11-06 17:27:57", nickname: "Kim", provider: nil, uid: nil, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTk5GO2sPjD47vukDnUIpPI0ewHkBbpy2Qc6g&usqp=CAU"}
+unless User.exists?(:email => "bob@bob.bob")
+	[
+		{email: "bob@bob.bob", encrypted_password: "$2b$10$hTWyjJ2M0cXVfbWZVDafZeA4Y3Q5BgmE3y8jhlaLEIe5kOH0Mrh0y", reset_password_token: nil, reset_password_sent_at: nil, remember_created_at: nil, created_at: "2020-11-06 17:27:29", updated_at: "2020-11-06 17:27:57", nickname: "Bob", provider: nil, uid: nil, image: "https://images-na.ssl-images-amazon.com/images/I/51vy0hxKhtL._AC_SX425_.jpg"},
+		{email: "jo@jo.jo", encrypted_password: "$2b$10$cTBNkgVpymjQUnmzcIOp..7LV89qUcA8oncTqPgm8Mhz7SU6.9SA2", reset_password_token: nil, reset_password_sent_at: nil, remember_created_at: nil, created_at: "2020-11-06 17:27:29", updated_at: "2020-11-06 17:27:57", nickname: "Jo", provider: nil, uid: nil, image: "https://images-na.ssl-images-amazon.com/images/I/81dIf1bhapL._AC_SY355_.jpg"},
+		{email: "kim@kim.kim", encrypted_password: "$2b$10$vlVG7aTb89HFydKlSMocCO1FHF.aut2CHeDT1VTRVk8BZyyyF8knO", reset_password_token: nil, reset_password_sent_at: nil, remember_created_at: nil, created_at: "2020-11-06 17:27:29", updated_at: "2020-11-06 17:27:57", nickname: "Kim", provider: nil, uid: nil, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTk5GO2sPjD47vukDnUIpPI0ewHkBbpy2Qc6g&usqp=CAU"}
 
-].each do |record|
-	newUser = User.new(record)
-	newUser.save!(validate: false)
+	].each do |record|
+		newUser = User.new(record)
+		newUser.save!(validate: false)
+	end
 end
-
 # [
 # 	{name: "ChatRoom1", owner_id: User.find_by(email: "bob@bob.bob").id, privacy: "Public"},
 # 	{name: "ChatRoom2", owner_id: User.find_by(email: "bob@bob.bob").id, privacy: "Public"},

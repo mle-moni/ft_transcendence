@@ -135,3 +135,18 @@
 		}
 	}
 }
+
+.chip {
+	display: inline-block;
+	padding: 5px;
+	font-size: 14px;
+	border-style: solid;
+	border-width: 1px;
+	border-color: black;
+	border-radius: 25px;
+	background-color: #d3cccc;
+}
+
+.font20 {
+	font-size: 20px;
+}

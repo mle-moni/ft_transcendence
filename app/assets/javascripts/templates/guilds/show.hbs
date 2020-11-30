@@ -14,10 +14,18 @@
 		<br>
 
 	<div>Users</div><br>
-
 	<ul>
 		{{#each guild.users}}
-		<li>{{nickname}}</li>
+		<li>
+			<a class="btn btn-outline-info btn-sm font20" href="#profiles/{{ id }}">{{ nickname }}</a>
+
+			{{#if guild_owner}}
+			<b class="chip">Owner</b>
+			{{/if}}
+			{{#if guild_officer}}
+			<b class="chip">Officer</b>
+			{{/if}}
+		</li>
 		<br>
 		{{/each}}
 	</ul>
@@ -59,6 +67,8 @@
 
 	{{#if owner }}
 	<a class="btn btn-info" href="#guilds/edit">Edit</a>
+	<br><br>
+	<a class="btn btn-info" href="#guilds/{{guild.id}}/new_war">New war</a>
 	<br><br>
 	{{/if}}
 
