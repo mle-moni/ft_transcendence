@@ -75,13 +75,15 @@ class User < ApplicationRecord
       nickname: usr.nickname,
       image: usr.image,
       elo: usr.elo,
-      guild_validated: usr.guild_validated,
       guild_id: usr.guild_id,
+      guild_validated: usr.guild_validated,
+      guild_owner: usr.guild_owner,
+      guild_officer: usr.guild_officer,
       last_seen: usr.last_seen,
       matches: usr.matches,
       blocked: usr.blocked,
       admin: usr.admin,
-      banned: usr.banned,
+      banned: usr.banned
     }
   end
   
