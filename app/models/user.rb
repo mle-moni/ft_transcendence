@@ -50,26 +50,21 @@ class User < ApplicationRecord
     end
   end
 
-  def self.clean(usr)
-		new_user = {
-      id: usr.id,
-      nickname: usr.nickname,
-      email: usr.email,
-      image: usr.image,
-      two_factor: usr.otp_required_for_login,
-      guild_id: usr.guild_id,
-      guild_owner: usr.guild_owner,
-      guild_officer: usr.guild_officer,
-      guild_validated: usr.guild_validated,
-      friends: usr.friends,
-      invites: usr.invites,
-      last_seen: usr.last_seen,
-      admin: usr.admin,
-      blocked: usr.blocked
-    }
+  def self.clean(usr, include_last_seen = false)
+    new_user = User.strict_clean(usr, include_last_seen)
+    
+    new_user[:email] = usr.email
+    new_user[:two_factor] = usr.otp_required_for_login
+    new_user[:friends] = usr.friends.map do |friend|
+      User.strict_clean(friend, include_last_seen)
+    end
+    new_user[:invites] = usr.invites.map do |invite|
+      User.strict_clean(invite, include_last_seen)
+    end
+    return (new_user);
   end
 
-  def self.strict_clean(usr)
+  def self.strict_clean(usr, include_last_seen = false)
 		new_user = {
       id: usr.id,
       nickname: usr.nickname,
@@ -79,12 +74,15 @@ class User < ApplicationRecord
       guild_validated: usr.guild_validated,
       guild_owner: usr.guild_owner,
       guild_officer: usr.guild_officer,
-      last_seen: usr.last_seen,
       matches: usr.matches,
       blocked: usr.blocked,
       admin: usr.admin,
       banned: usr.banned
     }
+    if include_last_seen
+      new_user[:last_seen] = usr.last_seen
+    end
+    return (new_user);
   end
   
   def self.reset_guild(usr)

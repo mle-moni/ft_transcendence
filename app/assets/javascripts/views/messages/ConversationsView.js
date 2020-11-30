@@ -47,11 +47,8 @@ AppClasses.Views.Conversations = class extends Backbone.View {
 		return (false);
 	}
 
-    updateRender(changes) {
+    updateRender() {
 
-		if (changes && App.utils.onlyThoseAttrsChanged(changes.changed, ["last_seen"])) {
-			return (this);
-		}
 		var currentDMRoom = this.model ? this.model.toJSON() : null;
 		if (currentDMRoom) {
 			currentDMRoom = _.filter(currentDMRoom, m => {

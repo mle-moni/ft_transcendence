@@ -87,10 +87,7 @@ AppClasses.Views.AuthInfos = class extends Backbone.View {
 			}, 3000);
 		});
 	}
-	updateRender(changes) {
-		if (changes && App.utils.onlyThoseAttrsChanged(changes.changed, ["last_seen"])) {
-			return (this);
-		}
+	updateRender() {
 		this.$el.html(this.template({
 			user: this.model.attributes,
 			token: $('meta[name="csrf-token"]').attr('content'),

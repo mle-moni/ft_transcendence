@@ -31,7 +31,6 @@
 			guild_validated: <%= current_user.guild_validated.to_json.html_safe %>,
 			friends: <%= current_user.friends.to_json.html_safe %>,
 			invites: <%= current_user.invites.to_json.html_safe %>,
-			last_seen: <%= current_user.last_seen.to_json.html_safe %>,
 			admin: <%= current_user.admin.to_json.html_safe %>
 		};
 		App.data.links = {

@@ -5,21 +5,19 @@ class FriendsController < ApplicationController
 	before_action :check_in_friendlist, only: [:add, :accept]
 
 	def get_all
-
-		# to_json : include : blocked array of records for block/unblock on profile page 
-		# respond_to do |format|
-		# 	format.html { redirect_to "/", notice: '^^' }
-		# 	format.json { render json: User.all.to_json(
-		# 		only: [:id, :nickname, :image, :guild_validated, :guild_id, :last_seen],
-		# 		include: [:blocked]), status: :ok
-		# 	}
-		
 		@users = User.all.map do |usr|
 			User.strict_clean(usr)
 		end
 		respond_to do |format|
 			format.html { redirect_to "/", notice: '^^' }
 			format.json { render json: @users, status: :ok }
+		end
+	end
+
+	def last_seen
+		respond_to do |format|
+			format.html { redirect_to "/#profile", notice: 'Profile infos updated' }
+			format.json { render json: User.clean(current_user, true), status: :ok }
 		end
 	end
 

@@ -1,0 +1,11 @@
+{{#each user.friends}}
+<div>
+	<strong> {{nickname}} </strong>
+	({{print_status}})
+	&nbsp;
+	<span class="clickToDeleteFriend pointer">
+		DELETE
+		<span class="nodisplay">{{id}}</span>
+	</span>
+</div>
+{{/each}}

@@ -47,6 +47,20 @@ AppClasses.Models.User = Backbone.Model.extend({
 		.fail(e => {
 			console.error(e);
 		})
+	},
+	updateLastSeen: (model) => {
+		if (!model) {
+			console.error("You must pass a valid user");
+			return (false);
+		}
+		let data = {authenticity_token: $('meta[name="csrf-token"]').attr('content')};
+		jQuery.post("/api/friends/last_seen.json", data)
+		.done(userData => {
+			model.set(userData);
+		})
+		.fail(e => {
+			console.error(e);
+		})
 	}
 });
 
