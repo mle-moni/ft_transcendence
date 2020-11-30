@@ -4,8 +4,24 @@ class PlayChannel < ApplicationCable::Channel
   end
 
   def unsubscribed
+    room_name = "play_channel_#{params[:game_room_id]}";
     # Any cleanup needed when channel is unsubscribed
-    ActionCable.server.broadcast "play_channel_#{params[:game_room_id]}", {action: 'quit'}
+    if (Redis.current.get("game_#{room_name}_end?") == "no") # if not already ended, end the game with actual player has loser (he left the game)
+      Redis.current.set("game_#{room_name}_end?", "yes");
+      if (params[:role] == 'r')
+        current_user = User.find_by(email: Redis.current.get("#{room_name}_r"))
+        other_user = User.find_by(email: Redis.current.get("#{room_name}_l"))
+        current_score = $games[room_name][:right_score]
+        other_score = $games[room_name][:left_score]
+      else
+        current_user = User.find_by(email: Redis.current.get("#{room_name}_l"))
+        other_user = User.find_by(email: Redis.current.get("#{room_name}_r"))
+        current_score = $games[room_name][:left_score]
+        other_score = $games[room_name][:right_score]
+      end
+      Match.create(winner: other_user, loser: current_user, winner_score: other_score, loser_score: current_score);
+      ActionCable.server.broadcast room_name, {action: 'quit'}
+    end
   end
 
   def take_turn(data)
@@ -46,6 +62,23 @@ class PlayChannel < ApplicationCable::Channel
   end
 
   def end_the_game(data)
-    ActionCable.server.broadcast data['room_name'], {action: 'quit'}
+    if (Redis.current.get("game_#{data['room_name']}_end?") == "no") # if not already ended, end the game with the actual datas
+      Redis.current.set("game_#{data['room_name']}_end?", "yes");
+
+      if ($games[data['room_name']][:right_score] == 11)
+        winner_user = User.find_by(email: Redis.current.get("#{data['room_name']}_r"))
+        loser_user = User.find_by(email: Redis.current.get("#{data['room_name']}_l"))
+        winner_score = 11
+        loser_score = $games[data['room_name']][:left_score]
+      else
+        winner_user = User.find_by(email: Redis.current.get("#{data['room_name']}_l"))
+        loser_user = User.find_by(email: Redis.current.get("#{data['room_name']}_r"))
+        winner_score = 11
+        loser_score = $games[data['room_name']][:right_score]
+      end
+
+      Match.create(winner: winner_user, loser: loser_user, winner_score: winner_score, loser_score: loser_score);
+      ActionCable.server.broadcast data['room_name'], {action: 'quit'}
+    end
   end
 end

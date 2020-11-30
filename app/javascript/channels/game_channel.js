@@ -4,7 +4,7 @@ let game = null;
 
 let currentTime = Date.now();
 
-const score_max = 11;
+const score_max = 3; // ! DONT FORGET TO RESET TO 11
 
 let keyboard = {
   up: false,
@@ -77,19 +77,22 @@ class Game {
     currentTime = Date.now();
     this.stop = false;
     this.ball_speed = 0.45;
-    this.paddle_speed = 1.4;
+    this.paddle_speed = 1.1;
     this.score_left = score_left;
     this.score_right = score_right;
     this.poss_dir = [1, -1];
     this.ball_dir = [this.poss_dir[Math.round(Math.random())], getRandomBetween(-1, 1)];
     this.fps = 45;
+    this.has_ended = false;
   }
 
   check_end() {
-    if (this.score_right == score_max)
-      this.consumer.perform("end_the_game", {room_name: this.room_name});
-    if (this.score_left == score_max)
-      this.consumer.perform("end_the_game", {room_name: this.room_name});
+    if (this.has_ended == false && (this.score_right == score_max || this.score_left == score_max)) {
+      this.has_ended = true;
+      setTimeout(function (game) {
+        game.consumer.perform("end_the_game", {room_name: game.room_name})
+      }, 2000, this)
+    }
   }
 
   send_datas() {
@@ -206,19 +209,19 @@ function game_loop() {
       game.ball_dir[1] = -1 * game.ball_dir[1];
     } else if (act == 1) { // * Bounce right
       game.ball_dir = [-1, getRandomBetween(-1.5, 1.5)];
-      game.ball_speed *= 1.05;
+      game.ball_speed *= 1.08; 
     } else if (act == 0) { // * Bounce left
       game.ball_dir = [1, getRandomBetween(-1.5, 1.5)];
-      game.ball_speed *= 1.05;
+      game.ball_speed *= 1.08;
     }
 
-    game.ball_speed = Math.min(game.ball_speed, 1.2);
+    game.ball_speed = Math.min(game.ball_speed, 1.4);
 
   }
 
-  game.check_end();
-  game.draw_datas();
   game.send_datas();
+  game.draw_datas();
+  game.check_end();
 
   //console.log("1 frame");
   if (game.consumer.role == 'r') {
@@ -323,7 +326,7 @@ function subscription_loop() {
         console.log(data);
         if (data.action === 'game_start') {
           location.hash = "#game/" + data.match_room_id;
-          consumer.subscriptions.create({channel: "PlayChannel", game_room_id: data.match_room_id}, {
+          consumer.subscriptions.create({channel: "PlayChannel", game_room_id: data.match_room_id, role: data.msg}, {
             room: undefined,
             connected() {
               // Called when the subscription is ready for use on the server
@@ -354,7 +357,7 @@ function subscription_loop() {
 
             received(data_nest) {
               // console.log(data_nest);
-              if (data_nest['action'] == 'quit' || game.left_action == "quit" || game.right_action == "quit")
+              if (data_nest['action'] == 'quit')
                 location.hash = "#";
               if (data_nest['ball_speed'] != null) {
                 update_datas(data_nest)
