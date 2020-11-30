@@ -4,7 +4,7 @@ class DirectChatsController < ApplicationController
   # GET /direct_chats
   # GET /direct_chats.json
   def index
-    @direct_chats = DirectChat.all
+    @direct_chats = DirectChat.where(user1_id: current_user.id).or(DirectChat.where(user2_id: current_user.id))
   end
 
   # GET /direct_chats/1
