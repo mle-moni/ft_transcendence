@@ -1,9 +1,9 @@
 class Game < ApplicationRecord
-	def self.start(player1, player2, match_id)
+	def self.start(player1, player2, match_id, is_ranked)
 		left, right = [player1, player2]
 
-		ActionCable.server.broadcast "player_#{right}", { action: 'game_start', msg: 'r', match_room_id: match_id }
-		ActionCable.server.broadcast "player_#{left}", { action: 'game_start', msg: 'l', match_room_id: match_id }
+		ActionCable.server.broadcast "player_#{right}", { action: 'game_start', msg: 'r', match_room_id: match_id, ranked: is_ranked }
+		ActionCable.server.broadcast "player_#{left}", { action: 'game_start', msg: 'l', match_room_id: match_id, ranked: is_ranked }
 	end
 
 	def self.start_game(room_name, is_ranked)
@@ -35,7 +35,6 @@ class Game < ApplicationRecord
 		if (Redis.current.get("game_#{room_name}_end?") == "no") # if not already ended, end the game with actual player has loser (he left the game)
 			Redis.current.set("game_#{room_name}_end?", "yes");
 
-			puts "ok1"
 			if (role_quit != 'n')
 				if (role_quit == 'r')
 					loser_user = User.find_by(email: Redis.current.get("#{room_name}_r"))
@@ -61,7 +60,6 @@ class Game < ApplicationRecord
 					loser_score = $games[room_name][:right_score]
 				end
 			end
-			puts "ok2"
 
 			if ($games[room_name][:is_ranked] == true)
 				match = EloRating::Match.new
@@ -77,10 +75,26 @@ class Game < ApplicationRecord
 				loser_user.save
 				winner_user.save
 			end
-			puts "ok3"
 
 			Match.create(winner: winner_user, loser: loser_user, winner_score: winner_score, loser_score: loser_score);
 			ActionCable.server.broadcast room_name, {action: 'quit'}
 		end
+	end
+
+	def self.launch_game(player1, player2, is_ranked=false)
+		left, right = [player1, player2]
+
+		@current_match_id = 0
+		if Redis.current.get('match_id').blank? || Redis.current.get('match_id').to_i >= 999_999
+			Redis.current.set('match_id', 0)
+		else
+			Redis.current.set('match_id', Redis.current.get('match_id').to_i + 1)
+			@current_match_id = Redis.current.get('match_id')
+		end
+
+		Redis.current.set("play_channel_#{@current_match_id}_l", "#{left}")
+		Redis.current.set("play_channel_#{@current_match_id}_r", "#{right}")
+
+		Game.start(left, right, @current_match_id, is_ranked)
 	end
 end

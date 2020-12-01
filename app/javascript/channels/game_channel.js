@@ -295,71 +295,71 @@ function subscription_loop() {
   }
 
   const element = document.getElementById("game_page_id")
-  if (element !== null) {
-    consumer.subscriptions.create({channel: "GameChannel", is_ranked: ranked}, {
-      connected() {
-        console.log("this is streaming from the game channel");
-      },
+  consumer.subscriptions.create({channel: "GameChannel", is_ranked: ranked, is_matchmaking: element !== null}, {
+    connected() {
+      console.log("this is streaming from the game channel");
+    },
 
-      disconnected() {
-        // Called when the subscription has been terminated by the server
-        console.log("leave matchmaking");
-        ctx = null;
-        canvas = null;
-      },
+    disconnected() {
+      // Called when the subscription has been terminated by the server
+      console.log("leave matchmaking");
+      ctx = null;
+      canvas = null;
+    },
 
-      received(data) {
-        console.log(data);
-        if (data.action === 'game_start') {
-          location.hash = "#game/" + data.match_room_id;
-          consumer.subscriptions.create({channel: "PlayChannel", game_room_id: data.match_room_id, role: data.msg}, {
-            room: undefined,
-            connected() {
-              // Called when the subscription is ready for use on the server
-              console.log("Now Playing, with paddle :" + data.msg);
-              this.role = data.msg;
-              this.room = `play_channel_${data.match_room_id}`;
-              console.log("your role is : " + this.role);
-              console.log(this.room);
-              this.perform("start_game", {room_name: this.room, is_ranked: ranked }); // default action
-              canvas = document.getElementById("myCanvas");
-              ctx = canvas.getContext('2d');
-              const UID = document.getElementById("UID");
-              UID.innerHTML = `You have the ${this.role} paddle`
-              game = new Game(this.room, ctx, 0, 0, 0, 0, this)
+    received(data) {
+      console.log(data);
+      if (data.action === 'game_start') {
+        location.hash = "#game/" + data.match_room_id;
+        consumer.subscriptions.create({channel: "PlayChannel", game_room_id: data.match_room_id, role: data.msg}, {
+          room: undefined,
+          connected() {
+            // Called when the subscription is ready for use on the server
+            console.log("Now Playing, with paddle :" + data.msg);
+            this.role = data.msg;
+            this.room = `play_channel_${data.match_room_id}`;
+            console.log("your role is : " + this.role);
+            console.log(this.room);
+            this.perform("start_game", {room_name: this.room, is_ranked: data.ranked }); // default action
+            canvas = document.getElementById("myCanvas");
+            ctx = canvas.getContext('2d');
+            const UID = document.getElementById("UID");
+            UID.innerHTML = `You have the ${this.role} paddle`
+            game = new Game(this.room, ctx, 0, 0, 0, 0, this)
+            game_loop(game);
+          },
+
+          disconnected() {
+            // Called when the subscription has been terminated by the server
+            console.log("I am disconnected of the room");
+            ball.x = 0.0;
+            ball.y = 0.0;
+            this.perform("quit", {room_name: game.room_name, player: this.role}); // default action
+            console.log("perform ok");
+            ctx = null;
+            canvas = null;
+          },
+
+          received(data_nest) {
+            // console.log(data_nest);
+            if (data_nest['action'] == 'quit')
+              location.hash = "#";
+            if (data_nest['ball_speed'] != null) {
+              update_datas(data_nest)
               game_loop(game);
-            },
-
-            disconnected() {
-              // Called when the subscription has been terminated by the server
-              console.log("I am disconnected of the room");
-              ball.x = 0.0;
-              ball.y = 0.0;
-              this.perform("quit", {room_name: game.room_name, player: this.role}); // default action
-              console.log("perform ok");
-              ctx = null;
-              canvas = null;
-            },
-
-            received(data_nest) {
-              // console.log(data_nest);
-              if (data_nest['action'] == 'quit')
-                location.hash = "#";
-              if (data_nest['ball_speed'] != null) {
-                update_datas(data_nest)
-                game_loop(game);
-              }
-
-              // if don't work use a set Interval avec une variable action has been played to check if data has been received in a certain time
             }
-          });
-        }
+
+            // if don't work use a set Interval avec une variable action has been played to check if data has been received in a certain time
+          }
+        });
       }
-    });
-  }
+    }
+  });
 }
 
 window.addEventListener("hashchange", e => {
   // console.log('hashchange1', window.location.hash );
   setTimeout(subscription_loop, 50);
 });
+
+subscription_loop();

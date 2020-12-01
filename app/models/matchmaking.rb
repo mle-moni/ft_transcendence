@@ -19,7 +19,7 @@ class Matchmaking < ApplicationRecord
 				Redis.current.set("play_channel_#{@current_match_id}_r", "#{opponent}")
 
 				Redis.current.set('matches_ranked', nil)
-				Game.start(player_mail, opponent, @current_match_id)
+				Game.start(player_mail, opponent, @current_match_id, is_ranked)
 			else
 				Redis.current.set('matches_ranked', player_mail)
 			end
@@ -38,7 +38,7 @@ class Matchmaking < ApplicationRecord
 				Redis.current.set("play_channel_#{@current_match_id}_r", "#{opponent}")
 
 				Redis.current.set('matches', nil)
-				Game.start(player_mail, opponent, @current_match_id)
+				Game.start(player_mail, opponent, @current_match_id, is_ranked)
 			else
 				Redis.current.set('matches', player_mail)
 			end
