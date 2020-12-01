@@ -24,7 +24,7 @@ document.addEventListener("keydown",  event => {
       keyboard["down"] = true;
       break;
   }
-  console.log(event.key);
+  // console.log(event.key);
 });
 
 document.addEventListener("keyup", event => {
@@ -74,7 +74,6 @@ class Game {
     this.left_action = 'w';
     this.right_action = 'w';
     this.consumer = consumer;
-    currentTime = Date.now();
     this.stop = false;
     this.ball_speed = 0.55;
     this.paddle_speed = 1.1;
@@ -233,6 +232,8 @@ function game_loop() {
 }
 
 function subscription_loop() {
+    console.log('hashchange1', window.location.hash );
+
   const ingameelement = document.getElementById("in_game_id")
   let ranked = true;
   const ranked_el = document.getElementById("ranked")
@@ -242,9 +243,10 @@ function subscription_loop() {
 
   if (ingameelement === null) {
     consumer.subscriptions.subscriptions.forEach(sub => {
-      // console.log(sub);
-      // sub.disconnected();
-      // consumer.subscriptions.remove(sub);
+        if (sub.identifier && (sub.identifier.includes("PlayChannel") || sub.identifier.includes("GameChannel"))) {
+          sub.disconnected();
+          consumer.subscriptions.remove(sub);
+        }
     })
   } else {
     let is_a_player = false;
@@ -326,7 +328,11 @@ function subscription_loop() {
             const UID = document.getElementById("UID");
             UID.innerHTML = `You have the ${this.role} paddle`
             game = new Game(this.room, ctx, 0, 0, 0, 0, this)
-            game_loop(game);
+            game.draw_datas();
+            setTimeout(function() {
+              currentTime = Date.now();
+              game_loop(game);
+            }, 2000);
           },
 
           disconnected() {
@@ -358,7 +364,6 @@ function subscription_loop() {
 }
 
 window.addEventListener("hashchange", e => {
-  // console.log('hashchange1', window.location.hash );
   setTimeout(subscription_loop, 50);
 });
 

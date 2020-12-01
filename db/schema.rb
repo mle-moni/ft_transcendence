@@ -191,7 +191,7 @@ ActiveRecord::Schema.define(version: 2020_11_29_155301) do
     t.index ["guild1_id"], name: "index_wars_on_guild1_id"
     t.index ["guild2_id"], name: "index_wars_on_guild2_id"
   end
-  
+
   add_foreign_key "blocks", "users", column: "toward_id"
   add_foreign_key "direct_messages", "direct_chats"
   add_foreign_key "friendships", "users"
