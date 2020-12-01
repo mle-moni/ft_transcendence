@@ -1,9 +1,20 @@
 class Game < ApplicationRecord
-	def self.start(player1, player2, match_id, is_ranked)
-		left, right = [player1, player2]
+	def self.start(player1, player2, is_ranked)
+		left, right = [player1, player2].shuffle
 
-		ActionCable.server.broadcast "player_#{right}", { action: 'game_start', msg: 'r', match_room_id: match_id, ranked: is_ranked }
-		ActionCable.server.broadcast "player_#{left}", { action: 'game_start', msg: 'l', match_room_id: match_id, ranked: is_ranked }
+		current_match_id = 0
+		if Redis.current.get('match_id').blank? || Redis.current.get('match_id').to_i >= 999_999
+			Redis.current.set('match_id', 0)
+		else
+			Redis.current.set('match_id', Redis.current.get('match_id').to_i + 1)
+			current_match_id = Redis.current.get('match_id')
+		end
+
+		Redis.current.set("play_channel_#{current_match_id}_l", "#{left}")
+		Redis.current.set("play_channel_#{current_match_id}_r", "#{right}")
+
+		ActionCable.server.broadcast "player_#{right}", { action: 'game_start', msg: 'r', match_room_id: current_match_id, ranked: is_ranked }
+		ActionCable.server.broadcast "player_#{left}", { action: 'game_start', msg: 'l', match_room_id: current_match_id, ranked: is_ranked }
 	end
 
 	def self.start_game(room_name, is_ranked)
@@ -82,19 +93,6 @@ class Game < ApplicationRecord
 	end
 
 	def self.launch_game(player1, player2, is_ranked=false)
-		left, right = [player1, player2]
-
-		@current_match_id = 0
-		if Redis.current.get('match_id').blank? || Redis.current.get('match_id').to_i >= 999_999
-			Redis.current.set('match_id', 0)
-		else
-			Redis.current.set('match_id', Redis.current.get('match_id').to_i + 1)
-			@current_match_id = Redis.current.get('match_id')
-		end
-
-		Redis.current.set("play_channel_#{@current_match_id}_l", "#{left}")
-		Redis.current.set("play_channel_#{@current_match_id}_r", "#{right}")
-
-		Game.start(left, right, @current_match_id, is_ranked)
+		Game.start(player1, player2, is_ranked)
 	end
 end

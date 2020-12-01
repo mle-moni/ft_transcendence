@@ -76,7 +76,7 @@ class Game {
     this.consumer = consumer;
     currentTime = Date.now();
     this.stop = false;
-    this.ball_speed = 0.45;
+    this.ball_speed = 0.55;
     this.paddle_speed = 1.1;
     this.score_left = score_left;
     this.score_right = score_right;
@@ -191,13 +191,13 @@ function game_loop() {
     var act = game.ball_collision();
     if (act == 5) {
       game.score_left += 1;
-      game.ball_speed = 0.45;
+      game.ball_speed = 0.55;
       ball.x = 0;
       ball.y = 0;
       game.ball_dir = [game.poss_dir[Math.round(Math.random())], getRandomBetween(-1, 1)];
     } else if (act == 4) {
       game.score_right += 1;
-      game.ball_speed = 0.45;
+      game.ball_speed = 0.55;
       ball.x = 0;
       ball.y = 0;
       game.ball_dir = [game.poss_dir[Math.round(Math.random())], getRandomBetween(-1, 1)];
