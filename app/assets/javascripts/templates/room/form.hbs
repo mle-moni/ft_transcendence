@@ -1,0 +1,29 @@
+<div id="checkRoomPresence"></div>
+
+
+<div class="newFormView">
+
+
+
+	<p> <u> {{titleText}}</u> </p>
+
+	<form id="{{formID}}" action="/api/rooms.json" accept-charset="UTF-8" method="{{method}}">
+
+		<input type="hidden" name="authenticity_token" value="{{token}}">
+
+		<input class="form-control" placeholder="Room Name" autocomplete="off" type="text" id="roomName" name="room[name]">
+		<input type="hidden" id="roomOwner" name="room[owner_id]" value="{{user.id}}">
+		<br>
+		<input class="form-control" placeholder="Room Privacy" autocomplete="off" type="text" id="roomPrivacy" name="room[privacy]"
+			value="public">
+		<br>
+		<input class="form-control" placeholder="Room Password" autocomplete="off" type="text" id="roomPassword" name="room[password]">
+		<br> <br>
+		<input type="submit" class="btn btn-success" value="{{submitText}}">
+		<br>
+	</form>
+
+	<br>
+	<a class="btn btn-primary" href="#room" role="button"> Back </a>
+
+</div>

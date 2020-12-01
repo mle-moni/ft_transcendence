@@ -1,14 +1,25 @@
-<h1>List of guilds</h1>
-<br>
-{{#each guilds}}
-    <div>
-		<h2>{{name}}, {{points}} points</h2>
-		<a style="font-size: 14px;" href="#guilds/{{id}}">profile page</a>
-		<br>
+<div class="margin25Div">
+
+
+	<p style="font-size: 20px;"> <u> <strong> Guild Ladder </strong></u>  &nbsp; ⚛ </p>
+
+	<br>
+	{{#each guilds}}
+	<div>
+		<h2> {{name}} </h2>
+		<p>{{points}} points &nbsp; Rank {{rank}}</p>
+
+		<a style="font-size: 14px;" class="btn btn-primary" href="#guilds/{{id}}">[{{anagram}}] {{name}}</a>
+
 	</div>
-{{/each}}
-<br>
-<br>
-<a href="#guilds/mine">My guild</a>
-<br>
-<a href="#">Home</a>
+	{{/each}}
+
+	<br>
+	<hr>
+	<br>
+	<a class="btn btn-success" href="#guilds/mine">My Guild</a>
+	<br><br>
+	<a class="btn btn-info" href="#">Home</a>
+
+
+</div>

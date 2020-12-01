@@ -12,6 +12,11 @@ AppClasses.Routers.Main = class extends AppClasses.Routers.AbstractRouter {
 		App.routers.guilds = new AppClasses.Routers.GuildsRouter();
 		// game routes
 		App.routers.game = new AppClasses.Routers.GameRouter();
+		
+		// Chat : Room & Messages
+		App.routers.rooms = new AppClasses.Routers.RoomRouter();
+		App.routers.messages = new AppClasses.Routers.DirectMessagesRouter();
+
 		// friends routes
 		App.routers.friends = new AppClasses.Routers.FriendsRouter();
 		// admin routes
@@ -19,6 +24,7 @@ AppClasses.Routers.Main = class extends AppClasses.Routers.AbstractRouter {
 
 		// create all models needed by multiple routes
 		this.models.user = new AppClasses.Models.User(App.data.user);
+		this.models.last_seen = new AppClasses.Models.User(App.data.user);
 		this.collections.allUsers = new AppClasses.Collections.AllUsers();
 
 		const seconds = 10; // update every N seconds
@@ -29,6 +35,7 @@ AppClasses.Routers.Main = class extends AppClasses.Routers.AbstractRouter {
 				type: 'POST'
 			});
 			this.models.user.update(this.models.user);
+			this.models.last_seen.updateLastSeen(this.models.last_seen);
 			this.collections.allUsers.myFetch();
 			this.collections.guilds.fetch();
 		}, 1000 * seconds);*/

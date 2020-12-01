@@ -7,6 +7,9 @@ rm -f /app/tmp/pids/server.pid
 bundle install
 yarn install
 
+# rails db:reset
+
+# rails db:drop
 rails db:create
 rails db:migrate
 rails db:seed

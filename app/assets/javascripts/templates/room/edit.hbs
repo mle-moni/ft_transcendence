@@ -1,0 +1,44 @@
+<div id="checkRoomPresence"></div>
+
+
+<div class="editRoomView">
+
+
+	<p>  {{titleText}} <u> {{name}}</u> </p>
+
+	<form id="{{editID}}" action="/api/rooms/{{room_id}}.json" accept-charset="UTF-8" method="PUT">
+
+		<input type="hidden" name="authenticity_token" value="{{token}}">
+
+		{{!-- Room Data --}}
+		<input class="form-control" type="text" autocomplete="off" id="roomName" placeholder="Room Name" name="room[name]">
+
+		<br>
+		<input class="form-control" type="text" autocomplete="off" id="roomPrivacy" placeholder="Room Privacy" name="room[privacy]">
+		<br>
+		<input class="form-control" type="text" autocomplete="off" id="roomPassword" placeholder="Room Password" name="room[password]">
+
+		<input type="hidden" name="room[id]" value="{{room_id}}">
+
+		<br>
+		<input type="submit"  class="btn btn-success"  value="Confirm room edit">
+		<br><br>
+	</form>
+
+	<br>
+
+	<button class="btn btn-warning" id="{{DeleteButton}}">{{DeleteText}}</button>
+	
+	
+	<form style="display: none;" id="{{deleteID}}" method="DELETE">
+		<br>
+		<input type="hidden" name="authenticity_token" value="{{token}}">
+		<input placeholder="Type room name" class="form-control" type="text" autocomplete="off" id="confirmRoomName">
+		<br>
+		<input type="hidden" id="roomID" name="room[room_id]" value="{{room_id}}">
+		<input type="submit" class="btn btn-danger" value="Confirm room delete">
+	</form>
+
+	<br><br>
+	<a class="btn btn-primary" href="#room" role="button"> Back </a>
+</div>

@@ -1,4 +1,42 @@
-<h1>{{titleText}}</h1>
+<div class="margin25Div">
+
+
+
+	<h3><u> {{titleText}}</u></h3><br>
+
+	<form id="{{formID}}" action="/api/guilds.json" accept-charset="UTF-8" method="{{method}}">
+		<input type="hidden" name="authenticity_token" value="{{token}}">
+		<label for="guildName">Guild name</label>
+		<input class="form-control-sm" type="text" id="guildName" value="{{guild.name}}" name="guild[name]">
+		<br>
+		<label for="guildName">Guild Anagram</label>
+		<input class="form-control-sm" type="text" id="guildAnagram" value="{{guild.anagram}}" name="guild[anagram]">
+		<br>
+		<br>
+		<input class="btn btn-success" type="submit" value="{{submitText}}">
+		<br>
+	</form>
+
+	{{#if guild.name }}
+	<br>
+	<button class="btn btn-danger" id="viewDelForm">Delete this guild</button>
+	<br>
+	<br>
+	<form style="display: none;" id="guildDeleteForm" method="DELETE">
+		<input type="hidden" name="authenticity_token" value="{{token}}">
+		<label for="confirmGuildName">Confirm guild name</label>
+		<input type="text" id="confirmGuildName">
+		<input class="btn btn-warning" type="submit" value="Confirm deletion">
+	</form>
+	{{/if}}
+
+	<br>
+	<a class="btn btn-info" href="#">Home</a>
+
+</div>
+
+
+{{!-- <h1>{{titleText}}</h1>
 
 <form id="{{formID}}" action="/api/guilds.json" accept-charset="UTF-8" method="{{method}}">
 	<input type="hidden" name="authenticity_token" value="{{token}}">
@@ -23,4 +61,4 @@
 {{/if}}
 
 <br>
-<a href="#">Home</a>
+<a href="#">Home</a> --}}

@@ -4,7 +4,8 @@ AppClasses.Models.User = Backbone.Model.extend({
 		email: "",
 		image: "",
 		two_factor: false,
-		guild_id: null
+		guild_id: null,
+		blocked: null
 	},
 	isOwner: (guild) => {
 		if (!guild) {
@@ -40,6 +41,20 @@ AppClasses.Models.User = Backbone.Model.extend({
 		}
 		let data = {authenticity_token: $('meta[name="csrf-token"]').attr('content')};
 		jQuery.post("/api/profile/get.json", data)
+		.done(userData => {
+			model.set(userData);
+		})
+		.fail(e => {
+			console.error(e);
+		})
+	},
+	updateLastSeen: (model) => {
+		if (!model) {
+			console.error("You must pass a valid user");
+			return (false);
+		}
+		let data = {authenticity_token: $('meta[name="csrf-token"]').attr('content')};
+		jQuery.post("/api/friends/last_seen.json", data)
 		.done(userData => {
 			model.set(userData);
 		})

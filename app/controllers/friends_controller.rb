@@ -14,6 +14,13 @@ class FriendsController < ApplicationController
 		end
 	end
 
+	def last_seen
+		respond_to do |format|
+			format.html { redirect_to "/#profile", notice: 'Profile infos updated' }
+			format.json { render json: User.clean(current_user, true), status: :ok }
+		end
+	end
+
 	def destroy
 		other_friendship = Friendship.where(user_id: @friend_id, friend_id: current_user.id).first
 		if other_friendship

@@ -1,21 +1,26 @@
-<h2>Log in</h2>
+<div class="margin25Div">
+
+
+<p style="margin-left: 40px; font-size: 24px;">LOG IN</p>
 
 <form class="new_user" id="new_user" action="/users/sign_in" accept-charset="UTF-8" method="post">
 	<input type="hidden" name="authenticity_token" value="EjODO88t40nRLDD5esEZ25L+u/Ix6qgJhQuHpO1v9C1mPri6la9WL5/d/SI0lhuLMOI8UyKmTRPKKyFasTPqbw==">
 	<div class="field">
-		<label for="user_email">Email</label><br>
-		<input autofocus="autofocus" autocomplete="email" type="email" value="" name="user[email]" id="user_email">
+		<input class="form-control-sm" placeholder="Email" autofocus="autofocus" autocomplete="email" type="email" value="" name="user[email]" id="user_email">
 	</div>
-	<div class="field">
-		<label for="user_password">Password</label><br>
-		<input autocomplete="current-password" type="password" name="user[password]" id="user_password">
-	</div>
-
 	<br>
+	<div class="field">
+		<input class="form-control-sm" placeholder="Password" autocomplete="current-password" type="password" name="user[password]" id="user_password">
+	</div>
+
 
 	<div class="field">
-		<label style="font-size: 15px;" for="user_otp">One time password (ignore this field if 2fa is not enabled in your account)</label><br>
-		<input autocomplete="none" placeholder="ex: 112442" type="text" name="user[otp_attempt]" id="user_otp">
+		<br>
+		<u>
+			<label style="font-size: 15px;" for="user_otp">
+				One time password <br> (Ignore this field if 2FA is not enabled in your account)</label><br>
+		</u>
+		<input class="form-control-sm" autocomplete="none" placeholder="Ex : 112442" type="text" name="user[otp_attempt]" id="user_otp">
 	</div>
 
 	<br>
@@ -28,8 +33,11 @@
 	-->
 
 	<div class="actions">
-		<input type="submit" name="commit" value="Log in">
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <input class="btn btn-success" type="submit" name="commit" value="Log in">
 	</div>
 </form>
 <br>
-<a href="/users/auth/marvin" style="font-size: 20px;">Sign in with 42</a><br>
+
+&nbsp; &nbsp; <a  class="btn btn-primary btn-sm" href="/users/auth/marvin" style="font-size: 16px;">Sign in with 42</a><br>
+
+</div>

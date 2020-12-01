@@ -1,14 +1,69 @@
-<h1>List of users</h1>
-<br>
-{{#each users}}
-    <div>
-		<h2 style="display: inline;">{{nickname}}</h2>
-		<a style="font-size: 14px;" href="#profiles/{{id}}">profile page</a>
+<div class="allProfilesList">
+	🏆&nbsp;  <p style="display: inline-block;font-size: 20px;"> <u>Leaderboard</u>&nbsp; 
+	</p>🏆
+	<br>
+
+	{{#each users}}
+
+	<div>
+		<div style="font-size: 20px; min-width: 150px; display: inline-block">
+			• {{nickname}}
+		</div>
+		&nbsp;
+		<a class="btn btn-outline-info btn-sm" style="font-size: 14px;" href="#profiles/{{id}}">Profile Page</a>
+		&nbsp;&nbsp;
+
+		{{#when ../currentUser.id "noteq" id }}
+		{{#ifIn id  ../blockedTabIDs}}
+		<form class="blockUnBlockForm" id="blockUnBlockForm-{{id}}" style="display: inline;"
+			action="{{../formBlock.url}}" accept-charset="UTF-8" method="{{../formBlock.method}}">
+			<input type="hidden" name="authenticity_token" value="{{../token}}">
+			<input type="hidden" name="targetUserID" value="{{id}}">
+			<input type="hidden" name="typeAction" value="unblock">
+			&nbsp;
+			<input class="btn btn-warning btn-sm" type="submit" value="Unblock">
+		</form>
+		{{/ifIn}}
+		{{#ifNotIn id  ../blockedTabIDs}}
+		<form class="blockUnBlockForm" id="blockUnBlockForm-{{id}}" style="display: inline;"
+			action="{{../formBlock.url}}" accept-charset="UTF-8" method="{{../formBlock.method}}">
+			<input type="hidden" name="authenticity_token" value="{{../token}}">
+			<input type="hidden" name="targetUserID" value="{{id}}">
+			<input type="hidden" name="typeAction" value="block">
+			&nbsp;
+			<input class="btn btn-outline-warning btn-sm" type="submit" value="Block">
+		</form>
+		{{/ifNotIn}}
+		{{/when}}
+
 		<br>
+		<div style="margin-top: 15px;">
+			&nbsp;&nbsp;
+			  <p style="display: inline;font-size: 16px;"> <strong> Ladder rank </strong> : </p>
+			 <p style="display: inline;">
+				 &nbsp;
+				 {{#when rank "eq" 1}}
+				 🥇 &nbsp;
+				 {{/when}}
+				  {{#when rank "eq" 2}}
+				 🥈 &nbsp;
+				 {{/when}}
+				  {{#when rank "eq" 3}}
+				 🥉 &nbsp;
+				 {{/when}}
+				 {{rank}}
+				 
+				 
+				 | ELO {{elo}} | </p>
+			{{!-- <a style="font-size: 14px;" href="#profiles/{{id}}">{{nickname}}</a> --}}
+			<br><br>
+		</div>
+		{{/each}}
+
+		<br>
+		<br>
+		<a class="btn btn-info" href="#profile">My profile</a>
+		<br><br>
+		<a class="btn btn-dark" href="#">Home</a>
+
 	</div>
-{{/each}}
-<br>
-<br>
-<a href="#profile">My profile</a>
-<br>
-<a href="#">Home</a>

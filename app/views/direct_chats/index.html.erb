@@ -1,0 +1,25 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Direct Chats</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @direct_chats.each do |direct_chat| %>
+      <tr>
+        <td><%= link_to 'Show', direct_chat %></td>
+        <td><%= link_to 'Edit', edit_direct_chat_path(direct_chat) %></td>
+        <td><%= link_to 'Destroy', direct_chat, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Direct Chat', new_direct_chat_path %>

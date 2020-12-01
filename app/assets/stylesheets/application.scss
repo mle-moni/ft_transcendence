@@ -1,5 +1,7 @@
 
 @import "bootstrap/scss/bootstrap";
+@import "./rooms";
+@import "./home";
 
 .acceptRequestGuild {
 	cursor: pointer;
@@ -11,4 +13,140 @@
 
 .pointer {
 	cursor: pointer;
+}
+
+.allProfilesList {
+	margin: 25px;
+}
+
+
+.margin25Div {
+	margin: 25px;
+}
+
+.mycontainer {
+	width: 95%;
+	height: 90%;
+	margin-top: 3%;
+	margin-left: 2%;
+	margin-right: 2%;
+	margin-bottom: 2%;
+
+
+	.otherUserProfile {
+		color: rgb(24, 119, 242);
+		text-decoration: none;
+	}
+
+	.avatar {
+		border: 1px solid rgb(153, 153, 153);
+	}
+
+	.list-users {
+		height: 80vh;
+		overflow-y: scroll;
+		scrollbar-color: light;
+		scrollbar-width: none;
+
+		.list-users-item {
+			justify-content: center;
+
+			.btn {
+				margin-top: 1vh;
+				margin-left: 1vh;
+			}
+		}
+	}
+
+	.list-group {
+		height: 60vh;
+		overflow-y: scroll;
+		scrollbar-color: light;
+		scrollbar-width: none;
+		display: flex;
+
+		.list-group-item {
+			display: inline-block;
+			border-style: none;
+			background-color: rgb(255, 255, 255);
+
+			.userName {
+				min-width: 60px;
+				display: inline-block;
+			}
+	
+			.message {
+				display: inline-block;
+				vertical-align: middle;
+				padding: 10px;
+				border-radius: 15px;
+				margin-top: 15px;
+				margin-right: 1vh;
+				max-width: 55%;
+			}
+
+			.otherMessage {
+				text-align: left;
+	
+				.message {
+					background-color: rgb(247, 247, 247);
+				}
+			}
+	
+			.ownMessage {
+				vertical-align: middle;
+				text-align: right;
+
+				.message {
+					vertical-align: middle;
+					background-color: rgb(24, 119, 242);
+					color:azure;
+				}
+			}
+	
+		}
+	}
+}
+
+.myroomcontainer {
+	width: 95%;
+	height: 90%;
+	margin-top: 3%;
+	margin-left: 2%;
+	margin-right: 2%;
+	margin-bottom: 2%;
+
+	.avatar {
+		border: 1px solid rgb(153, 153, 153);
+	}
+
+	.list-group {
+		height: 60vh;
+		overflow-y: scroll;
+		scrollbar-color: light;
+		scrollbar-width: none;
+
+		.list-group-item {
+
+			.ownMessage {
+				vertical-align: middle;
+				text-align: right;
+			}
+		}
+	}
+}
+
+.chip {
+	display: inline-block;
+	padding: 5px;
+	font-size: 14px;
+	border-style: solid;
+	border-width: 1px;
+	border-color: black;
+	border-radius: 25px;
+	background-color: #d3cccc;
+}
+
+.font20 {
+	font-size: 20px;
 }

@@ -1,0 +1,112 @@
+<div id="checkRoomPresence"></div>
+
+<div style="margin: 20px;">
+    <br>
+	<p style="font-size: 20px;"> <u> <strong> Let's talk ! </strong></u>  &nbsp;  📜 </p><br>
+
+    <a class="btn btn-primary" href="#room/new" role="button">Create a new room</a>
+    <br>
+    <br>
+</div>
+
+<div>
+
+    <ul class="list-group list-group-flush">
+
+        <p> &nbsp; &nbsp; <strong> Owned Rooms </strong> </p>
+        {{#each roomJoinedAsOwner}}
+        {{!-- roomJoinedAsOwner --}}
+        <li class="list-group-item"> {{name}} &nbsp; [{{privacy}}] &nbsp;
+            <a class="btn btn-success btn-sm" href="#rooms/{{id}}">Open</a>
+            <a class="btn btn-primary btn-sm" href="#room/edit/{{id}}">Edit</a>
+            <a class="btn btn-info btn-sm" href="#room/administrate/{{id}}?{{../administrateStatusOwner}}">Administrate</a>
+            {{!-- QUIT Form --}}
+            <form class="roomQuitForm" id="roomQuitForm-{{id}}" style="display: inline;" action="{{../quitForm.url}}"
+                accept-charset="UTF-8" method="{{../quitForm.method}}">
+                <input type="hidden" name="authenticity_token" value="{{../quitForm.token}}">
+                <input type="hidden" id="roomID" name="room[room_id]" value="{{id}}">
+                <input type="hidden" id="roomOwner" name="room[owner_id]" value="{{owner_id}}">
+                <input type="hidden" id="userRoomGrade" name="room[userRoomGrade]" value="Owner">
+                <input class="btn btn-outline-danger btn-sm" type="submit" value="{{../quitForm.submitText}}">
+            </form>
+        </li><br>
+        {{/each}}
+
+        <p> &nbsp; &nbsp; <strong> Administrated Rooms </strong> </p>
+
+        {{#each roomJoinedAsRoomAdmin}}
+        {{!-- roomJoinedAsRoomAdmin --}}
+        <li class="list-group-item"> {{name}} &nbsp; [{{privacy}}] &nbsp;
+            <a class="btn btn-success btn-sm" href="#rooms/{{id}}">Open</a>
+            <a class="btn btn-info btn-sm" href="#room/administrate/{{id}}?{{../administrateStatusAdmin}}">Administrate</a>
+
+             <form class="roomQuitForm" id="roomQuitForm-{{id}}" style="display: inline;" action="{{../quitForm.url}}"
+                accept-charset="UTF-8" method="{{../quitForm.method}}">
+                <input type="hidden" name="authenticity_token" value="{{../quitForm.token}}">
+                <input type="hidden" id="roomID" name="room[room_id]" value="{{id}}">
+                <input type="hidden" id="roomOwner" name="room[owner_id]" value="{{owner_id}}">
+                <input type="hidden" id="userRoomGrade" name="room[userRoomGrade]" value="Admin">
+                <input class="btn btn-outline-danger btn-sm" type="submit" value="{{../quitForm.submitText}}">
+            </form>
+        </li> <br>
+        {{/each}}
+
+        <p> &nbsp; &nbsp; <strong> Member Rooms </strong> </p>
+
+        {{#each roomJoinedAsMember}}
+        {{!-- roomJoinedAsMember --}}
+        <li class="list-group-item"> {{name}} &nbsp; [{{privacy}}] &nbsp;
+            <a class="btn btn-success btn-sm" href="#rooms/{{id}}">Open</a>
+             <form class="roomQuitForm" id="roomQuitForm-{{id}}" style="display: inline;" action="{{../quitForm.url}}"
+                accept-charset="UTF-8" method="{{../quitForm.method}}">
+                <input type="hidden" name="authenticity_token" value="{{../quitForm.token}}">
+                <input type="hidden" id="roomID" name="room[room_id]" value="{{id}}">
+                <input type="hidden" id="roomOwner" name="room[owner_id]" value="{{owner_id}}">
+                <input type="hidden" id="userRoomGrade" name="room[userRoomGrade]" value="Member">
+                <input class="btn btn-outline-danger btn-sm" type="submit" value="{{../quitForm.submitText}}">
+            </form>
+        </li><br>
+        {{/each}}
+
+        <p> &nbsp; &nbsp; <strong> Unknown Rooms </strong> </p>
+
+        {{#each notJoinedRooms}}
+        {{!-- notJoinedRooms --}}
+
+        <li class="list-group-item"> {{name}} &nbsp; [{{privacy}}] &nbsp;
+        
+            {{#when privacy "eq" "private" }}
+            <form class="privateRoomAuthForm" id="privateRoomAuthForm-{{id}}" style="display: inline;"
+                id="{{../privateForm.formID}}" action="/api/rooms/joinPrivate.json" accept-charset="UTF-8"
+                method="{{../privateForm.method}}">
+                <input type="hidden" name="authenticity_token" value="{{../privateForm.token}}">
+                <input type="text" class="privateRoomAuthFormField" placeholder="Password" id="roomPassword" name="room[password]">  &nbsp;
+                <input type="hidden" id="roomOwner" name="room[owner_id]" value="{{owner_id}}">
+                <input type="hidden" id="roomID" name="room[room_id]" value="{{id}}">
+                <input class="btn btn-success btn-sm" type="submit" value="{{../privateForm.submitText}}">
+            </form>
+            {{/when}}
+
+            {{#when privacy "noteq" "private" }}
+            <form class="publicRoomJoinForm" id="publicRoomJoinForm-{{id}}" style="display: inline;"
+                action="/api/rooms/joinPublic.json" accept-charset="UTF-8" method="{{../publicForm.method}}">
+                <input type="hidden" name="authenticity_token" value="{{../publicForm.token}}">
+                <input type="hidden" id="roomID" name="room[room_id]" value="{{id}}">
+                <input type="hidden" id="roomOwner" name="room[owner_id]" value="{{owner_id}}">
+                <input class="btn btn-success btn-sm" type="submit" value="{{../publicForm.submitText}}">
+            </form>
+            {{/when}}
+
+             {{#if ../superAdmin }}
+                <a class="btn btn-light btn-sm" href="#rooms/{{id}}">Inspect</a>
+                <a class="btn btn-info btn-sm" href="#room/administrate/{{id}}?{{../administrateStatusOwner}}">Administrate</a>
+            {{/if}}
+            
+        </li>
+        <br>
+        {{/each}}
+
+        <br>
+
+    </ul>
+</div>

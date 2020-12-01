@@ -91,8 +91,4 @@ class Game < ApplicationRecord
 			ActionCable.server.broadcast room_name, {action: 'quit'}
 		end
 	end
-
-	def self.launch_game(player1, player2, is_ranked=false)
-		Game.start(player1, player2, is_ranked)
-	end
 end

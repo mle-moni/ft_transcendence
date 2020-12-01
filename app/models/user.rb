@@ -3,6 +3,16 @@ class User < ApplicationRecord
   # "required: false" because the user may have a null guild_id
   belongs_to :guild, required: false
 
+  # ---------- Chat / User Relations ----------
+  has_many :room_link_members
+  has_many :rooms_as_member, :through => :room_link_members, :source => :room
+  # Attention à la syntaxe : room_link_members (table) vs rooms_as_member (relation)
+  has_many :room_link_admins
+	has_many :rooms_as_admin, :through => :room_link_admins, :source => :room
+  # -------- Chat / DM / User Relations -------
+  has_many :blocked, class_name: "Block", dependent: :destroy
+  # ---------- ---------- ---------- ----------
+
   # friends relation setup
   has_many :friendships
   has_many :confirmed_friendships, -> { where confirmed: true }, class_name: 'Friendship'
@@ -40,34 +50,39 @@ class User < ApplicationRecord
     end
   end
 
-  def self.clean(usr)
-		new_user = {
-      id: usr.id,
-      nickname: usr.nickname,
-      email: usr.email,
-      image: usr.image,
-      two_factor: usr.otp_required_for_login,
-      guild_id: usr.guild_id,
-      guild_owner: usr.guild_owner,
-      guild_officer: usr.guild_officer,
-      guild_validated: usr.guild_validated,
-      friends: usr.friends,
-      invites: usr.invites,
-      last_seen: usr.last_seen,
-      admin: usr.admin
-    }
+  def self.clean(usr, include_last_seen = false)
+    new_user = User.strict_clean(usr, include_last_seen)
+    
+    new_user[:email] = usr.email
+    new_user[:two_factor] = usr.otp_required_for_login
+    new_user[:friends] = usr.friends.map do |friend|
+      User.strict_clean(friend, include_last_seen)
+    end
+    new_user[:invites] = usr.invites.map do |invite|
+      User.strict_clean(invite, include_last_seen)
+    end
+    return (new_user);
   end
 
-  def self.strict_clean(usr)
+  def self.strict_clean(usr, include_last_seen = false)
 		new_user = {
       id: usr.id,
       nickname: usr.nickname,
       image: usr.image,
-      guild_validated: usr.guild_validated,
+      elo: usr.elo,
       guild_id: usr.guild_id,
-      last_seen: usr.last_seen,
-      matches: usr.matches
+      guild_validated: usr.guild_validated,
+      guild_owner: usr.guild_owner,
+      guild_officer: usr.guild_officer,
+      matches: usr.matches,
+      blocked: usr.blocked,
+      admin: usr.admin,
+      banned: usr.banned
     }
+    if include_last_seen
+      new_user[:last_seen] = usr.last_seen
+    end
+    return (new_user);
   end
   
   def self.reset_guild(usr)

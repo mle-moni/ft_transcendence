@@ -242,9 +242,9 @@ function subscription_loop() {
 
   if (ingameelement === null) {
     consumer.subscriptions.subscriptions.forEach(sub => {
-      console.log(sub);
-      sub.disconnected();
-      consumer.subscriptions.remove(sub);
+      // console.log(sub);
+      // sub.disconnected();
+      // consumer.subscriptions.remove(sub);
     })
   } else {
     let is_a_player = false;

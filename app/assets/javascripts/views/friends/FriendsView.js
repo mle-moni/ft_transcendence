@@ -12,6 +12,7 @@ AppClasses.Views.Friends = class extends Backbone.View {
 		this.template = App.templates["friends/index"];
 		this.updateRender(); // render the template only one time, unless model changed
 		this.listenTo(this.model, "change", this.updateRender);
+		this.listenTo(App.models.last_seen, "change", this.updateOnlineInfos);
 		this.listenTo(App.collections.allUsers, "change reset add remove", this.updateRender);
 	}
 	friendAction(event, url, msgSuccess) {
@@ -53,7 +54,13 @@ AppClasses.Views.Friends = class extends Backbone.View {
 			token: $('meta[name="csrf-token"]').attr('content'),
 			allUsers: App.collections.allUsers.toJSON()
 		}));
+		this.updateOnlineInfos()
 		return (this);
+	}
+	updateOnlineInfos() {
+		this.$el.find("#onlineInfos").html(App.templates["friends/onlineInfos"]({
+			user: App.models.last_seen.toJSON()
+		}));
 	}
 	render() {
 		this.model.update(this.model);

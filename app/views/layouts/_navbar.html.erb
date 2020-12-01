@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#">Navbar</a>
+  <a class="navbar-brand" href="#">Transcendence</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -7,13 +7,36 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
-        <a class="nav-link" href="#">Home</a>
+        <a class="nav-link" href="<%= @href %>"> <%= @name %></a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="#game">Game</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="#game_ranked">Game Ranked</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#room">Rooms</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#messages">Messages</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#profiles">Profiles</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#guilds">Guilds</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#friends">Friends</a>
+      </li>
+      <% if @superAdmin %>
+        <li class="nav-item">
+          <a class="nav-link" href="#admin">Admin</a>
+        </li>
+      <% end %>
+      <li class="nav-item">
+        <a class="nav-link" rel="nofollow" data-method="delete" href="/users/sign_out">Sign out</a>
       </li>
     </ul>
   </div>

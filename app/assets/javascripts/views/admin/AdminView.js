@@ -37,10 +37,7 @@ AppClasses.Views.Admin = class extends Backbone.View {
 	demoteUser(e) {
 		this.adminAction(e, "/api/admin/demote.json", "User demoted");
 	}
-	updateRender(changes) {
-		if (changes && App.utils.onlyThoseAttrsChanged(changes.changed, ["last_seen"])) {
-			return (this);
-		}
+	updateRender() {
 		this.$el.html(this.template({
 			user: this.model.toJSON(),
 			token: $('meta[name="csrf-token"]').attr('content'),

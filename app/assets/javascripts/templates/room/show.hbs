@@ -1,0 +1,101 @@
+<script>
+    	var scrollElem = document.getElementById('list-message');
+		if (scrollElem) scrollElem.scroll(0, scrollElem.scrollHeight);
+        var focusElem = document.getElementById('message');
+		if (focusElem) focusElem.focus();
+</script>
+
+<div id="checkRoomPresence"></div>
+<div id="userID" value="{{currentUser.id}}"></div>
+
+<div class="container">
+    <div class="row">
+        <div class="col" style="justify-content: center;">
+            <br>
+            <a class="btn btn-primary" href="#room" role="button"> Back </a>
+            <br>
+            <br>
+            <div class="sectionTitle"> <strong>You are in room <u> {{currentRoom.name}} </u></strong> </div>
+
+        </div>
+    </div>
+
+ 
+    <div class="myroomcontainer">
+        <div class="row">
+            <div class="col">
+
+                <ul class="list-group" id="list-message">
+
+                    <div class="chat" data-channel-subscribe="room" data-room-id="{{currentRoom.id}}">
+                        {{#each roomMessages}}
+
+                        {{#when user_id "noteq" ../currentUser.id}}
+                        <li style="background-color:lightskyblue; word-wrap: break-word;" class="list-group-item">
+
+                            <div class="otherMessage">
+                                <img src="{{#getUserAttributes ../members user_id "image"}}{{/getUserAttributes}}"
+                                    alt="Avatar" class="avatar">
+
+                                <div style="min-width: 60px; display: inline-block">
+                                    <a style="display: inline-block;"
+                                        href="#profiles/ {{#getUserAttributes ../members user_id "id"}}{{/getUserAttributes}}">
+                                        {{#getUserAttributes ../members user_id "nickname"}}{{/getUserAttributes}}
+                                    </a>
+
+                                </div>
+
+                                <p style="display: inline; font-style: italic" data-role="message-text">
+                                    {{message}}
+                                </p>
+                            </div>
+
+                        </li>
+                        <br>
+                        {{/when}}
+
+                        {{#when user_id "eq" ../currentUser.id}}
+                        <li style="background-color: #fffdd0; word-wrap: break-word;" class="list-group-item">
+
+                            <div class="ownMessage">
+
+                                <p style="display: inline; font-style: italic" data-role="message-text">
+                                    {{message}}
+                                </p>
+
+                                <div style="min-width: 60px; display: inline-block">
+                                    You
+                                </div>
+
+                                <img src="{{../currentUser.image}}" alt="Avatar" class="avatar">
+                            </div>
+
+                        </li>
+                        <br>
+                        {{/when}}
+
+                        {{/each}}
+                    </div>
+
+                </ul>
+
+                <form id="{{messageCreateForm.formID}}" action="/api/room_messages.json" accept-charset="UTF-8"
+                    method="{{messageCreateForm.method}}">
+                    <input type="hidden" name="authenticity_token" value="{{messageCreateForm.token}}">
+                    {{!-- Room Data --}}
+                    <input type="hidden" id="roomOwner" name="room_message[user_id]" value="{{currentUser.id}}">
+                    <input type="hidden" id="roomID" name="room_message[room_id]" value="{{currentRoom.id}}">
+                    <br>
+
+                
+                    <input class="btn btn-success" style="float: right;" type="submit" value="{{messageCreateForm.submitText}}">
+                    <div style="overflow: hidden; padding-right: .5em;">
+                    <input style="width: 100%;" class="form-control" placeholder="Message" autocomplete="off" type="text" id="message" name="room_message[message]">
+                    </div>
+                    <br>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>

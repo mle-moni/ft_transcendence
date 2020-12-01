@@ -8,7 +8,6 @@ AppClasses.Views.ProfileEdit = class extends Backbone.View {
 		this.template = App.templates["profile/edit"];
 		this.updateRender(); // render the template only one time, unless model changed
 		this.listenTo(this.model, "change", this.updateRender);
-
 	}
 	submit(e) {
 		e.preventDefault();
@@ -23,10 +22,7 @@ AppClasses.Views.ProfileEdit = class extends Backbone.View {
 		});
 		return (false);
 	}
-	updateRender(changes) {
-		if (changes && App.utils.onlyThoseAttrsChanged(changes.changed, ["last_seen"])) {
-			return (this);
-		}
+	updateRender() {
 		this.$el.html(this.template({
 			user: this.model.attributes,
 			token: $('meta[name="csrf-token"]').attr('content')
