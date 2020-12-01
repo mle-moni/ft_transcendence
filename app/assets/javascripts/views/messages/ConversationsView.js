@@ -105,7 +105,6 @@ AppClasses.Views.Conversations = class extends Backbone.View {
 			dmRooms: this.model,
 			allUsers: usersNonBlocked ? usersNonBlocked : this.allUsers.models,
 			userID: this.user.id,
-			//ADD
 			chatID: this.chatID,
 			currentUser: currentUser,
 			otherUser: otherUser,
@@ -113,10 +112,6 @@ AppClasses.Views.Conversations = class extends Backbone.View {
 			directMessages: directMessages,
 			token: $('meta[name="csrf-token"]').attr('content')
 		}));
-		// var myElement = document.getElementById('list-message');
-		// if (myElement) myElement.scroll(0, 100000000);
-
-
 		this.delegateEvents();
 		return (this);
     }
@@ -129,7 +124,13 @@ AppClasses.Views.Conversations = class extends Backbone.View {
 		this.model.fetch();
 		this.delegateEvents();
 		return (this);
-    }
+	}
+
+	destroy() {
+		this.undelegateEvents();
+		this.$el.removeData().unbind();
+		this.remove();
+		return (this);
+	}
 
 }
-    

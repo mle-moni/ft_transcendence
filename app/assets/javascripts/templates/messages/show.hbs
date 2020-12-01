@@ -12,13 +12,12 @@
         <div class="row">
 
             {{!-- USER LIST --}}
-            <div class="col-3">
+            <div class="col-2">
             <div class="list-users">
                 {{#each allUsers}}
 
                 <div class="list-users-item">
                     <img src="{{attributes.image}}" style="float: left" alt="Avatar" class="avatar">
-                 {{!-- style="background-color: rgb(247, 247, 247);" --}}
                     {{#ifDm ../userID attributes.id ../dmRooms.models }}
                         {{#ifCurrentDmRoom ../userID attributes.id ../dmRooms.models ../chatID  }}
                         <a class="btn btn-outline-success btn-sm"
