@@ -17,7 +17,7 @@ AppClasses.Routers.DirectMessagesRouter = class extends AppClasses.Routers.Abstr
     conversation(chatID) {
 		const user = this.models.user;
 		const cID = parseInt(chatID);
-		this.viewWithRenderParam("conversation", "Conversations", cID, {
+		this.specialViewWithRenderParam("conversation", "Conversations", cID, {
             model: this.collections.DirectMessagesRoom,
 			user: user,
 			chatID: cID

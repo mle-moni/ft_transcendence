@@ -18,4 +18,13 @@ AppClasses.Routers.AbstractRouter = class extends Backbone.Router {
 		}
 		this.mainDiv.html(this.views[viewName].render(renderParam).el);
 	}
+
+	specialViewWithRenderParam(viewName, viewClassName, renderParam, viewOptions = {}) {
+        if (this.views[viewName]) {
+            this.views[viewName].destroy();
+            delete(this.views[viewName]);
+        }
+        this.views[viewName] = new AppClasses.Views[viewClassName](viewOptions);
+        this.mainDiv.html(this.views[viewName].render(renderParam).el);
+    }
 }

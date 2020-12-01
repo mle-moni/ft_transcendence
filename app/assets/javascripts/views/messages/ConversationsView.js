@@ -2,7 +2,7 @@ AppClasses.Views.Conversations = class extends Backbone.View {
 	constructor(opts) {
 		opts.events = {
 			"submit #sendRoomMessageForm": "submit",
-			// "submit .createDM": "createDM"
+			"submit .createDM": "createDM"
 		}
 		super(opts);
 		this.user = App.models.user;
@@ -18,20 +18,20 @@ AppClasses.Views.Conversations = class extends Backbone.View {
 		this.updateRender();
 	}
 
-    // createDM(e) {
-	// 	e.preventDefault();
-	// 	var selectorFormID = "";
-	// 	if (e.currentTarget) selectorFormID = "#" + e.currentTarget.id;
-	// 	App.utils.formAjax("/api/direct_chats.json", selectorFormID)
-	// 	.done(res => {
-	// 		App.toast.success("Room created !", { duration: 1500, style: App.toastStyle });
-	// 		location.hash = "#messages/" + res.id;
-	// 	})
-	// 	.fail((e) => {
-	// 		App.utils.toastError(e);
-	// 	});
-	// 	return (false);
-    // }
+    createDM(e) {
+		e.preventDefault();
+		var selectorFormID = "";
+		if (e.currentTarget) selectorFormID = "#" + e.currentTarget.id;
+		App.utils.formAjax("/api/direct_chats.json", selectorFormID)
+		.done(res => {
+			App.toast.success("Room created !", { duration: 1500, style: App.toastStyle });
+			location.hash = "#messages/" + res.id;
+		})
+		.fail((e) => {
+			App.utils.toastError(e);
+		});
+		return (false);
+    }
 	
 	submit(e)  {
 		e.preventDefault();
@@ -108,7 +108,6 @@ AppClasses.Views.Conversations = class extends Backbone.View {
 			dmRooms: this.model,
 			allUsers: usersNonBlocked ? usersNonBlocked : this.allUsers.models,
 			userID: this.user.id,
-			//ADD
 			chatID: this.chatID,
 			currentUser: currentUser,
 			otherUser: otherUser,
@@ -116,10 +115,6 @@ AppClasses.Views.Conversations = class extends Backbone.View {
 			directMessages: directMessages,
 			token: $('meta[name="csrf-token"]').attr('content')
 		}));
-		// var myElement = document.getElementById('list-message');
-		// if (myElement) myElement.scroll(0, 100000000);
-
-
 		this.delegateEvents();
 		return (this);
     }
@@ -132,7 +127,13 @@ AppClasses.Views.Conversations = class extends Backbone.View {
 		this.model.fetch();
 		this.delegateEvents();
 		return (this);
-    }
+	}
+
+	destroy() {
+		this.undelegateEvents();
+		this.$el.removeData().unbind();
+		this.remove();
+		return (this);
+	}
 
 }
-    
