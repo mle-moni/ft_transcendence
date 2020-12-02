@@ -324,7 +324,7 @@ function subscription_loop() {
             this.room = `play_channel_${data.match_room_id}`;
             console.log("your role is : " + this.role);
             console.log(this.room);
-            this.perform("start_game", {room_name: this.room, is_ranked: data.ranked }); // default action
+            this.perform("start_game", { room_name: this.room, is_ranked: data.ranked }); // default action
             canvas = document.getElementById("myCanvas");
             ctx = canvas.getContext('2d');
             const UID = document.getElementById("UID");
@@ -332,7 +332,11 @@ function subscription_loop() {
             game = new Game(this.room, ctx, 0, 0, 0, 0, this)
             game.draw_datas();
             setTimeout(function() {
+              game.consumer.perform("connect_to_game", { room_name: game.room_name, player: game.consumer.role });
+            }, 500)
+            setTimeout(function() {
               currentTime = Date.now();
+              game.consumer.perform("check_users_connection", { room_name: game.room_name })
               game_loop(game);
             }, 2000);
           },
@@ -349,12 +353,13 @@ function subscription_loop() {
           },
 
           received(data_nest) {
-            // console.log(data_nest);
-            if (data_nest['action'] == 'quit')
-              location.hash = "#";
-            if (data_nest['ball_speed'] != null) {
-              update_datas(data_nest)
-              game_loop(game);
+            if (data_nest != null) {
+              if (data_nest['action'] == 'quit')
+                location.hash = "#";
+              if (data_nest['ball_speed'] != null) {
+                update_datas(data_nest)
+                game_loop(game);
+              }
             }
 
             // if don't work use a set Interval avec une variable action has been played to check if data has been received in a certain time

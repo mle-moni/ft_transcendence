@@ -34,8 +34,30 @@ class PlayChannel < ApplicationCable::Channel
     game[:ball_speed] = data['ball_speed']
   end
 
+  def connect_to_game(data)
+    game = $games[data['room_name']]
+    if (data['player'] == 'l')
+      game[:player_left_connected] = true;
+    elsif (data['player'] == 'r')
+      game[:player_right_connected] = true; 
+    end
+  end
+
+  def check_users_connection(data)
+    game = $games[data['room_name']]
+
+    if (game[:player_left_connected] == false)
+      Game.end_the_game(data['room_name'], 'l')
+    elsif (game[:player_right_connected] == false)
+      Game.end_the_game(data['room_name'], 'r')
+    end
+  end
+
   def start_game(data)
-    Game.start_game("#{data['room_name']}", data['is_ranked'])
+    if (Redis.current.get("#{data['room_name']}_launched").blank?)
+      Redis.current.set("#{data['room_name']}_launched", true);
+      Game.start_game("#{data['room_name']}", data['is_ranked'])
+    end
   end
 
   def get_datas(data)
