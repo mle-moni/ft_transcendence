@@ -31,7 +31,9 @@ class Guild < ApplicationRecord
 			owner: User.strict_clean(guild.owner),
 			users: guild.users.map { |usr| User.strict_clean(usr) },
 			officers: guild.officers.map { |usr| User.strict_clean(usr) },
-			requests: guild.requests.map { |usr| User.strict_clean(usr) }
+			requests: guild.requests.map { |usr| User.strict_clean(usr) },
+			wars: guild.wars,
+			active_war: guild.active_war
 		}
 	end
 
