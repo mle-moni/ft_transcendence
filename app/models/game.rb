@@ -1,191 +1,94 @@
-def collision?(pos_x, pos_y, paddle_l, paddle_r)
-	# paddle pos_x are 0.9 and -0.9
-	if pos_x > 1
-		5
-	elsif pos_x < -1
-		4
-	elsif pos_y >= 1
-		3
-	elsif pos_y <= -1
-		2
-	elsif pos_x >= 0.83 && pos_x <= 0.89 && pos_y >= paddle_r - 0.250 && pos_y <= paddle_r + 0.250
-		1
-	elsif pos_x <= -0.83 && pos_x >= -0.89 && pos_y >= paddle_l - 0.250 && pos_y <= paddle_l + 0.250
-		0
-	else
-		-1
-	end
-end
-
 class Game < ApplicationRecord
-	def self.start(player1, player2, match_id)
-		left, right = [player1, player2]
+	def self.start(player1, player2, is_ranked)
+		left, right = [player1, player2].shuffle
 
-		ActionCable.server.broadcast "player_#{right}", { action: 'game_start', msg: 'r', match_room_id: match_id }
-		ActionCable.server.broadcast "player_#{left}", { action: 'game_start', msg: 'l', match_room_id: match_id }
+		current_match_id = 0
+		if Redis.current.get('match_id').blank? || Redis.current.get('match_id').to_i >= 999_999
+			Redis.current.set('match_id', 0)
+		else
+			Redis.current.set('match_id', Redis.current.get('match_id').to_i + 1)
+			current_match_id = Redis.current.get('match_id')
+		end
 
-		Redis.current.set("opponent_for:#{left}", right)
-		Redis.current.set("opponent_for:#{right}", left)
+		Redis.current.set("play_channel_#{current_match_id}_l", "#{left}")
+		Redis.current.set("play_channel_#{current_match_id}_r", "#{right}")
 
-		logger.debug left
-		logger.debug right
+		ActionCable.server.broadcast "player_#{right}", { action: 'game_start', msg: 'r', match_room_id: current_match_id, ranked: is_ranked }
+		ActionCable.server.broadcast "player_#{left}", { action: 'game_start', msg: 'l', match_room_id: current_match_id, ranked: is_ranked }
 	end
 
 	def self.start_game(room_name, is_ranked)
-		# dont forget to check if the game was already started
-		ActionCable.server.broadcast room_name, { msg: 'game start' }
-		game_loop(room_name, is_ranked)
+		# create the game model holder
+		game = {
+			room_name: room_name,
+			is_ranked: is_ranked,
+			ball_pos_x: 0.0,
+			ball_pos_y: 0.0,
+			left_pos: 0.0,
+			right_pos: 0.0,
+			right_score: 0,
+			left_score: 0,
+			ball_speed: 0.0,
+			ball_dir_x: 0.0,
+			ball_dir_y: 0.0,
+			left_action: "w",
+			right_action: "w"
+		}
+		$games[room_name] = game
+
+		Redis.current.set("game_#{room_name}_end?", "no");
+
+		puts "Game started with data :"
+		puts room_name, is_ranked
 	end
 
-	def self.game_loop(room_name, is_ranked)
-		Thread.new do
-			Rails.application.executor.wrap do
-				left_mail = Redis.current.get("#{room_name}_l")
-				right_mail = Redis.current.get("#{room_name}_r")
-				match = EloRating::Match.new
+	def self.end_the_game(room_name, role_quit) # role_quit is 'r' or 'l' when someone gave up else 'n'
+		if (Redis.current.get("game_#{room_name}_end?") == "no") # if not already ended, end the game with actual player has loser (he left the game)
+			Redis.current.set("game_#{room_name}_end?", "yes");
 
-				left_user = User.find_by(email: left_mail)
-				right_user = User.find_by(email: right_mail)
-
-				l_score = 0
-				r_score = 0
-				pos_l = 0
-				pos_r = 0
-				speed = 0.07
-				ball_speed = 0.007
-				ball_x = 0
-				ball_y = 0
-				dir = [-1, 1].shuffle
-				# paddle take 1 / 4 of the screen
-				loop do
-					if r_score == 11
-						sleep(2)
-						ActionCable.server.broadcast room_name, { s: 'end' }
-						if is_ranked == true
-							match.add_player(rating: left_user.elo)
-							match.add_player(rating: right_user.elo, winner: true)
-							tmp = match.updated_ratings
-							left_user.elo = tmp[0]
-							left_user.save
-							right_user.elo = tmp[1]
-							right_user.save
-							if right_user.guild
-								right_user.guild.points += 1
-								right_user.guild.save
-							end
-						end
-						Match.create({ winner: right_user, loser: left_user, winner_score: r_score, loser_score: l_score })
-						break
-					elsif l_score == 11
-						sleep(2)
-						ActionCable.server.broadcast room_name, { s: 'end' }
-						if is_ranked == true
-							match.add_player(rating: right_user.elo)
-							match.add_player(rating: left_user.elo, winner: true)
-							tmp = match.updated_ratings
-							left_user.elo = tmp[1]
-							left_user.save
-							right_user.elo = tmp[0]
-							right_user.save
-							if left_user.guild
-								left_user.guild.points += 1
-								left_user.guild.save
-							end
-						end
-						Match.create({ winner: left_user, loser: right_user, winner_score: l_score, loser_score: r_score })
-						break
-					end
-					start_lp = Time.now
-					cur_act_l = Redis.current.get(room_name + '_l')
-					case cur_act_l
-					when 'd'
-						pos_l = [pos_l + 1 * speed, 0.750].min
-					when 'u'
-						pos_l = [pos_l - 1 * speed, -0.750].max
-					when 'quit'
-						ActionCable.server.broadcast room_name, { s: 'end', lv: 'l' }
-						if is_ranked == true
-							match.add_player(rating: right_user.elo)
-							match.add_player(rating: left_user.elo, winner: true)
-							tmp = match.updated_ratings
-							left_user.elo = tmp[1]
-							left_user.save
-							right_user.elo = tmp[0]
-							right_user.save
-							if left_user.guild
-								left_user.guild.points += 1
-								left_user.guild.save
-							end
-						end
-						Match.create({ winner: right_user, loser: left_user, winner_score: r_score, loser_score: l_score })
-						break;
-					end
-					cur_act_r = Redis.current.get(room_name + '_r')
-					case cur_act_r
-					when 'd'
-						pos_r = [pos_r + 1 * speed, 0.750].min
-					when 'u'
-						pos_r = [pos_r - 1 * speed, -0.750].max
-					when 'quit'
-						ActionCable.server.broadcast room_name, { s: 'end', lv: 'r' }
-						if is_ranked == true
-							match.add_player(rating: left_user.elo)
-							match.add_player(rating: right_user.elo, winner: true)
-							tmp = match.updated_ratings
-							left_user.elo = tmp[0]
-							left_user.save
-							right_user.elo = tmp[1]
-							right_user.save
-							puts right_user.elo
-							puts left_user.elo
-							if right_user.guild
-								right_user.guild.points += 1
-								right_user.guild.save
-							end
-						end
-						Match.create({ winner: left_user, loser: right_user, winner_score: l_score, loser_score: r_score })
-						break
-					end
-			
-					ball_x += dir[0] * ball_speed
-					ball_y += dir[1] * ball_speed
-					act = collision? ball_x, ball_y, pos_l, pos_r
-					case act
-					when 5
-						l_score += 1
-						ball_speed = 0.007
-					when 4
-						r_score += 1
-						ball_speed = 0.007
-					end
-					case act
-					when 4..5
-						ball_x = 0
-						ball_y = 0
-						dir = [[-1, -1], [-1, -0.5], [-1, 0], [-1, 0.5], [-1, 1], [1, -1], [1, -0.5], [1, 0], [1, 0.5], [1, 1]].shuffle()[0]
-					when 3
-						ball_y = 0.90
-						dir[1] = -1 * dir[1]
-					when 2
-						ball_y = -0.90
-						dir[1] = -1 * dir[1]
-					when 1
-						dir = [[-1, -1], [-1, -0.5], [-1, 0], [-1, 0.5], [-1, 1]].shuffle()[0]
-						ball_speed *= 1.01
-					when 0
-						dir = [[1, -1], [1, -0.5], [1, 0], [1, 0.5], [1, 1]].shuffle()[0]
-						ball_speed *= 1.01
-					end
-					ball_speed = [ball_speed, 0.03].min
-					ActionCable.server.broadcast room_name, { s: 'g', l: pos_l, r: pos_r, bl: [ball_x, ball_y],
-																sl: l_score, sr: r_score }
-					Redis.current.set(room_name + '_l', nil);
-					Redis.current.set(room_name + '_r', nil);
-					sleep(0.01)
+			if (role_quit != 'n')
+				if (role_quit == 'r')
+					loser_user = User.find_by(email: Redis.current.get("#{room_name}_r"))
+					winner_user = User.find_by(email: Redis.current.get("#{room_name}_l"))
+					loser_score = $games[room_name][:right_score]
+					winner_score = $games[room_name][:left_score]
+				else
+					loser_user = User.find_by(email: Redis.current.get("#{room_name}_l"))
+					winner_user = User.find_by(email: Redis.current.get("#{room_name}_r"))
+					loser_score = $games[room_name][:left_score]
+					winner_score = $games[room_name][:right_score]
 				end
-				puts 'end game'
+			else
+				if ($games[room_name][:right_score] == 11)
+					winner_user = User.find_by(email: Redis.current.get("#{room_name}_r"))
+					loser_user = User.find_by(email: Redis.current.get("#{room_name}_l"))
+					winner_score = $games[room_name][:right_score]
+					loser_score = $games[room_name][:left_score]
+				else
+					winner_user = User.find_by(email: Redis.current.get("#{room_name}_l"))
+					loser_user = User.find_by(email: Redis.current.get("#{room_name}_r"))
+					winner_score = $games[room_name][:left_score]
+					loser_score = $games[room_name][:right_score]
+				end
 			end
-		puts 'end thread'
+
+			if ($games[room_name][:is_ranked] == true)
+				match = EloRating::Match.new
+				match.add_player(rating: loser_user.elo)
+				match.add_player(rating: winner_user.elo, winner: true)
+				tmp = match.updated_ratings
+				loser_user.elo = tmp[0]
+				winner_user.elo = tmp[1]
+				if winner_user.guild
+					winner_user.guild.points += 1
+					winner_user.guild.save
+				end
+				loser_user.save
+				winner_user.save
+			end
+
+			Match.create(winner: winner_user, loser: loser_user, winner_score: winner_score, loser_score: loser_score);
+			ActionCable.server.broadcast room_name, {action: 'quit'}
 		end
 	end
 end

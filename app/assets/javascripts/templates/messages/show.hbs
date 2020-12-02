@@ -10,11 +10,9 @@
 
     <div class="mycontainer">
         <div class="row">
-            <div class="col-1">
-            <a class="btn btn-primary" href="#messages" role="button" > Back </a>
-            </div>
+
             {{!-- USER LIST --}}
-            {{!-- <div class="col-3">
+            <div class="col-2">
             <div class="list-users">
                 {{#each allUsers}}
 
@@ -44,11 +42,11 @@
                 </div>
                 {{/each}}
             </div>
-            </div> --}}
+            </div>
 
 
             {{!-- CHATBOX --}}
-            <div class="col-10">
+            <div class="col-9">
                 <h3><a class="otherUserProfile" href="#profiles/{{otherUser.id}}">{{otherUser.nickname}} </a></h3>
                 <ul class="list-group" id="list-message">
 
