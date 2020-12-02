@@ -1,0 +1,15 @@
+<h1>{{guild.name}} is going to war!</h1>
+
+<p style="font-size: 20px;"> <strong> Select enemy guild (this will create a War) </strong> </p>
+
+<input autocomplete="off" type="text" name="" id="searchGuild"><br>
+<div id="userInputGuilds">
+
+</div>
+
+<br>
+
+<form style="display: none;" id="createWarForm" method="POST">
+	<input type="hidden" name="authenticity_token" value="{{token}}">
+	<input type="text" name="id" id="guildIDField">
+</form>
