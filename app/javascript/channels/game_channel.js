@@ -231,9 +231,19 @@ function game_loop() {
   } 
 }
 
-function subscription_loop() {
-    console.log('hashchange1', window.location.hash );
+function unregister_loop() {
+  if (document.getElementById("in_game_id") === null) {
+    consumer.subscriptions.subscriptions.forEach(sub => {
+        if (sub.identifier && (sub.identifier.includes("PlayChannel") || sub.identifier.includes("GameChannel"))) {
+          sub.disconnected();
+          consumer.subscriptions.remove(sub);
+        }
+    })
+  }
+}
 
+function subscription_loop() {
+  // console.log('hashchange1', window.location.hash );
   const ingameelement = document.getElementById("in_game_id")
   let ranked = true;
   const ranked_el = document.getElementById("ranked")
@@ -241,14 +251,7 @@ function subscription_loop() {
   if (ranked_el === null)
     ranked = false;
 
-  if (ingameelement === null) {
-    consumer.subscriptions.subscriptions.forEach(sub => {
-        if (sub.identifier && (sub.identifier.includes("PlayChannel") || sub.identifier.includes("GameChannel"))) {
-          sub.disconnected();
-          consumer.subscriptions.remove(sub);
-        }
-    })
-  } else {
+  if (ingameelement !== null) {
     let is_a_player = false;
 
     consumer.subscriptions.subscriptions.forEach(sub => {
@@ -299,12 +302,11 @@ function subscription_loop() {
   const element = document.getElementById("game_page_id")
   consumer.subscriptions.create({channel: "GameChannel", is_ranked: ranked, is_matchmaking: element !== null}, {
     connected() {
-      console.log("this is streaming from the game channel");
+      console.log("You are register on the game channel");
     },
 
     disconnected() {
       // Called when the subscription has been terminated by the server
-      console.log("leave matchmaking");
       ctx = null;
       canvas = null;
     },
@@ -364,7 +366,8 @@ function subscription_loop() {
 }
 
 window.addEventListener("hashchange", e => {
-  setTimeout(subscription_loop, 50);
+  setTimeout(unregister_loop, 50);
+  setTimeout(subscription_loop, 150);
 });
 
 subscription_loop();
