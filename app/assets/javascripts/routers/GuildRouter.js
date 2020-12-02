@@ -45,6 +45,6 @@ AppClasses.Routers.GuildsRouter = class extends AppClasses.Routers.AbstractRoute
 		});
 	}
 	newWar() {
-		this.basicView("newGuildWar", "NewGuildWar", {model: this.collections.guilds});
+		this.basicView("war", "War", {model: this.collections.guilds});
 	}
 }
