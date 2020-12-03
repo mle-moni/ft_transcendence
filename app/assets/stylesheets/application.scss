@@ -32,10 +32,18 @@
 	margin-right: 2%;
 	margin-bottom: 2%;
 
+	.chatboxHeader {
+		display: flex;
 
-	.otherUserProfile {
-		color: rgb(24, 119, 242);
-		text-decoration: none;
+		.otherUserProfile {
+			color: rgb(24, 119, 242);
+			text-decoration: none;
+		}
+	
+		.dualForm {
+			margin-left: 10vh;
+			display: inline;
+		}
 	}
 
 	.avatar {

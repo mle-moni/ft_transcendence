@@ -2,7 +2,9 @@ AppClasses.Views.Conversations = class extends Backbone.View {
 	constructor(opts) {
 		opts.events = {
 			"submit #sendRoomMessageForm": "submit",
-			"submit .createDM": "createDM"
+			"submit .createDM": "createDM",
+			"submit #sendDualRequest": "sendDualRequest",
+			"submit #AcceptDualRequest": "AcceptDualRequest",
 		}
 		super(opts);
 		this.user = App.models.user;
@@ -16,6 +18,34 @@ AppClasses.Views.Conversations = class extends Backbone.View {
 		this.tagName = "div";
         this.template = App.templates["messages/show"];
 		this.updateRender();
+	}
+
+	AcceptDualRequest(e)
+	{
+		e.preventDefault();
+		App.utils.formAjax("/api/direct_chats/acceptDualRequest.json", "#AcceptDualRequest")
+		.done(res => {
+			App.toast.success("Dual request accepted !", { duration: 1500, style: App.toastStyle });
+			//location.hash = "#game";
+		})
+		.fail((e) => {
+			App.utils.toastError(e);
+		});
+		return (false);
+	}
+
+	sendDualRequest(e)
+	{
+		e.preventDefault();
+		App.utils.formAjax("/api/direct_chats/createDualRequest.json", "#sendDualRequest")
+		.done(res => {
+			App.toast.success("Dual request sent !", { duration: 1500, style: App.toastStyle });
+			//location.hash = "#game";
+		})
+		.fail((e) => {
+			App.utils.toastError(e);
+		});
+		return (false);
 	}
 
     createDM(e) {
@@ -123,6 +153,8 @@ AppClasses.Views.Conversations = class extends Backbone.View {
 				}
 			}
 		}
+
+		console.log(currentDMRoom);
 		this.$el.html(this.template({
 			dmRooms: this.model,
 			allUsers: usersNonBlocked ? usersNonBlocked : this.allUsers.models,
@@ -132,6 +164,8 @@ AppClasses.Views.Conversations = class extends Backbone.View {
 			otherUser: otherUser,
 			currentDMRoom: currentDMRoom,
 			directMessages: directMessages,
+			isTrue: true,
+			isFalse: false,
 			token: $('meta[name="csrf-token"]').attr('content')
 		}));
 		this.delegateEvents();

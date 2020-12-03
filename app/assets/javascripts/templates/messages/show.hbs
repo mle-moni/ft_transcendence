@@ -47,7 +47,27 @@
 
             {{!-- CHATBOX --}}
             <div class="col-9">
-                <h3><a class="otherUserProfile" href="#profiles/{{otherUser.id}}">{{otherUser.nickname}} </a></h3>
+
+
+                <div class="chatboxHeader">
+                    {{!-- LINK TO OTHER USER PROFILE --}}
+                    <h3><a class="otherUserProfile" href="#profiles/{{otherUser.id}}">{{otherUser.nickname}} </a></h3>
+
+                    {{!-- REQUEST DUAL FORM --}}
+                    <form class="dualForm" id="sendDualRequest" action="/api/direct_chats/createDualRequest" accept-charset="UTF-8"
+                        method="POST" style="display: inline;">
+                        <input type="hidden" name="authenticity_token" value="{{token}}">
+                        <input type="hidden" name="dual_request[from_id]" value="{{currentUser.id}}">
+                        <input type="hidden" name="dual_request[direct_chat_id]" value="{{chatID}}">
+                        <input class="btn btn-outline-success btn-sm" style="background-color:rgb(24, 119, 242); color:azure" type="submit" value="Send game request"> 
+                        <select class="form-control-sm" name="dual_request[is_ranked]">
+                            <option value="false">Normal</option>
+                            <option value="true">Ranked</option>
+                        </select>
+                    </form>
+                </div>
+
+
                 <ul class="list-group" id="list-message">
 
                     {{!-- ALL MESSAGES --}}
@@ -58,7 +78,24 @@
                         <li class="list-group-item">
                             <div class="otherMessage" style="word-wrap: break-word;">
                                 <img src="{{../otherUser.image}}" alt="Avatar" class="avatar">
-                                <p class="message" data-role="message-text">{{message}}</p>
+
+                                {{#ifDualReq is_dual_request}}
+                                    <form id="AcceptDualRequest" action="/api/direct_chats/acceptDualRequest" accept-charset="UTF-8"
+                                        method="POST" style="display: inline;">
+                                        <input type="hidden" name="authenticity_token" value="{{../token}}">
+                                        {{!-- Room Data --}}
+                                        <input type="hidden" name="dual_request[first_user_id]" value="{{from_id}}">
+                                        <input type="hidden" name="dual_request[second_user_id]" value="{{../currentUser.id}}">
+                                        <input type="hidden" name="dual_request[is_ranked]" value={{is_ranked}}>
+                                        {{#ifRanked is_ranked}}
+                                            <input class="btn" style="background-color:rgb(94, 155, 124); color:azure" type="submit" value="Accept ranked game"> 
+                                        {{else}}
+                                            <input class="btn" style="background-color:rgb(94, 155, 124); color:azure" type="submit" value="Accept normal game"> 
+                                        {{/ifRanked}}
+                                    </form>
+                                {{else}}
+                                    <p class="message" data-role="message-text">{{message}}</p>
+                                {{/ifDualReq}}
                             </div>
                         </li>
                         <br>
@@ -66,15 +103,17 @@
 
                         {{!-- MY MESSAGES --}}
                         {{#when from_id "eq" ../currentUser.id}}
+                        {{#ifDualReq is_dual_request}} {{!-- IF CURRENT USER DUAL REQUEST DISPLAY NOTHING --}}
+                        {{else}}
                         <li class="list-group-item">
                             <div class="ownMessage" style="word-wrap: break-word;">
                                 <p class="message" data-role="message-text">{{message}}</p>
                                 <img src="{{../currentUser.image}}" alt="Avatar" class="avatar">
+                                <br>
                             </div>
                         </li>
-                        <br>
+                        {{/ifDualReq}}
                         {{/when}}
-
                         {{/each}}
                 </ul>
                         <div class="row">

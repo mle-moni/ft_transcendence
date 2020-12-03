@@ -34,6 +34,9 @@ Rails.application.routes.draw do
 
     resources :direct_chats
     resources :chat_messages
+    
+    post '/direct_chats/createDualRequest', to: 'direct_chats#createDualRequest'
+    post '/direct_chats/acceptDualRequest', to: 'direct_chats#acceptDualRequest'
 
     # ------
     
