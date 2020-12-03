@@ -3,7 +3,8 @@ AppClasses.Views.War = class extends Backbone.View {
 		opts.events = {
 			"keyup #searchGuild": "inputChanged",
 			"click .clickToCreateWar": "createWar",
-			"click #cancelActiveWar": "cancelWar"
+			"click #cancelActiveWar": "cancelWar",
+			"click #validateActiveWar": "validateWar"
 		}
 		super(opts);
 		this.guild_id = App.models.user.get("guild_id");
@@ -32,6 +33,9 @@ AppClasses.Views.War = class extends Backbone.View {
 	}
 	cancelWar() {
 		this.formAction("#deleteWarForm", "/api/wars/delete.json")
+	}
+	validateWar() {
+		this.formAction("#validateWarForm", "/api/wars/validate.json")
 	}
 	formAction(formQueryStr, url) {
 		App.utils.formAjax(url, formQueryStr)

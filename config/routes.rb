@@ -11,6 +11,7 @@ Rails.application.routes.draw do
     post '/guild/accept', to: 'guilds#accept_request'
     post '/wars/create', to: 'wars#create_war'
     post '/wars/delete', to: 'wars#delete_war'
+    post '/wars/validate', to: 'wars#validate_war'
 
     # CHAT & DMS ------
     resources :rooms do 

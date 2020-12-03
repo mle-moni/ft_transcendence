@@ -29,6 +29,19 @@ class WarsController < ApplicationController
 		success("War deleted")
 	end
 
+	def validate_war
+		war = current_user.guild.active_war
+		ret = war.confirm(current_user.guild.id)
+		case ret
+		when 0
+			success("War confirmed")
+		when 1
+			res_with_error("War already confirmed", :bad_request)
+		when 2
+			res_with_error("Bad guild ID", :bad_request)
+		end
+	end
+
 	private
 
 	def set_foe
