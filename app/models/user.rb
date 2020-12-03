@@ -77,7 +77,8 @@ class User < ApplicationRecord
       matches: usr.matches,
       blocked: usr.blocked,
       admin: usr.admin,
-      banned: usr.banned
+      banned: usr.banned,
+      in_game: usr.in_game
     }
     if include_last_seen
       new_user[:last_seen] = usr.last_seen

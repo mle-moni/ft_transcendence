@@ -1,11 +1,29 @@
 class PlayChannel < ApplicationCable::Channel
   def subscribed
     stream_from "play_channel_#{params[:game_room_id]}"
+    if (params[:role] == "r")
+      tmp = User.find_by(email: Redis.current.get("play_channel_#{params[:game_room_id]}_r"))
+      tmp.in_game = true
+      tmp.save
+    elsif (params[:role] == "l")
+      tmp = User.find_by(email: Redis.current.get("play_channel_#{params[:game_room_id]}_l"))
+      tmp.in_game = true
+      tmp.save
+    end
   end
 
   def unsubscribed
     if (params[:role] != "v")
       Game.end_the_game("play_channel_#{params[:game_room_id]}", params[:role])
+      if (params[:role] == "r")
+        tmp = User.find_by(email: Redis.current.get("play_channel_#{params[:game_room_id]}_r"))
+        tmp.in_game = false
+        tmp.save
+      elsif (params[:role] == "l")
+        tmp = User.find_by(email: Redis.current.get("play_channel_#{params[:game_room_id]}_l"))
+        tmp.in_game = false
+        tmp.save
+      end
     end
   end
 
