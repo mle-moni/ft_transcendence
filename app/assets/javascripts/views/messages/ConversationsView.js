@@ -35,6 +35,7 @@ AppClasses.Views.Conversations = class extends Backbone.View {
 	
 	submit(e)  {
 		e.preventDefault();
+		if (!this.verif_infos(e)) return (false);
 		if (!e.currentTarget.message || (e.currentTarget.message && e.currentTarget.message.value == ""))
 			return ;
 		App.utils.formAjax("/api/chat_messages.json", "#sendRoomMessageForm")
@@ -45,6 +46,27 @@ AppClasses.Views.Conversations = class extends Backbone.View {
 			App.utils.toastError(e);
 		});
 		return (false);
+	}
+
+	verif_infos(e)
+	{
+		if (e.currentTarget && e.currentTarget[1])
+		{
+			if (e.currentTarget[1].value != this.user.id)
+			{
+				App.utils.toastError(e);
+				return (false);
+			}
+		}
+		if (e.currentTarget && e.currentTarget[2])
+		{
+			if (e.currentTarget[2].value != this.chatID)
+			{
+				App.utils.toastError(e);
+				return (false);
+			}
+		}
+		return (true);
 	}
 
     updateRender() {
