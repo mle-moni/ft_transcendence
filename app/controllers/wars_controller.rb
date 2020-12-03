@@ -31,6 +31,10 @@ class WarsController < ApplicationController
 
 	def validate_war
 		war = current_user.guild.active_war
+		unless war
+			res_with_error("Nothing to validate", :bad_request)
+			return false
+		end
 		ret = war.confirm(current_user.guild.id)
 		case ret
 		when 0

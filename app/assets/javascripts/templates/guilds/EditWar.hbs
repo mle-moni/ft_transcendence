@@ -1,5 +1,40 @@
-<h4 id="cancelActiveWar" class="pointer">Cancel war</h4>
-<h4 id="validateActiveWar" class="pointer">Validate war</h4>
+<h2>Edit war</h2>
+
+<form id="updateWarForm" method="POST">
+	<input type="hidden" name="authenticity_token" value="{{token}}">
+
+	<label for="prize">Prize for the war</label>
+	<input type="number" id="prize" name="prize" min="0" required>
+
+	<p>Matches that counts for this war</p>
+	<input type="checkbox" id="ladderBool" name="ladderBool">
+	<label for="ladderBool">Ladder</label>
+	<input type="checkbox" id="tournamentBool" name="tournamentBool">
+	<label for="tournamentBool">Tournament</label>
+	<input type="checkbox" id="duelBool" name="duelBool">
+	<label for="duelBool">Duel</label>
+
+	<p>When does the war start?</p>
+	<input type="datetime-local" id="dateStart" name="dateStart" required>
+	<br>
+	<br>
+	<p>When does the war end?</p>
+	<input type="datetime-local" id="dateEnd" name="dateEnd" required>
+
+	<br>
+	<br>
+
+	<button class="btn btn-primary" id="updateWarButton">Update war</button>
+</form>
+
+<br>
+<hr>
+<br>
+
+<button id="cancelActiveWar" class="btn btn-danger">Cancel war</button>
+{{#unless validatedByYou }}
+	<button id="validateActiveWar" class="btn btn-success">Validate war</button>
+{{/unless}}
 
 <form style="display: none;" id="deleteWarForm" method="POST">
 	<input type="hidden" name="authenticity_token" value="{{token}}">

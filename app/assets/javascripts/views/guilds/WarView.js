@@ -55,17 +55,22 @@ AppClasses.Views.War = class extends AppClasses.Views.AbstractView {
 			this.$el.html("You need to have a guild in order to access this page")
 			return (this);
 		}
-		if (!guildJSON.active_war) {
+		const war = guildJSON.active_war;
+		if (!war) {
 			this.$el.html(App.templates["guilds/CreateWar"]({
 				guild: guildJSON,
 				user,
 				token: $('meta[name="csrf-token"]').attr('content')
 			}));
+		} else if (war.validated == war.guild1_id + war.guild2_id) {
+			this.$el.html("War is confirmed");
 		} else {
+			let validatedByYou = war.validated == guildJSON.id;
 			this.$el.html(App.templates["guilds/EditWar"]({
 				guild: guildJSON,
-				war: guildJSON.active_war,
+				war,
 				user,
+				validatedByYou,
 				token: $('meta[name="csrf-token"]').attr('content')
 			}));
 		}
