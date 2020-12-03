@@ -4,7 +4,7 @@ AppClasses.Routers.GuildsRouter = class extends AppClasses.Routers.AbstractRoute
 		// routes
 		this.route("guilds", "index");
 		this.route("guilds/:guild_id", "showGuild");
-		this.route("guilds/:guild_id/new_war", "newWar");
+		this.route("guilds/:guild_id/war", "newWar");
 		this.route("guilds/mine", "mine");
 		this.route("guilds/new", "newGuild");
 		this.route("guilds/edit", "edit");

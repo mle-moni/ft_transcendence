@@ -1,4 +1,4 @@
-AppClasses.Models.Guild = Backbone.Model.extend({
+AppClasses.Models.Guild = Backbone.DeepModel.extend({
 	defaults: {
 		name: "",
 		anagram: ""
