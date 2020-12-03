@@ -2,7 +2,7 @@
 
 
 
-	{{#if guild }}
+{{#if guild }}
 	<div style="min-width: 100px; display: inline-block;">   Name </div> 
 		<p style="font-size: 20px; display: inline-block;">	: &nbsp; {{guild.name}} </p>
 		<br>
@@ -46,6 +46,35 @@
 
 	<br><hr><br>
 
+	<h3>War history</h3>
+
+	{{#each wars}}
+		<article>
+			<h4>
+				{{#if planning }}
+					This war is still being planned by guild owners
+				{{else if pending }}
+					This war is active
+				{{else}}
+					{{#if won }}
+					Victory
+					{{else}}
+					Defeat
+					{{/if}}
+				{{/if}}
+			</h4>
+			<p> {{ you }} VS <a href="#guilds/{{ enemy.id }}">{{ enemy.name }}</a> </p>
+			<p>
+				{{!-- {{#if won }}
+				{{ winner_score }} - {{ loser_score }}
+				{{else}}
+				{{ loser_score }} - {{ winner_score }}
+				{{/if}} --}}
+			</p>
+			<hr>
+		</article>
+	{{/each}}
+
 	{{#if isInGuild}}
 	<form method="POST" id="quitGuildForm">
 		<input type="hidden" name="authenticity_token" value="{{token}}">
@@ -60,16 +89,22 @@
 	</form>
 	<br>
 	{{/if}}
-	{{else}}
+{{else}}
 	<h1>This guild does not seem to exist</h1>
 	<br><br>
-	{{/if}}
+{{/if}}
 
 	{{#if owner }}
-	<a class="btn btn-info" href="#guilds/edit">Edit</a>
+	<a class="btn btn-info" href="#guilds/edit">Edit guild</a>
 	<br><br>
-	<a class="btn btn-info" href="#guilds/{{guild.id}}/new_war">New war</a>
-	<br><br>
+	{{#if guild.active_war}}
+		{{#if guild.active_war.planning}}
+			<a class="btn btn-info" href="#guilds/{{guild.id}}/war">Edit war</a><br><br>
+		{{/if}}
+	{{else}}
+		<a class="btn btn-info" href="#guilds/{{guild.id}}/war">Create new War</a><br><br>
+	{{/if}}
+
 	{{/if}}
 
 	<a class="btn btn-success" href="#guilds">Guilds list</a>

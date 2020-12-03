@@ -60,15 +60,44 @@ AppClasses.Views.ShowGuild = class extends Backbone.View {
 		});
 		return (false);
 	}
+	getWars(guildJSON) {
+		let wars = [];
+		if (guildJSON) {
+			wars = guildJSON.wars.map(war => {
+				const warNotEnded = guildJSON.active_war && war.id === guildJSON.active_war.id;
+				const enemyID = war.guild1_id == guildJSON.id ? war.guild2_id : war.guild1_id;
+				const enemyGuild = this.model.findWhere({id: enemyID});
+				const enemyJSON = enemyGuild ? enemyGuild.toJSON() : null;
+				war.pending = warNotEnded && war.validated == war.guild1_id + war.guild2_id;
+				war.planning = warNotEnded && !war.pending;
+				war.won = war.winner == guildJSON.id;
+				war.you = guildJSON.name;
+				war.enemy = enemyJSON ? {name: enemyJSON.name, id: enemyID} : null;
+				if (guildJSON.active_war && guildJSON.active_war.id === war.id) {
+					guildJSON.active_war.pending = war.pending;
+					guildJSON.active_war.planning = war.planning;
+				}
+				war.date = new Date(war.created_at);
+				war.rawDate = war.date.valueOf();
+				return war;
+			});
+		}
+		return (wars);
+	}
 	updateRender() {
 		this.guild = this.model.findWhere({id: this.guild_id});
 		const guildJSON = this.guild ? this.guild.toJSON() : null;
 		const user = App.models.user;
+		let wars = this.getWars(guildJSON);
+		wars = wars.sort((a, b) => {
+			return (b.rawDate - a.rawDate);
+		});
 		this.$el.html(this.template({
 			guild: guildJSON,
 			owner: user.isOwner(this.guild),
 			officerRights: user.isOwner(this.guild) || user.isOfficer(this.guild),
 			isInGuild: user.isInGuild(this.guild),
+			wars,
 			token: $('meta[name="csrf-token"]').attr('content')
 		}));
 		return (this);

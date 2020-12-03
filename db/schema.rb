@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_29_155301) do
+ActiveRecord::Schema.define(version: 2020_12_03_121336) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -166,6 +166,7 @@ ActiveRecord::Schema.define(version: 2020_11_29_155301) do
     t.boolean "admin", default: false
     t.boolean "banned", default: false
     t.float "elo", default: 1000.0
+    t.boolean "in_game", default: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["guild_id"], name: "index_users_on_guild_id"
     t.index ["provider"], name: "index_users_on_provider"
@@ -176,7 +177,7 @@ ActiveRecord::Schema.define(version: 2020_11_29_155301) do
   create_table "wars", force: :cascade do |t|
     t.datetime "start"
     t.datetime "end"
-    t.integer "prize"
+    t.integer "prize", default: 0
     t.boolean "mods", default: false
     t.integer "time_to_answer", default: 5
     t.boolean "ladder", default: false
@@ -188,6 +189,8 @@ ActiveRecord::Schema.define(version: 2020_11_29_155301) do
     t.bigint "guild2_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "g1_score", default: 0
+    t.integer "g2_score", default: 0
     t.index ["guild1_id"], name: "index_wars_on_guild1_id"
     t.index ["guild2_id"], name: "index_wars_on_guild2_id"
   end

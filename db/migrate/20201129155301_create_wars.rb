@@ -3,7 +3,7 @@ class CreateWars < ActiveRecord::Migration[6.0]
     create_table :wars do |t|
       t.datetime :start
       t.datetime :end
-      t.integer :prize
+      t.integer :prize, default: 0
       t.boolean :mods, default: false
       t.integer :time_to_answer, default: 5 # minutes
       t.boolean :ladder, default: false
