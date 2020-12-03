@@ -1,4 +1,4 @@
-AppClasses.Views.Conversations = class extends Backbone.View {
+AppClasses.Views.Conversations = class extends AppClasses.Views.AbstractView {
 	constructor(opts) {
 		opts.events = {
 			"submit #sendRoomMessageForm": "submit",
@@ -186,13 +186,6 @@ AppClasses.Views.Conversations = class extends Backbone.View {
 		}
 		this.model.fetch();
 		this.delegateEvents();
-		return (this);
-	}
-
-	destroy() {
-		this.undelegateEvents();
-		this.$el.removeData().unbind();
-		this.remove();
 		return (this);
 	}
 

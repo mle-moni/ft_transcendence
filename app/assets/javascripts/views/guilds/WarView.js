@@ -1,4 +1,4 @@
-AppClasses.Views.War = class extends Backbone.View {
+AppClasses.Views.War = class extends AppClasses.Views.AbstractView {
 	constructor(opts) {
 		opts.events = {
 			"keyup #searchGuild": "inputChanged",
@@ -9,6 +9,7 @@ AppClasses.Views.War = class extends Backbone.View {
 		super(opts);
 		this.guild_id = App.models.user.get("guild_id");
 		this.tagName = "div";
+		this.listenTo(App.models.user, "change", this.updateRender);
 		this.guild = null;
 		this.model.fetch().then(() => {
 			this.guild = this.model.findWhere({id: this.guild_id});
