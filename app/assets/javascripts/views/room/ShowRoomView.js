@@ -2,9 +2,12 @@ AppClasses.Views.ShowRoom = class extends Backbone.View {
 	constructor(opts) {
 		opts.events = {
 			"submit #sendRoomMessageForm": "submit",
+			"submit #sendDualRequest": "sendDualRequest",
+			"submit #AcceptDualRequest": "AcceptDualRequest",
 		}
         super(opts);
-        this.room_id = opts.room_id;
+		this.room_id = opts.room_id;
+		this.user = opts.user;
 		this.tagName = "div";
 		this.template = App.templates["room/show"];
 		this.listenTo(this.model, "change add", this.updateRender);
@@ -15,8 +18,36 @@ AppClasses.Views.ShowRoom = class extends Backbone.View {
 		this.updateRender();
 	}
 	
+	AcceptDualRequest(e)
+	{
+		e.preventDefault();
+		App.utils.formAjax("/api/rooms/acceptDualRequest.json", "#AcceptDualRequest")
+		.done(res => {
+			App.toast.success("Dual request accepted !", { duration: 1500, style: App.toastStyle });
+		})
+		.fail((e) => {
+			App.utils.toastError(e);
+		});
+		return (false);
+	}
+
+	sendDualRequest(e)
+	{
+		e.preventDefault();
+		if (!this.verif_infos(e)) return (false);
+		App.utils.formAjax("/api/rooms/createDualRequest.json", "#sendDualRequest")
+		.done(res => {
+			App.toast.success("Dual request sent !", { duration: 1500, style: App.toastStyle });
+		})
+		.fail((e) => {
+			App.utils.toastError(e);
+		});
+		return (false);
+	}
+
 	submit(e) {
 		e.preventDefault();
+		if (!this.verif_infos(e)) return (false);
 		if (!e.currentTarget.message || (e.currentTarget.message && e.currentTarget.message.value == ""))
 			return ;
 		App.utils.formAjax("/api/room_messages.json", "#sendRoomMessageForm")
@@ -30,7 +61,29 @@ AppClasses.Views.ShowRoom = class extends Backbone.View {
 		});
 		return (false);
 	}
-    
+
+	verif_infos(e)
+	{
+		if (!e.currentTarget || !e.currentTarget[1] || !e.currentTarget[2] // verification null value
+			|| e.currentTarget[1].value != this.user.id || e.currentTarget[2].value != this.room_id) // Verification value if not null
+		{
+			App.utils.toastError(e);
+			return (false);
+		}
+		return (true);
+	}
+
+	verif_accept_request(e)
+	{
+		if (!e.currentTarget || !e.currentTarget[1] || !e.currentTarget[2] // verification null value
+			|| e.currentTarget[2].value != this.user.id) // Verification users' id
+			{
+				App.utils.toastError(e);
+				return (false);
+			}
+		return (true);
+	}
+
 	updateRender() {
 		const { attributes } = App.models.user;
 		this.rooms = this.model;
@@ -90,13 +143,14 @@ AppClasses.Views.ShowRoom = class extends Backbone.View {
 			roomMessages: roomMessages || null,
 			currentUser: attributes,
 			members: members || null,
+			roomID: this.room_id,
+			token: $('meta[name="csrf-token"]').attr('content'),
 			// Form data for message creation
 			messageCreateForm: {
 				method: "POST",
 				titleText: "Send a message",
 				submitText: "Send",
 				formID: "sendRoomMessageForm",
-				token: $('meta[name="csrf-token"]').attr('content')
 			}
 		
 		}));

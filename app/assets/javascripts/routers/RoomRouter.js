@@ -28,6 +28,7 @@ AppClasses.Routers.RoomRouter = class extends AppClasses.Routers.AbstractRouter 
 		const user = this.models.user;
 		this.viewWithRenderParam("showRoom", "ShowRoom", r_id, {
 			model: this.collections.rooms,
+			user: this.models.user,
 			room_id: r_id,
 			user
 		});
