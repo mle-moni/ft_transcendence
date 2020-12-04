@@ -161,18 +161,47 @@
 }
 
 .navbar-brand {
-	font-size: 3vh !important;
+	font-size: 15px !important;
 	color: lightgrey !important;
 }
 
 .navbar {
-	min-height:10vh !important;
-	padding-top:1vh !important; 
-	padding-bottom:1vh !important;
-	font-size: 2vh !important;
+	min-height:8vh !important;
+	padding-top:0.5vh !important; 
+	padding-bottom:0.5vh !important;
+	font-size: 15px !important;
 }
 
 .navbar-toggler-icon {
 	width: 2vw !important;
 	height: 4vh !important;
+}
+
+.dropdown-item {
+	color: lightgrey !important;
+	font-size: 15px !important;
+}
+	
+.dropdown-menu > a:hover {
+	background-color: rgb(32, 32, 32);
+}
+
+@media screen and (max-height: 600px) {
+	.navbar-brand {
+		font-size: 10px !important;
+	}
+	
+	.navbar {
+		padding-top:0.25vh !important; 
+		padding-bottom:0.25vh !important;
+		font-size: 10px !important;
+	}
+	
+	.navbar-toggler-icon {
+		width: 1.5vw !important;
+		height: 3vh !important;
+	}
+	.dropdown-item {
+		font-size: 10px !important;
+	}
 }

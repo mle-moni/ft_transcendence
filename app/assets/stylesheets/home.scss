@@ -2,26 +2,24 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
 
+
 #homePageContainer {
-  height: 90vh;
+  height: 92vh;
   margin: auto;
   color: white;
   font-family: 'Courier New', Courier, monospace;
   .welcome-text {
-    padding-top: 70vh;
+    padding-top: 5vh;
     font-size: 4vh !important;
     text-align: center;
   }
 }
 
 .bg { 
-  /* The image used */
   background-image: url("/images/old_tv_home.png");
 
-  /* Full height */
   height: 100%; 
 
-  /* Center and scale the image nicely */
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
