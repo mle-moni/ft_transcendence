@@ -12,10 +12,11 @@
         </a>
         <div class="dropdown-menu bg-dark" aria-labelledby="navbarDropdown">
           <a class="dropdown-item" href="<%= @href %>">Your Profile</a>
-          <a class="dropdown-item" rel="nofollow" data-method="delete" href="/users/sign_out">Sign out</a>
           <% if @superAdmin %>
           <a class="dropdown-item" href="#admin">Admin</a>
           <% end %>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" rel="nofollow" data-method="delete" href="/users/sign_out">Sign out</a>
         </div>
       </li>
       <li class="nav-item dropdown">
@@ -55,7 +56,14 @@
 _.each(document.getElementById("mainNavbar").getElementsByClassName("dropdown-item"), el => {
     el.onclick = () => {
       if (innerWidth < 768) {
-        console.log("ok")
+        document.getElementById("navbarToggler").click();
+      }
+    }
+});
+
+_.each(document.getElementsByClassName("navbar-brand"), el => {
+    el.onclick = () => {
+      if (innerWidth < 768) {
         document.getElementById("navbarToggler").click();
       }
     }
