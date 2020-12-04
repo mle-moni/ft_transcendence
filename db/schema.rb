@@ -177,7 +177,7 @@ ActiveRecord::Schema.define(version: 2020_12_03_121336) do
   create_table "wars", force: :cascade do |t|
     t.datetime "start"
     t.datetime "end"
-    t.integer "prize", default: 0
+    t.integer "prize"
     t.boolean "mods", default: false
     t.integer "time_to_answer", default: 5
     t.boolean "ladder", default: false

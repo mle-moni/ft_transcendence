@@ -92,6 +92,7 @@ class Game < ApplicationRecord
 
 			Match.create(winner: winner_user, loser: loser_user, winner_score: winner_score, loser_score: loser_score);
 			ActionCable.server.broadcast room_name, {action: 'quit'}
+			game[room_name] = nil;
 		end
 	end
 end

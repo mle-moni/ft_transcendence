@@ -64,4 +64,5 @@ Rails.application.configure do
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
   ActionCable.server.config.logger = Logger.new(nil)
+  config.active_record.logger = nil
 end
