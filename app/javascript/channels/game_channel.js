@@ -514,8 +514,9 @@ class Game {
     ctx.save();
     ctx.globalAlpha = 0.2;
     ctx.drawImage(mygif.image, 0, 0, canvas.width, canvas.height);
-    ctx.restore();
+    ctx.globalAlpha = 0.6;
     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    ctx.restore();
   }
 
   ball_collision() {

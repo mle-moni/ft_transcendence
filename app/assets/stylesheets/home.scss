@@ -3,16 +3,26 @@
 // You can use Sass (SCSS) here: https://sass-lang.com/
 
 #homePageContainer {
-  margin: 20px;
-  display: flex;
-  height: 85vh;
-  article {
-    margin: auto;
-    h3 {
-      text-align: center;
-    }
-    img {
-      max-width: 90vw;
-    }
+  height: 90vh;
+  margin: auto;
+  color: white;
+  font-family: 'Courier New', Courier, monospace;
+  .welcome-text {
+    padding-top: 75vh;
+    font-size: 4vh !important;
+    text-align: center;
   }
+}
+
+.bg { 
+  /* The image used */
+  background-image: url("/images/old_tv_home.png");
+
+  /* Full height */
+  height: 100%; 
+
+  /* Center and scale the image nicely */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
