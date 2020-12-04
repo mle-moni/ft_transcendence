@@ -25,7 +25,6 @@ class DirectChatsController < ApplicationController
   # POST /direct_chats/createDualRequest
   # POST /direct_chats/createDualRequest.json
   def createDualRequest
-    puts "CONTROLLER CREATE DUAL REQUEST"
     filteredParams = params.require(:dual_request).permit(:from_id, :direct_chat_id, :is_ranked)
 
     user = User.find(filteredParams["from_id"]);
@@ -57,6 +56,11 @@ class DirectChatsController < ApplicationController
     user1 = User.find(filteredParams["first_user_id"])
     user2 = User.find(filteredParams["second_user_id"])
 
+    if !user1 || !user2
+      res_with_error("Unknow User(s)", :bad_request)
+      return (false)
+    end 
+    
     Game.start(user1.email, user2.email, filteredParams["is_ranked"])
     DirectMessage.where(from_id: filteredParams["first_user_id"]).where(is_dual_request: true).delete_all
     DirectMessage.where(from_id: filteredParams["second_user_id"]).where(is_dual_request: true).delete_all

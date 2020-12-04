@@ -30,6 +30,9 @@ Rails.application.routes.draw do
     post '/rooms/promoteAdmin', to: 'rooms#promoteAdmin'
     post '/rooms/demoteAdmin', to: 'rooms#demoteAdmin'
 
+    post '/rooms/createDualRequest', to: 'rooms#createDualRequest'
+    post '/rooms/acceptDualRequest', to: 'rooms#acceptDualRequest'
+
     post '/handleBlock', to: 'profile#handleBlock'
 
     resources :direct_chats

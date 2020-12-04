@@ -271,6 +271,43 @@ class RoomsController < ApplicationController
     end
   end
 
+  # POST /rooms/createDualRequest
+  # POST /rooms/createDualRequest.json
+  def createDualRequest
+    filteredParams = params.require(:dual_request).permit(:user_id, :room_id, :is_ranked)
+
+    @dual_request = RoomMessage.create(message: "", user_id: filteredParams["user_id"], room_id: filteredParams["room_id"], is_dual_request: true, is_ranked: filteredParams["is_ranked"])
+    respond_to do |format|
+      if @dual_request.save
+          ActionCable.server.broadcast "room_channel", type: "dual_request", description: "create-request", user: current_user
+          format.html { redirect_to @dual_request, notice: 'Dual request was successfully created.' }
+          format.json { head :no_content }
+      else
+          format.html { render :new }
+          format.json { render json: @dual_request.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  # POST /rooms/acceptDualRequest
+  # POST /rooms/acceptDualRequest.json
+  def acceptDualRequest
+    filteredParams = params.require(:dual_request).permit(:first_user_id, :second_user_id, :is_ranked)
+    
+    user1 = User.find(filteredParams["first_user_id"])
+    user2 = User.find(filteredParams["second_user_id"])
+
+    if !user1 || !user2
+      res_with_error("Unknow User(s)", :bad_request)
+      return (false)
+    end 
+
+    Game.start(user1.email, user2.email, filteredParams["is_ranked"])
+    RoomMessage.where(user_id: filteredParams["first_user_id"]).where(is_dual_request: true).delete_all
+    RoomMessage.where(user_id: filteredParams["second_user_id"]).where(is_dual_request: true).delete_all
+    ActionCable.server.broadcast "chat_channel", type: "dual_request", description: "delete-request", user: current_user
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_room

@@ -26,7 +26,6 @@ AppClasses.Views.Conversations = class extends Backbone.View {
 		App.utils.formAjax("/api/direct_chats/acceptDualRequest.json", "#AcceptDualRequest")
 		.done(res => {
 			App.toast.success("Dual request accepted !", { duration: 1500, style: App.toastStyle });
-			//location.hash = "#game";
 		})
 		.fail((e) => {
 			App.utils.toastError(e);
@@ -40,7 +39,6 @@ AppClasses.Views.Conversations = class extends Backbone.View {
 		App.utils.formAjax("/api/direct_chats/createDualRequest.json", "#sendDualRequest")
 		.done(res => {
 			App.toast.success("Dual request sent !", { duration: 1500, style: App.toastStyle });
-			//location.hash = "#game";
 		})
 		.fail((e) => {
 			App.utils.toastError(e);

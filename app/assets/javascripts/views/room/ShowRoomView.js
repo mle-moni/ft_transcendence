@@ -2,6 +2,8 @@ AppClasses.Views.ShowRoom = class extends Backbone.View {
 	constructor(opts) {
 		opts.events = {
 			"submit #sendRoomMessageForm": "submit",
+			"submit #sendDualRequest": "sendDualRequest",
+			"submit #AcceptDualRequest": "AcceptDualRequest",
 		}
         super(opts);
 		this.room_id = opts.room_id;
@@ -52,6 +54,33 @@ AppClasses.Views.ShowRoom = class extends Backbone.View {
 			}
 		}
 		return (true);
+	}
+
+	AcceptDualRequest(e)
+	{
+		e.preventDefault();
+		App.utils.formAjax("/api/rooms/acceptDualRequest.json", "#AcceptDualRequest")
+		.done(res => {
+			App.toast.success("Dual request accepted !", { duration: 1500, style: App.toastStyle });
+		})
+		.fail((e) => {
+			App.utils.toastError(e);
+		});
+		return (false);
+	}
+
+	sendDualRequest(e)
+	{
+		e.preventDefault();
+		console.log("SEND DUAL REQUEST ROOM");
+		App.utils.formAjax("/api/rooms/createDualRequest.json", "#sendDualRequest")
+		.done(res => {
+			App.toast.success("Dual request sent !", { duration: 1500, style: App.toastStyle });
+		})
+		.fail((e) => {
+			App.utils.toastError(e);
+		});
+		return (false);
 	}
     
 	updateRender() {
@@ -113,13 +142,14 @@ AppClasses.Views.ShowRoom = class extends Backbone.View {
 			roomMessages: roomMessages || null,
 			currentUser: attributes,
 			members: members || null,
+			roomID: this.room_id,
+			token: $('meta[name="csrf-token"]').attr('content'),
 			// Form data for message creation
 			messageCreateForm: {
 				method: "POST",
 				titleText: "Send a message",
 				submitText: "Send",
 				formID: "sendRoomMessageForm",
-				token: $('meta[name="csrf-token"]').attr('content')
 			}
 		
 		}));
