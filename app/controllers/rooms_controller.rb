@@ -293,7 +293,7 @@ class RoomsController < ApplicationController
   # POST /rooms/acceptDualRequest.json
   def acceptDualRequest
     filteredParams = params.require(:dual_request).permit(:first_user_id, :second_user_id, :is_ranked)
-    
+
     user1 = User.find(filteredParams["first_user_id"])
     user2 = User.find(filteredParams["second_user_id"])
 
@@ -303,9 +303,6 @@ class RoomsController < ApplicationController
     end 
 
     Game.start(user1.email, user2.email, filteredParams["is_ranked"])
-    RoomMessage.where(user_id: filteredParams["first_user_id"]).where(is_dual_request: true).delete_all
-    RoomMessage.where(user_id: filteredParams["second_user_id"]).where(is_dual_request: true).delete_all
-    ActionCable.server.broadcast "chat_channel", type: "dual_request", description: "delete-request", user: current_user
   end
 
   private

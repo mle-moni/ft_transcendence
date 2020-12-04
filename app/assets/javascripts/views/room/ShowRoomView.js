@@ -18,6 +18,33 @@ AppClasses.Views.ShowRoom = class extends Backbone.View {
 		this.updateRender();
 	}
 	
+	AcceptDualRequest(e)
+	{
+		e.preventDefault();
+		App.utils.formAjax("/api/rooms/acceptDualRequest.json", "#AcceptDualRequest")
+		.done(res => {
+			App.toast.success("Dual request accepted !", { duration: 1500, style: App.toastStyle });
+		})
+		.fail((e) => {
+			App.utils.toastError(e);
+		});
+		return (false);
+	}
+
+	sendDualRequest(e)
+	{
+		e.preventDefault();
+		if (!this.verif_infos(e)) return (false);
+		App.utils.formAjax("/api/rooms/createDualRequest.json", "#sendDualRequest")
+		.done(res => {
+			App.toast.success("Dual request sent !", { duration: 1500, style: App.toastStyle });
+		})
+		.fail((e) => {
+			App.utils.toastError(e);
+		});
+		return (false);
+	}
+
 	submit(e) {
 		e.preventDefault();
 		if (!this.verif_infos(e)) return (false);
@@ -37,52 +64,26 @@ AppClasses.Views.ShowRoom = class extends Backbone.View {
 
 	verif_infos(e)
 	{
-		if (e.currentTarget && e.currentTarget[1])
+		if (!e.currentTarget || !e.currentTarget[1] || !e.currentTarget[2] // verification null value
+			|| e.currentTarget[1].value != this.user.id || e.currentTarget[2].value != this.room_id) // Verification value if not null
 		{
-			if (e.currentTarget[1].value != this.user.id)
-			{
-				App.utils.toastError(e);
-				return (false);
-			}
-		}
-		if (e.currentTarget && e.currentTarget[2])
-		{
-			if (e.currentTarget[2].value != this.room_id)
-			{
-				App.utils.toastError(e);
-				return (false);
-			}
+			App.utils.toastError(e);
+			return (false);
 		}
 		return (true);
 	}
 
-	AcceptDualRequest(e)
+	verif_accept_request(e)
 	{
-		e.preventDefault();
-		App.utils.formAjax("/api/rooms/acceptDualRequest.json", "#AcceptDualRequest")
-		.done(res => {
-			App.toast.success("Dual request accepted !", { duration: 1500, style: App.toastStyle });
-		})
-		.fail((e) => {
-			App.utils.toastError(e);
-		});
-		return (false);
+		if (!e.currentTarget || !e.currentTarget[1] || !e.currentTarget[2] // verification null value
+			|| e.currentTarget[2].value != this.user.id) // Verification users' id
+			{
+				App.utils.toastError(e);
+				return (false);
+			}
+		return (true);
 	}
 
-	sendDualRequest(e)
-	{
-		e.preventDefault();
-		console.log("SEND DUAL REQUEST ROOM");
-		App.utils.formAjax("/api/rooms/createDualRequest.json", "#sendDualRequest")
-		.done(res => {
-			App.toast.success("Dual request sent !", { duration: 1500, style: App.toastStyle });
-		})
-		.fail((e) => {
-			App.utils.toastError(e);
-		});
-		return (false);
-	}
-    
 	updateRender() {
 		const { attributes } = App.models.user;
 		this.rooms = this.model;

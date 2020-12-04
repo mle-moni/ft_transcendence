@@ -20,7 +20,7 @@
 
                 {{!-- REQUEST DUAL FORM --}}
                 <form class="dualForm" id="sendDualRequest" action="/api/rooms/createDualRequest.json" accept-charset="UTF-8"
-                    method="POST" style="display: inline;">
+                    method="POST">
                     <input type="hidden" name="authenticity_token" value="{{token}}">
                     <input type="hidden" name="dual_request[user_id]" value="{{currentUser.id}}">
                     <input type="hidden" name="dual_request[room_id]" value="{{roomID}}">

@@ -60,11 +60,8 @@ class DirectChatsController < ApplicationController
       res_with_error("Unknow User(s)", :bad_request)
       return (false)
     end 
-    
+
     Game.start(user1.email, user2.email, filteredParams["is_ranked"])
-    DirectMessage.where(from_id: filteredParams["first_user_id"]).where(is_dual_request: true).delete_all
-    DirectMessage.where(from_id: filteredParams["second_user_id"]).where(is_dual_request: true).delete_all
-    ActionCable.server.broadcast "chat_channel", type: "dual_request", description: "delete-request", user: current_user
   end
 
 

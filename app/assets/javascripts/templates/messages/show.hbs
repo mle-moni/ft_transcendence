@@ -55,7 +55,7 @@
 
                     {{!-- REQUEST DUAL FORM --}}
                     <form class="dualForm" id="sendDualRequest" action="/api/direct_chats/createDualRequest" accept-charset="UTF-8"
-                        method="POST" style="display: inline;">
+                        method="POST">
                         <input type="hidden" name="authenticity_token" value="{{token}}">
                         <input type="hidden" name="dual_request[from_id]" value="{{currentUser.id}}">
                         <input type="hidden" name="dual_request[direct_chat_id]" value="{{chatID}}">
