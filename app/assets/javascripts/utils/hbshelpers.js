@@ -100,3 +100,17 @@ Handlebars.registerHelper('ifCurrentDmRoom', function(userID, otherUserID, dmRoo
     }
     return options.inverse(this);
 });
+
+Handlebars.registerHelper('ifDualReq', function(isDualReq, options) {
+
+    if (isDualReq)
+        return options.fn(this);
+    return options.inverse(this);
+});
+
+Handlebars.registerHelper('ifRanked', function(isRanked, options) {
+
+    if (isRanked)
+        return options.fn(this);
+    return options.inverse(this);
+});

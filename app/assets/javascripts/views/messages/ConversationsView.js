@@ -2,7 +2,9 @@ AppClasses.Views.Conversations = class extends Backbone.View {
 	constructor(opts) {
 		opts.events = {
 			"submit #sendRoomMessageForm": "submit",
-			"submit .createDM": "createDM"
+			"submit .createDM": "createDM",
+			"submit #sendDualRequest": "sendDualRequest",
+			"submit #AcceptDualRequest": "AcceptDualRequest",
 		}
 		super(opts);
 		this.user = App.models.user;
@@ -16,6 +18,34 @@ AppClasses.Views.Conversations = class extends Backbone.View {
 		this.tagName = "div";
         this.template = App.templates["messages/show"];
 		this.updateRender();
+	}
+
+	AcceptDualRequest(e)
+	{
+		e.preventDefault();
+		if (!this.verif_accept_request(e)) return (false);
+		App.utils.formAjax("/api/direct_chats/acceptDualRequest.json", "#AcceptDualRequest")
+		.done(res => {
+			App.toast.success("Dual request accepted !", { duration: 1500, style: App.toastStyle });
+		})
+		.fail((e) => {
+			App.utils.toastError(e);
+		});
+		return (false);
+	}
+
+	sendDualRequest(e)
+	{
+		e.preventDefault();
+		if (!this.verif_infos(e)) return (false);
+		App.utils.formAjax("/api/direct_chats/createDualRequest.json", "#sendDualRequest")
+		.done(res => {
+			App.toast.success("Dual request sent !", { duration: 1500, style: App.toastStyle });
+		})
+		.fail((e) => {
+			App.utils.toastError(e);
+		});
+		return (false);
 	}
 
     createDM(e) {
@@ -35,6 +65,7 @@ AppClasses.Views.Conversations = class extends Backbone.View {
 	
 	submit(e)  {
 		e.preventDefault();
+		if (!this.verif_infos(e)) return (false);
 		if (!e.currentTarget.message || (e.currentTarget.message && e.currentTarget.message.value == ""))
 			return ;
 		App.utils.formAjax("/api/chat_messages.json", "#sendRoomMessageForm")
@@ -45,6 +76,36 @@ AppClasses.Views.Conversations = class extends Backbone.View {
 			App.utils.toastError(e);
 		});
 		return (false);
+	}
+
+	verif_infos(e)
+	{
+		if (!e.currentTarget || !e.currentTarget[1] || !e.currentTarget[2] // verification null value
+			|| e.currentTarget[1].value != this.user.id || e.currentTarget[2].value != this.chatID) // Verification value if not null
+		{
+			App.utils.toastError(e);
+			return (false);
+		}
+		return (true);
+	}
+
+	verif_accept_request(e)
+	{
+		var currentDMRoom = this.model ? this.model.toJSON() : null;
+		var otherUser = null;
+		if (currentDMRoom) {
+			currentDMRoom = _.filter(currentDMRoom, m => {
+				return m.id === this.chatID;
+			})[0] || null;
+			otherUser = this.user.id === currentDMRoom.user1_id ? currentDMRoom.user2_id : currentDMRoom.user1_id;
+		}
+		if (!currentDMRoom || !otherUser || !e.currentTarget || !e.currentTarget[1] || !e.currentTarget[2] // verification null value
+			|| e.currentTarget[1].value != otherUser || e.currentTarget[2].value != this.user.id) // Verification users' id
+			{
+				App.utils.toastError(e);
+				return (false);
+			}
+		return (true);
 	}
 
     updateRender() {
@@ -110,6 +171,8 @@ AppClasses.Views.Conversations = class extends Backbone.View {
 			otherUser: otherUser,
 			currentDMRoom: currentDMRoom,
 			directMessages: directMessages,
+			isTrue: true,
+			isFalse: false,
 			token: $('meta[name="csrf-token"]').attr('content')
 		}));
 		this.delegateEvents();
