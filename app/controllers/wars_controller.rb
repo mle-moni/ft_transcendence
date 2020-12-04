@@ -1,9 +1,11 @@
 class WarsController < ApplicationController
 	before_action :connect_user
 	before_action :guild_owner?
-	before_action :set_foe, only: [:create_war]
+	before_action :set_foe, only: [:create]
+	before_action :set_war, only: [:delete, :update, :validate]
+	before_action :set_update_params, only: [:update]
 
-	def create_war
+	def create
 		unless War.create_war(current_user.guild, @foe)
 			if current_user.guild.id == @foe.id
 				res_with_error("You are trying to start a war against your guild XD", :bad_request)
@@ -15,27 +17,22 @@ class WarsController < ApplicationController
 		success("War against #{@foe.name} created")
 	end
 
-	def delete_war
-		war = current_user.guild.active_war
-		unless war
-			res_with_error("Your guild has no active war", :bad_request)
-			return false
-		end
-		if war.validated == war.guild1_id + war.guild2_id
+	def delete
+		if @war.validated == @war.guild1_id + @war.guild2_id
 			res_with_error("You cannot delete a validated war", :bad_request)
 			return false
 		end
-		War.delete(war.id)
+		War.delete(@war.id)
 		success("War deleted")
 	end
 
-	def validate_war
-		war = current_user.guild.active_war
-		unless war
-			res_with_error("Nothing to validate", :bad_request)
+	def validate
+		check_ret = check_dates(@war.start, @war.end)
+		unless check_ret == ""
+			res_with_error(check_ret, :bad_request)
 			return false
 		end
-		ret = war.confirm(current_user.guild.id)
+		ret = @war.confirm(current_user.guild.id)
 		case ret
 		when 0
 			success("War confirmed")
@@ -46,7 +43,68 @@ class WarsController < ApplicationController
 		end
 	end
 
+	def update
+		@war.prize = @prize
+		@war.start = @dateStart
+		@war.end = @dateEnd
+		@war.ladder = @ladderBool
+		@war.tournament = @tournamentBool
+		@war.duel = @duelBool
+		@war.validated = 0
+		if @war.save
+			success("War update")
+			return true
+		end
+		res_with_error("Could not update war", :unprocessable_entity)
+	end
+
 	private
+
+	def set_war
+		@war = current_user.guild.active_war
+		unless @war
+			res_with_error("Your guild has no active war", :bad_request)
+			return false
+		end
+	end
+
+	def set_update_params
+		unless params[:prize] && params[:dateStart] && params[:dateEnd]
+			res_with_error("Some fields are missing from your request", :bad_request)
+			return false
+		end
+		@prize = Integer(params[:prize]) rescue nil
+		if (!@prize || @prize < 0) 
+			res_with_error("Prize must be a positive number", :bad_request)
+			return false
+		end
+		@dateStart = DateTime.parse(params[:dateStart] + "+01:00") rescue nil
+		@dateEnd = DateTime.parse(params[:dateEnd] + "+01:00") rescue nil
+		check_ret = check_dates(@dateStart, @dateEnd)
+		unless check_ret == ""
+			res_with_error(check_ret, :bad_request)
+			return false
+		end
+		set_game_modes()
+	end
+
+	def set_game_modes
+		@duelBool = !!params[:duelBool]
+		@tournamentBool = !!params[:tournamentBool]
+		@ladderBool = !!params[:ladderBool]
+	end
+
+	def check_dates(dateStart, dateEnd)
+		if (!dateStart || !dateEnd)
+			return "Error while parsing dates"
+		end
+		Time.zone = "Europe/Paris"
+		now = DateTime.parse(Time.current.to_s)
+		if dateEnd <= dateStart || dateStart < now || dateEnd < now
+			return "Dates are incoherent"
+		end
+		return ""
+	end
 
 	def set_foe
 		unless params[:id]

@@ -14,7 +14,6 @@ Handlebars.registerHelper('getDateValue', function(date) {
 	let strBase = date.toLocaleString("fr", {timeZone: "Europe/Paris"});
 	let strDateRaw = strBase.slice(0,10);
 	let strDate = strDateRaw.split("/").reverse().join("-");	
-	strDate += "T" + strBase.slice(13,18);
-
+	strDate += "T" + strBase.slice(11,16);
 	return (strDate);
 });

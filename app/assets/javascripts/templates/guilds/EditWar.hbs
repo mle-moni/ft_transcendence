@@ -4,22 +4,31 @@
 	<input type="hidden" name="authenticity_token" value="{{token}}">
 
 	<label for="prize">Prize for the war</label>
-	<input type="number" id="prize" name="prize" min="0" required>
+	<input type="number" id="prize" name="prize" min="0" required
+	{{#if war.prize}}
+		value="{{war.prize}}"
+	{{/if}}>
 
 	<p>Matches that counts for this war</p>
-	<input type="checkbox" id="ladderBool" name="ladderBool">
+	<input type="checkbox" id="ladderBool" name="ladderBool" {{#if war.ladder}}checked{{/if}}>
 	<label for="ladderBool">Ladder</label>
-	<input type="checkbox" id="tournamentBool" name="tournamentBool">
+	<input type="checkbox" id="tournamentBool" name="tournamentBool" {{#if war.tournament}}checked{{/if}}>
 	<label for="tournamentBool">Tournament</label>
-	<input type="checkbox" id="duelBool" name="duelBool">
+	<input type="checkbox" id="duelBool" name="duelBool" {{#if war.duel}}checked{{/if}}>
 	<label for="duelBool">Duel</label>
 
 	<p>When does the war start?</p>
-	<input type="datetime-local" id="dateStart" name="dateStart" required>
+	<input type="datetime-local" id="dateStart" name="dateStart" required
+	{{#if war.start}}
+		value="{{getDateValue war.start}}"
+	{{/if}}>
 	<br>
 	<br>
 	<p>When does the war end?</p>
-	<input type="datetime-local" id="dateEnd" name="dateEnd" required>
+	<input type="datetime-local" id="dateEnd" name="dateEnd" required
+	{{#if war.end}}
+		value="{{getDateValue war.end}}"
+	{{/if}}>
 
 	<br>
 	<br>

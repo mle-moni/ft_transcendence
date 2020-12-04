@@ -4,12 +4,12 @@ AppClasses.Views.War = class extends AppClasses.Views.AbstractView {
 			"keyup #searchGuild": "inputChanged",
 			"click .clickToCreateWar": "createWar",
 			"click #cancelActiveWar": "cancelWar",
-			"click #validateActiveWar": "validateWar"
+			"click #validateActiveWar": "validateWar",
+			"submit #updateWarForm": "updateWar"
 		}
 		super(opts);
 		this.guild_id = App.models.user.get("guild_id");
 		this.tagName = "div";
-		this.listenTo(App.models.user, "change", this.updateRender);
 		this.guild = null;
 		this.model.fetch().then(() => {
 			this.guild = this.model.findWhere({id: this.guild_id});
@@ -37,6 +37,11 @@ AppClasses.Views.War = class extends AppClasses.Views.AbstractView {
 	}
 	validateWar() {
 		this.formAction("#validateWarForm", "/api/wars/validate.json")
+	}
+	updateWar(e) {
+		e.preventDefault();
+		this.formAction("#updateWarForm", "/api/wars/update.json");
+		return (false);
 	}
 	formAction(formQueryStr, url) {
 		App.utils.formAjax(url, formQueryStr)
