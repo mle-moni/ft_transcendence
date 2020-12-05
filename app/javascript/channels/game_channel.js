@@ -650,7 +650,7 @@ function subscription_loop() {
 
     consumer.subscriptions.subscriptions.forEach(sub => {
       if (JSON.parse(sub.identifier)["channel"] === "PlayChannel") {
-        if (JSON.parse(sub.identifier)["game_room_id"] === location.hash.split("/")[1]) {
+        if (JSON.parse(sub.identifier)["game_room_id"] === location.hash.split("/")[1] && JSON.parse(sub.identifier)["role"] != 'v') {
           is_a_player = true;
         } else {
           sub.disconnected();
@@ -773,4 +773,4 @@ window.addEventListener("hashchange", e => {
   setTimeout(subscription_loop, 150);
 });
 
-setTimeout(subscription_loop, 1000);
+setTimeout(subscription_loop, 1500);
