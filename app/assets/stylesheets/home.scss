@@ -5,10 +5,10 @@
 
 #homePageContainer {
   height: 92vh;
-  margin: auto;
   color: white;
+  padding-top: 20vh;
   .welcome-text {
-    padding-top: 5vh;
+    background-color: rgba(29, 24, 24, 0.712);
     font-size: 4vh !important;
     text-align: center;
   }
