@@ -1,6 +1,7 @@
 class RoomsController < ApplicationController
   # before_action :set_room, only: [:show, :edit, :update, :destroy]
   before_action :connect_user, only: [:new, :edit, :update, :destroy, :joinPublic, :joinPrivate, :quit, :accept_request]
+  before_action :reset_temporary_restrictions
 
   # GET /rooms
   # GET /rooms.json
@@ -275,6 +276,12 @@ class RoomsController < ApplicationController
   # POST /rooms/createDualRequest.json
   def createDualRequest
     filteredParams = params.require(:dual_request).permit(:user_id, :room_id, :is_ranked)
+    
+    @room = Room.find(filteredParams["room_id"])
+    if @room && RoomMute.where(room: @room, user: current_user).exists?
+      res_with_error("You're currently muted", :bad_request)
+      return false
+    end
 
     @dual_request = RoomMessage.create(message: "", user_id: filteredParams["user_id"], room_id: filteredParams["room_id"], is_dual_request: true, is_ranked: filteredParams["is_ranked"])
     respond_to do |format|
@@ -333,5 +340,16 @@ class RoomsController < ApplicationController
         end
       end
     end
+
+    def reset_temporary_restrictions
+      if RoomMute.where('"endTime" < ?', DateTime.now).exists?
+          RoomMute.where('"endTime" < ?', DateTime.now).destroy_all
+          ActionCable.server.broadcast "room_channel", type: "rooms", description: "A user has reached the end of its muted period"
+      end
+      if RoomBan.where('"endTime" < ?', DateTime.now).exists?
+          RoomBan.where('"endTime" < ?', DateTime.now).destroy_all
+          ActionCable.server.broadcast "room_channel", type: "rooms", description: "A user has reached the end of its ban period"
+      end 
+  end
 
 end

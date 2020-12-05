@@ -92,7 +92,7 @@ AppClasses.Views.ShowRoom = class extends Backbone.View {
 			return m.id === this.room_id;
 		})[0] || null;
 
-		// Uri Protection : assert current user is member, or admin owner superAdmin
+		// Uri Protection : assert current user is member, or admin owner superAdmin, so if kicked, the user is redirect to index
 		if (attributes && currentRoom && !App.utils.assertRoomCurrentUserIsMember(attributes, currentRoom)) {
 			location.hash = '#room';
 			return (false);
@@ -112,7 +112,7 @@ AppClasses.Views.ShowRoom = class extends Backbone.View {
 			// Filter bans
 			var members = [...currentRoom.members, ...currentRoom.admins];	
 			currentRoom.bans.forEach(roomBanRecord => {
-				if (roomBanRecord.user_id == attributes.id) {
+				if (currentRoom.owner_id != attributes.id && roomBanRecord.user_id == attributes.id) {
 					location.hash = '#room';
 					return (false);
 				}
@@ -132,7 +132,7 @@ AppClasses.Views.ShowRoom = class extends Backbone.View {
 			currentRoom.admins.forEach(user => {
 				idTab.push(user.id);
 			})
-			if (attributes && !attributes.admin && !idTab.includes(attributes.id)) {
+			if (attributes && !attributes.admin && attributes.id != currentRoom.owner_id && !idTab.includes(attributes.id)) {
 				location.hash = '#room';
 				return false;
 			}

@@ -1,5 +1,6 @@
 class RoomMessagesController < ApplicationController
   before_action :set_room_message, only: [:show, :edit, :update, :destroy]
+  before_action :reset_temporary_restrictions
 
   # GET /room_messages
   # GET /room_messages.json
@@ -94,5 +95,16 @@ class RoomMessagesController < ApplicationController
         format.json { render json: {msg: "#{msg}"}} #status: :ok
       end
     end
+
+    def reset_temporary_restrictions
+      if RoomMute.where('"endTime" < ?', DateTime.now).exists?
+          RoomMute.where('"endTime" < ?', DateTime.now).destroy_all
+          ActionCable.server.broadcast "room_channel", type: "rooms", description: "A user has reached the end of its muted period"
+      end
+      if RoomBan.where('"endTime" < ?', DateTime.now).exists?
+          RoomBan.where('"endTime" < ?', DateTime.now).destroy_all
+          ActionCable.server.broadcast "room_channel", type: "rooms", description: "A user has reached the end of its ban period"
+      end 
+  end
     
 end

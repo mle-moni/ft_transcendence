@@ -1,5 +1,6 @@
 class RoomsAdministrateController < ApplicationController
   before_action :connect_user
+  before_action :reset_temporary_restrictions
 
   def mute
 
@@ -103,6 +104,7 @@ class RoomsAdministrateController < ApplicationController
     RoomLinkAdmin.where(user: userTargeted, room: @room).destroy_all
     RoomMute.where(room: @room, user: userTargeted).destroy_all
     RoomBan.where(room: @room, user: userTargeted).destroy_all
+    RoomMessage.where(room: @room, user: userTargeted).destroy_all
     respond_to do |format|
       ActionCable.server.broadcast "room_channel", type: "rooms", description: "Kick", user: current_user
       format.html { redirect_to rooms_url, notice: 'User kicked'}
@@ -134,5 +136,16 @@ class RoomsAdministrateController < ApplicationController
         end
       end
     end
+
+    def reset_temporary_restrictions
+      if RoomMute.where('"endTime" < ?', DateTime.now).exists?
+          RoomMute.where('"endTime" < ?', DateTime.now).destroy_all
+          ActionCable.server.broadcast "room_channel", type: "rooms", description: "A user has reached the end of its muted period"
+      end
+      if RoomBan.where('"endTime" < ?', DateTime.now).exists?
+          RoomBan.where('"endTime" < ?', DateTime.now).destroy_all
+          ActionCable.server.broadcast "room_channel", type: "rooms", description: "A user has reached the end of its ban period"
+      end 
+  end
 
 end

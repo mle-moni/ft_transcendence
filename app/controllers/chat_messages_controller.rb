@@ -1,5 +1,7 @@
 class ChatMessagesController < ApplicationController
 
+    before_action :reset_temporary_restrictions
+
     # GET /chat_messages
     # GET /chat_messages.json
     def index
@@ -86,6 +88,18 @@ class ChatMessagesController < ApplicationController
                 format.json { render json: {alert: "#{msg}"}, status: error }
             end
         end
+
+        def reset_temporary_restrictions
+            if RoomMute.where('"endTime" < ?', DateTime.now).exists?
+                RoomMute.where('"endTime" < ?', DateTime.now).destroy_all
+                ActionCable.server.broadcast "chat_channel", type: "rooms", description: "A user has reached the end of its muted period"
+            end
+            if RoomBan.where('"endTime" < ?', DateTime.now).exists?
+                RoomBan.where('"endTime" < ?', DateTime.now).destroy_all
+                ActionCable.server.broadcast "chat_channel", type: "rooms", description: "A user has reached the end of its ban period"
+            end 
+        end
+    
         
     end
 

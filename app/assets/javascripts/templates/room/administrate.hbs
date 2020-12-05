@@ -129,8 +129,7 @@
                 <input type="hidden" name="authenticity_token" value="{{../token}}">
                 <input type="hidden" name="room[room_id]" value="{{../room.id}}">
                 <input type="hidden" name="room[targetMemberID]" value="{{id}}">
-                <input type="time" class="form-control-sm" name="room[endTime]" min="{{../currentTime}}"
-                    value="{{../currentTime}}">
+                <input type="time" class="form-control-sm" name="room[endTime]" value="{{../currentTime}}">
                 &nbsp;
                 <input class="btn btn-outline-danger btn-sm" type="submit" value="Mute">
             </form>
@@ -158,8 +157,7 @@
                 <input type="hidden" name="authenticity_token" value="{{../token}}">
                 <input type="hidden" name="room[room_id]" value="{{../room.id}}">
                 <input type="hidden" name="room[targetMemberID]" value="{{id}}">
-                <input type="time" class="form-control-sm" style="display: inline;" name="room[endTime]"
-                    min="{{../currentTime}}" value="{{../currentTime}}">
+                <input type="time" class="form-control-sm" style="display: inline;" name="room[endTime]" value="{{../currentTime}}">
                 &nbsp;
                 <input class="btn btn-outline-danger btn-sm" type="submit" value="Ban">
             </form>

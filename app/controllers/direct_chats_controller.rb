@@ -1,5 +1,7 @@
 class DirectChatsController < ApplicationController
   before_action :set_direct_chat, only: [:show, :edit, :update, :destroy]
+  before_action :reset_temporary_restrictions
+
 
   # GET /direct_chats
   # GET /direct_chats.json
@@ -122,11 +124,25 @@ class DirectChatsController < ApplicationController
     def direct_chat_params
       params.fetch(:direct_chat, {})
     end
+
+    def reset_temporary_restrictions
+      if RoomMute.where('"endTime" < ?', DateTime.now).exists?
+        RoomMute.where('"endTime" < ?', DateTime.now).destroy_all
+        ActionCable.server.broadcast "chat_channel", type: "rooms", description: "A user has reach the end of its muted period"
+      end
+      if RoomBan.where('"endTime" < ?', DateTime.now).exists?
+        RoomBan.where('"endTime" < ?', DateTime.now).destroy_all
+        ActionCable.server.broadcast "chat_channel", type: "rooms", description: "A user has reach the end of its ban period"
+      end 
+    end
+
+    def res_with_error(msg, error)
+      respond_to do |format|
+        format.html { redirect_to "/", alert: "#{msg}" }
+        format.json { render json: {alert: "#{msg}"}, status: error }
+      end
+    end
+  
 end
 
-def res_with_error(msg, error)
-  respond_to do |format|
-    format.html { redirect_to "/", alert: "#{msg}" }
-    format.json { render json: {alert: "#{msg}"}, status: error }
-  end
-end
+  
