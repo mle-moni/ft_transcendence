@@ -65,4 +65,6 @@ Rails.application.configure do
 
   ActionCable.server.config.logger = Logger.new(nil)
   config.active_record.logger = nil
+  config.assets.precompile << /\.(?:svg|eot|woff|ttf)\z/
+  config.serve_static_assets = true
 end

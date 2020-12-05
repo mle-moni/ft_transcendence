@@ -506,7 +506,7 @@ class Game {
 
     draw_ball();
 
-    ctx.font = "84px Trebuchet MS";
+    ctx.font = "84px 'Air Americana'";
     ctx.fillStyle = "white";
     ctx.fillText(this.score_left.toString(), canvas.width / 3, 180);
     ctx.fillText(this.score_right.toString(), (canvas.width / 3) * 2 - 42, 180);
