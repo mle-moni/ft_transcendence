@@ -161,7 +161,7 @@
 }
 
 .navbar-brand {
-	font-size: 25px !important;
+	font-size: 20px !important;
 	color: lightgrey !important;
 }
 
@@ -169,7 +169,7 @@
 	min-height:8vh !important;
 	padding-top:0.5vh !important; 
 	padding-bottom:0.5vh !important;
-	font-size: 25px !important;
+	font-size: 20px !important;
 }
 
 .navbar-toggler-icon {
@@ -179,7 +179,7 @@
 
 .dropdown-item {
 	color: lightgrey !important;
-	font-size: 25px !important;
+	font-size: 20px !important;
 }
 	
 .dropdown-menu > a:hover {
@@ -216,15 +216,36 @@
 	background-size: cover;
 }
 
-@media screen and (max-height: 1100px) {
+@media (min-width: 936px) {
+    .navbar-expand-custom {
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+    }
+    .navbar-expand-custom .navbar-nav {
+        flex-direction: row;
+    }
+    .navbar-expand-custom .navbar-nav .nav-link {
+        padding-right: .5rem;
+        padding-left: .5rem;
+    }
+    .navbar-expand-custom .navbar-collapse {
+        display: flex!important;
+    }
+    .navbar-expand-custom .navbar-toggler {
+        display: none;
+    }
+}
+
+@media screen and (max-height: 600px) {
 	.navbar-brand {
-		font-size: 20px !important;
+		font-size: 10px !important;
 	}
 	
 	.navbar {
 		padding-top:0.25vh !important; 
 		padding-bottom:0.25vh !important;
-		font-size: 20px !important;
+		font-size: 10px !important;
 	}
 	
 	.navbar-toggler-icon {
@@ -232,11 +253,32 @@
 		height: 3vh !important;
 	}
 	.dropdown-item {
-		font-size: 20px !important;
+		font-size: 10px !important;
 	}
 
 	.page-title {
 		font-size: 40px;
+	}
+
+	@media (min-width: 600px) {
+		.navbar-expand-custom {
+			flex-direction: row;
+			flex-wrap: nowrap;
+			justify-content: flex-start;
+		}
+		.navbar-expand-custom .navbar-nav {
+			flex-direction: row;
+		}
+		.navbar-expand-custom .navbar-nav .nav-link {
+			padding-right: .5rem;
+			padding-left: .5rem;
+		}
+		.navbar-expand-custom .navbar-collapse {
+			display: flex!important;
+		}
+		.navbar-expand-custom .navbar-toggler {
+			display: none;
+		}
 	}
 }
 
