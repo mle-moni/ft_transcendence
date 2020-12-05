@@ -161,7 +161,7 @@
 }
 
 .navbar-brand {
-	font-size: 15px !important;
+	font-size: 25px !important;
 	color: lightgrey !important;
 }
 
@@ -169,7 +169,7 @@
 	min-height:8vh !important;
 	padding-top:0.5vh !important; 
 	padding-bottom:0.5vh !important;
-	font-size: 15px !important;
+	font-size: 25px !important;
 }
 
 .navbar-toggler-icon {
@@ -179,7 +179,7 @@
 
 .dropdown-item {
 	color: lightgrey !important;
-	font-size: 15px !important;
+	font-size: 25px !important;
 }
 	
 .dropdown-menu > a:hover {
@@ -216,15 +216,15 @@
 	background-size: cover;
 }
 
-@media screen and (max-height: 600px) {
+@media screen and (max-height: 1100px) {
 	.navbar-brand {
-		font-size: 10px !important;
+		font-size: 20px !important;
 	}
 	
 	.navbar {
 		padding-top:0.25vh !important; 
 		padding-bottom:0.25vh !important;
-		font-size: 10px !important;
+		font-size: 20px !important;
 	}
 	
 	.navbar-toggler-icon {
@@ -232,7 +232,7 @@
 		height: 3vh !important;
 	}
 	.dropdown-item {
-		font-size: 10px !important;
+		font-size: 20px !important;
 	}
 
 	.page-title {
