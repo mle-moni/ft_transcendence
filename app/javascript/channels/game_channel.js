@@ -724,7 +724,6 @@ function subscription_loop() {
             this.room = `play_channel_${data.match_room_id}`;
             console.log("your role is : " + this.role);
             console.log(this.room);
-            this.perform("start_game", { room_name: this.room, is_ranked: data.ranked }); // default action
             canvas = document.getElementById("myCanvas");
             ctx = canvas.getContext('2d');
             const UID = document.getElementById("UID");

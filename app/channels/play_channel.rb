@@ -71,13 +71,6 @@ class PlayChannel < ApplicationCable::Channel
     end
   end
 
-  def start_game(data)
-    if (Redis.current.get("#{data['room_name']}_launched").blank?)
-      Redis.current.set("#{data['room_name']}_launched", true);
-      Game.start_game("#{data['room_name']}", data['is_ranked'])
-    end
-  end
-
   def get_datas(data)
     ActionCable.server.broadcast data['room_name'], $games[data['room_name']];
   end

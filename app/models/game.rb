@@ -15,36 +15,32 @@ class Game < ApplicationRecord
 	
 			clean_players_dual_requests(player1, player2)
 
-			ActionCable.server.broadcast "player_#{right}", { action: 'game_start', msg: 'r', match_room_id: current_match_id, ranked: is_ranked }
-			ActionCable.server.broadcast "player_#{left}", { action: 'game_start', msg: 'l', match_room_id: current_match_id, ranked: is_ranked }
+			room_name = "play_channel_#{current_match_id}"
+
+			game = {
+				room_name: room_name,
+				is_ranked: is_ranked,
+				ball_pos_x: 0.0,
+				ball_pos_y: 0.0,
+				left_pos: 0.0,
+				right_pos: 0.0,
+				right_score: 0,
+				left_score: 0,
+				ball_speed: 0.0,
+				ball_dir_x: 0.0,
+				ball_dir_y: 0.0,
+				left_action: "w",
+				right_action: "w",
+				player_left_connected: false,
+				player_right_connected: false
+			}
+			$games[room_name] = game
+	
+			Redis.current.set("game_#{room_name}_end?", "no");
+
+			ActionCable.server.broadcast "player_#{right}", { action: 'game_start', msg: 'r', match_room_id: current_match_id }
+			ActionCable.server.broadcast "player_#{left}", { action: 'game_start', msg: 'l', match_room_id: current_match_id }
 		end
-	end
-
-	def self.start_game(room_name, is_ranked)
-		# create the game model holder
-		game = {
-			room_name: room_name,
-			is_ranked: is_ranked,
-			ball_pos_x: 0.0,
-			ball_pos_y: 0.0,
-			left_pos: 0.0,
-			right_pos: 0.0,
-			right_score: 0,
-			left_score: 0,
-			ball_speed: 0.0,
-			ball_dir_x: 0.0,
-			ball_dir_y: 0.0,
-			left_action: "w",
-			right_action: "w",
-			player_left_connected: false,
-			player_right_connected: false
-		}
-		$games[room_name] = game
-
-		Redis.current.set("game_#{room_name}_end?", "no");
-
-		puts "Game started with data :"
-		puts room_name, is_ranked
 	end
 
 	def self.end_the_game(room_name, role_quit) # role_quit is 'r' or 'l' when someone gave up else 'n'
@@ -77,7 +73,7 @@ class Game < ApplicationRecord
 				end
 			end
 
-			if ($games[room_name][:is_ranked] == true)
+			if ($games[room_name][:is_ranked] == "ranked")
 				match = EloRating::Match.new
 				match.add_player(rating: loser_user.elo)
 				match.add_player(rating: winner_user.elo, winner: true)
@@ -91,6 +87,8 @@ class Game < ApplicationRecord
 				loser_user.save
 				winner_user.save
 			end
+
+			## * Add here for other end game type conditions
 
 			Match.create(winner: winner_user, loser: loser_user, winner_score: winner_score, loser_score: loser_score);
 			ActionCable.server.broadcast room_name, {action: 'quit'}

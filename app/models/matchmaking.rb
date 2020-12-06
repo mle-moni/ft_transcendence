@@ -4,7 +4,7 @@ class Matchmaking < ApplicationRecord
 		puts "is searching for a match"
 		puts is_ranked
 
-		if is_ranked
+		if is_ranked == "ranked"
 			if !Redis.current.get('matches_ranked').blank? && Redis.current.get('matches_ranked') != player_mail
 				opponent = Redis.current.get('matches_ranked')
 				Game.start(player_mail, opponent, is_ranked)
