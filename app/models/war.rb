@@ -15,6 +15,28 @@ class War < ApplicationRecord
     return validated == guild1_id + guild2_id
   end
 
+  def running?
+    unless confirmed?
+      return false
+    end
+    now = DateTime.parse(Time.current.to_s)
+    return start < now && now < self.end
+  end
+
+  def war_time?
+    unless running?
+      return false
+    end
+    now = DateTime.parse(Time.current.to_s)
+    war_times.each do |wt|
+      wt_end = wt.start + war_time_len.minutes
+      if wt.start < now && now < wt_end
+        return true
+      end
+    end
+    return false
+  end
+
   # ret values: 
   # 0 = success, 1 = already confirmed, 2 = wrong gid
   def confirm(gid)
@@ -73,7 +95,8 @@ class War < ApplicationRecord
 			war_times: war.war_times,
 			war_time_len: war.war_time_len,
 			war_time_match: war.war_time_match,
-			winner: war.winner
+      winner: war.winner,
+      in_war_time: war_time?
     }
     return retwar
   end
