@@ -2,7 +2,7 @@ class WarsController < ApplicationController
 	before_action :connect_user
 	before_action :guild_owner?
 	before_action :set_foe, only: [:create]
-	before_action :set_war, only: [:delete, :update, :validate]
+	before_action :set_war, only: [:delete, :update, :validate, :create_war_time, :delete_war_time]
 	before_action :set_update_params, only: [:update]
 
 	def create
@@ -10,7 +10,7 @@ class WarsController < ApplicationController
 			if current_user.guild.id == @foe.id
 				res_with_error("You are trying to start a war against your guild XD", :bad_request)
 			else
-				res_with_error("one of the guild is already at war, or planning a war", :bad_request)
+				res_with_error("one of the 2 guilds is already at war, or planning a war", :bad_request)
 			end
 			return false
 		end
@@ -22,7 +22,7 @@ class WarsController < ApplicationController
 			res_with_error("You cannot delete a validated war", :bad_request)
 			return false
 		end
-		War.delete(@war.id)
+		War.destroy(@war.id)
 		success("War deleted")
 	end
 
@@ -50,12 +50,42 @@ class WarsController < ApplicationController
 		@war.ladder = @ladderBool
 		@war.tournament = @tournamentBool
 		@war.duel = @duelBool
+		@war.war_time_len = @war_time_len
 		@war.validated = 0
 		if @war.save
 			success("War update")
 			return true
 		end
 		res_with_error("Could not update war", :unprocessable_entity)
+	end
+
+	def create_war_time
+		unless params[:new_wt]
+			return res_with_error("Invalid param", :bad_request)
+		end
+		wt_date = DateTime.parse(params[:new_wt] + "+01:00") rescue nil
+		unless wt_date
+			return res_with_error("Invalid param", :bad_request)
+		end
+		WarTime.create({war: @war, start: wt_date})
+		success("War time created")
+	end
+
+	def delete_war_time
+		unless params[:id]
+			return res_with_error("Missing param", :bad_request)
+		end
+		wt = WarTime.find(params[:id])
+		unless wt
+			return res_with_error("War time not found", :not_found)
+		end
+		unless wt.war.id == @war.id
+			return res_with_error("You cannot edit this war time", :forbidden)
+		end
+		unless wt.destroy
+			return res_with_error("Could not destroy war time", :unprocessable_entity)
+		end
+		success("War time destroyed")
 	end
 
 	private
@@ -66,16 +96,24 @@ class WarsController < ApplicationController
 			res_with_error("Your guild has no active war", :bad_request)
 			return false
 		end
+		if @war.confirmed?
+			res_with_error("You cannot edit this war (already confirmed)", :bad_request)
+		end
 	end
 
 	def set_update_params
-		unless params[:prize] && params[:dateStart] && params[:dateEnd]
+		unless params[:prize] && params[:dateStart] && params[:dateEnd] && params[:war_time_len]
 			res_with_error("Some fields are missing from your request", :bad_request)
 			return false
 		end
 		@prize = Integer(params[:prize]) rescue nil
 		if (!@prize || @prize < 0) 
 			res_with_error("Prize must be a positive number", :bad_request)
+			return false
+		end
+		@war_time_len = Integer(params[:war_time_len]) rescue nil
+		if (!@war_time_len || @war_time_len < 2)
+			res_with_error("War time duration must be a number >= 2", :bad_request)
 			return false
 		end
 		@dateStart = DateTime.parse(params[:dateStart] + "+01:00") rescue nil
@@ -138,6 +176,7 @@ class WarsController < ApplicationController
 			format.html { redirect_to "/", alert: msg }
 			format.json { render json: {alert: msg}, status: error }
 		end
+		return false
 	end
 
 	def success(msg)

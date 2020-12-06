@@ -14,6 +14,7 @@ AppClasses.Views.Friends = class extends Backbone.View {
 		this.listenTo(this.model, "change", this.updateRender);
 		this.listenTo(App.models.last_seen, "change", this.updateOnlineInfos);
 		this.listenTo(App.collections.allUsers, "change reset add remove", this.updateRender);
+		App.models.last_seen.updateLastSeen(App.models.last_seen);
 	}
 	friendAction(event, url, msgSuccess) {
 		const userID = event.target.getElementsByClassName("nodisplay")[0].innerText;

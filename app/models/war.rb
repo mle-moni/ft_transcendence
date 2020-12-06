@@ -1,6 +1,15 @@
 class War < ApplicationRecord
+  after_save do 
+    ActionCable.server.broadcast "update_channel", action: "update", target: "guilds"
+  end
+  after_destroy do
+		ActionCable.server.broadcast "update_channel", action: "update", target: "guilds"
+	end
+
   belongs_to :guild1, class_name: 'Guild'
   belongs_to :guild2, class_name: 'Guild'
+
+  has_many :war_times
 
   def confirmed?
     return validated == guild1_id + guild2_id
@@ -38,6 +47,35 @@ class War < ApplicationRecord
     return false unless g1 && g2
     return false unless g1.active_war
     return g1.active_war.confirmed? 
+  end
+
+  def self.clean(war)
+    if !war
+      return nil
+    end
+    retwar = {
+			id: war.id,
+			created_at: war.created_at,
+			updated_at: war.updated_at,
+			start: war.start,
+			end: war.end,
+			duel: war.duel,
+			ladder: war.ladder,
+			tournament: war.tournament,
+			g1_score: war.g1_score,
+			g2_score: war.g2_score,
+			guild1_id: war.guild1_id,
+			guild2_id: war.guild2_id,
+			mods: war.mods,
+			prize: war.prize,
+			time_to_answer: war.time_to_answer,
+			validated: war.validated,
+			war_times: war.war_times,
+			war_time_len: war.war_time_len,
+			war_time_match: war.war_time_match,
+			winner: war.winner
+    }
+    return retwar
   end
 
 end

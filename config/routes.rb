@@ -13,6 +13,8 @@ Rails.application.routes.draw do
     post '/wars/delete', to: 'wars#delete'
     post '/wars/validate', to: 'wars#validate'
     post '/wars/update', to: 'wars#update'
+    post '/wars/create_war_time', to: 'wars#create_war_time'
+    post '/wars/delete_war_time', to: 'wars#delete_war_time'
 
     # CHAT & DMS ------
     resources :rooms do 

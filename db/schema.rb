@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_04_124923) do
+ActiveRecord::Schema.define(version: 2020_12_05_144714) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -178,6 +178,14 @@ ActiveRecord::Schema.define(version: 2020_12_04_124923) do
     t.index ["uid"], name: "index_users_on_uid"
   end
 
+  create_table "war_times", force: :cascade do |t|
+    t.datetime "start"
+    t.bigint "war_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["war_id"], name: "index_war_times_on_war_id"
+  end
+
   create_table "wars", force: :cascade do |t|
     t.datetime "start"
     t.datetime "end"
@@ -195,6 +203,8 @@ ActiveRecord::Schema.define(version: 2020_12_04_124923) do
     t.datetime "updated_at", precision: 6, null: false
     t.integer "g1_score", default: 0
     t.integer "g2_score", default: 0
+    t.integer "war_time_len", default: 5
+    t.boolean "war_time_match", default: false
     t.index ["guild1_id"], name: "index_wars_on_guild1_id"
     t.index ["guild2_id"], name: "index_wars_on_guild2_id"
   end
@@ -211,6 +221,7 @@ ActiveRecord::Schema.define(version: 2020_12_04_124923) do
   add_foreign_key "room_mutes", "users", column: "by_id"
   add_foreign_key "rooms", "users", column: "owner_id"
   add_foreign_key "users", "guilds"
+  add_foreign_key "war_times", "wars"
   add_foreign_key "wars", "guilds", column: "guild1_id"
   add_foreign_key "wars", "guilds", column: "guild2_id"
 end

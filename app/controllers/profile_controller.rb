@@ -120,11 +120,12 @@ class ProfileController < ApplicationController
 		@user.email = params[:email]
 		@user.nickname = params[:nickname]
 		if @user.save
-			# redirect_to "/#profile", notice: 'Profile was successfully updated.'
 			respond_to do |format|
 				format.html { redirect_to "/#profile", notice: 'Profile was successfully updated.' }
 				format.json { render json: User.clean(@user), status: :ok }
 			end
+			ActionCable.server.broadcast "update_channel", action: "update", target: "users"
+			ActionCable.server.broadcast "update_channel", action: "update", target: "guilds"
 		else
 			update_error("Could not save profile")
 		end

@@ -9,6 +9,14 @@
 		value="{{war.prize}}"
 	{{/if}}>
 
+	<br>
+
+	<label for="war_time_len">War times duration</label>
+	<input type="number" id="war_time_len" name="war_time_len" min="0" required
+	{{#if war.prize}}
+		value="{{war.war_time_len}}"
+	{{/if}}>
+
 	<p>Matches that counts for this war</p>
 	<input type="checkbox" id="ladderBool" name="ladderBool" {{#if war.ladder}}checked{{/if}}>
 	<label for="ladderBool">Ladder</label>
@@ -33,10 +41,31 @@
 	<br>
 	<br>
 
-	<button class="btn btn-primary" id="updateWarButton">Update war</button>
+	<button class="btn btn-primary">Update war</button>
 </form>
 
 <br>
+
+<form id="addWarTimeForm" method="POST">
+	<input type="hidden" name="authenticity_token" value="{{token}}">
+	<label for="new_wt">Add new war time</label><br>
+	<input type="datetime-local" id="new_wt" name="new_wt" required>
+	<button class="btn btn-primary">Add war time</button>
+</form>
+
+<br>
+<hr>
+
+<h3>War times</h3>
+{{#each war.war_times }}
+	<input type="datetime-local" value="{{getDateValue start}}" readonly>
+	<span class="clickToDeleteWarTime pointer">
+		DELETE
+		<span class="nodisplay">{{id}}</span>
+	</span>
+	<br>
+{{/each}}
+
 <hr>
 <br>
 
@@ -51,4 +80,9 @@
 
 <form style="display: none;" id="validateWarForm" method="POST">
 	<input type="hidden" name="authenticity_token" value="{{token}}">
+</form>
+
+<form style="display: none;" id="deleteWarTimeForm" method="POST">
+	<input type="hidden" name="authenticity_token" value="{{token}}">
+	<input type="text" name="id" id="warTimeIDField">
 </form>

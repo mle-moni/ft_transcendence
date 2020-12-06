@@ -1,4 +1,11 @@
 class Guild < ApplicationRecord
+	after_save do
+		ActionCable.server.broadcast "update_channel", action: "update", target: "guilds"
+	end
+	after_destroy do
+		ActionCable.server.broadcast "update_channel", action: "update", target: "guilds"
+	end
+
 	has_many :users, -> { where(guild_validated: true) }, class_name: "User"
 	has_many :requests, -> { where(guild_validated: false) }, class_name: "User"
 	has_one :owner, -> { where(guild_owner: true) }, class_name: "User"
@@ -33,7 +40,7 @@ class Guild < ApplicationRecord
 			officers: guild.officers.map { |usr| User.strict_clean(usr) },
 			requests: guild.requests.map { |usr| User.strict_clean(usr) },
 			wars: guild.wars,
-			active_war: guild.active_war
+			active_war: War.clean(guild.active_war)
 		}
 	end
 

@@ -27,17 +27,16 @@ AppClasses.Routers.Main = class extends AppClasses.Routers.AbstractRouter {
 		this.models.last_seen = new AppClasses.Models.User(App.data.user);
 		this.collections.allUsers = new AppClasses.Collections.AllUsers();
 
-		const seconds = 10; // update every N seconds
+		const seconds = 10; // update every N seconds, to see users status
 		setInterval(() => {
 			$.ajax({
 				url:  '/api/active',
 				data: { "authenticity_token": $('meta[name="csrf-token"]').attr('content') },
 				type: 'POST'
 			});
-			this.models.user.update(this.models.user);
-			this.models.last_seen.updateLastSeen(this.models.last_seen);
-			this.collections.allUsers.myFetch();
-			this.collections.guilds.fetch();
+			if (location.hash == "#friends") {
+				this.models.last_seen.updateLastSeen(this.models.last_seen);
+			}
 		}, 1000 * seconds);
 	}
 	index() {

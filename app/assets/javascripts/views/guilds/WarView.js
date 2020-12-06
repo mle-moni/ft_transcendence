@@ -5,7 +5,9 @@ AppClasses.Views.War = class extends AppClasses.Views.AbstractView {
 			"click .clickToCreateWar": "createWar",
 			"click #cancelActiveWar": "cancelWar",
 			"click #validateActiveWar": "validateWar",
-			"submit #updateWarForm": "updateWar"
+			"submit #updateWarForm": "updateWar",
+			"submit #addWarTimeForm": "addWarTime",
+			"click .clickToDeleteWarTime": "deleteWarTime"
 		}
 		super(opts);
 		this.guild_id = App.models.user.get("guild_id");
@@ -43,6 +45,16 @@ AppClasses.Views.War = class extends AppClasses.Views.AbstractView {
 		this.formAction("#updateWarForm", "/api/wars/update.json");
 		return (false);
 	}
+	addWarTime(e) {
+		e.preventDefault();
+		this.formAction("#addWarTimeForm", "/api/wars/create_war_time.json");
+		return (false);
+	}
+	deleteWarTime(e) {
+		const wt_id = e.target.getElementsByClassName("nodisplay")[0].innerText;
+		$("#warTimeIDField")[0].value = wt_id;
+		this.formAction("#deleteWarTimeForm", "/api/wars/delete_war_time.json");
+	}
 	formAction(formQueryStr, url) {
 		App.utils.formAjax(url, formQueryStr)
 		.done(res => {
@@ -68,7 +80,7 @@ AppClasses.Views.War = class extends AppClasses.Views.AbstractView {
 				token: $('meta[name="csrf-token"]').attr('content')
 			}));
 		} else if (war.validated == war.guild1_id + war.guild2_id) {
-			this.$el.html("War is confirmed");
+			this.$el.html("War is already confirmed");
 		} else {
 			let validatedByYou = war.validated == guildJSON.id;
 			this.$el.html(App.templates["guilds/EditWar"]({
