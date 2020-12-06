@@ -242,7 +242,7 @@ canvas {
 
 .page-title {
 	height: 92vh;
-	color: lightgrey;
+	color: black !important;
 	padding-top: 20vh;
 	font-size: 60px;
 	text-align: center;
@@ -250,6 +250,11 @@ canvas {
 	background-position: center;
 	background-repeat: no-repeat;
 	background-size: cover;
+}
+
+.big-profile-picture {
+	width: 250px;
+	height: 180px;
 }
 
 @media (min-width: 950px) {
@@ -324,12 +329,15 @@ canvas {
 	}
 }
 
-
 @import url(https://fonts.googleapis.com/css?family=Lobster+Two:700italic);
 
 .fifties {
   font-family: lobster two;
-  animation: shadow_anim 10s alternate infinite;
+  color: lightgray;
+}
+
+.shdw-anim {
+	animation: shadow_anim 10s alternate infinite;
 }
 
 @font-face {
@@ -337,4 +345,38 @@ canvas {
 	src: url('/fonts/Air Americana.ttf') format('truetype');
 	font-weight: normal;
 	font-style: normal;
+}
+
+.profile-description {
+	margin: 0 auto;
+	text-align: center;
+}
+
+.user-name {
+	margin: 25px 0 16px;
+	text-align: center;
+}
+
+.clear {
+	clear: both;
+}
+
+.profile-align {
+	text-align: center;
+}
+
+.btn-group.special {
+	display: flex;
+}
+
+.special .btn {
+	flex: 1
+}
+
+.profile-page {
+	padding-top: 5vh;
+}
+
+.blk-text {
+	color: black;
 }
