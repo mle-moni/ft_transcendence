@@ -1,59 +1,50 @@
 <div class="margin25Div">
+	<p class="fifties blk-text user-name admin-title"> <u> Admin page </u></p>
+	<ul class="list-group">
+		{{#each allUsers}}
+		<li class="list-group-item fifties blk-text">
+			<div style="min-width: 100px; display:inline-block">
+				<p>{{nickname}}</p>
+			</div>
+			{{!-- BAN / UNBAN --}}
+			{{#if banned}}
+			&nbsp;
+			<span class="clickToUnbanUser pointer btn btn-success">
+				UNBAN
+				<span class="nodisplay">{{id}}</span>
+			</span>
+			{{else}}
+			&nbsp;
+			<span class="clickToBanUser pointer btn btn-danger">
+				BAN
+				<span class="nodisplay">{{id}}</span>
+			</span>
+			{{/if}}
 
-	<p><strong> <u> Admin page </u></strong></p>
+			{{!-- PROMOTE / DEMOTE --}}
+			{{#if admin}}
+			&nbsp;
+			<span class="clickToDemoteUser pointer btn btn-danger">
+				DEMOTE
+				<span class="nodisplay">{{id}}</span>
+			</span>
+			{{else}}
+			&nbsp;
+			<span class="clickToPromoteUser pointer btn btn-success">
+				PROMOTE
+				<span class="nodisplay">{{id}}</span>
+			</span>
+			{{/if}}
+		</li>
+		{{/each}}
+	</ul>
 
-	{{#each allUsers}}
-	<div>
+	<form style="display: none;" id="adminForm" method="POST">
+		<input type="hidden" name="authenticity_token" value="{{token}}">
+		<input type="text" name="id" id="userIDField">
+	</form>
 
-
-		<div style="min-width: 100px; display:inline-block">
-			<p>{{nickname}}</p>
-		</div>
-
-
-		{{!-- BAN / UNBAN --}}
-		{{#if banned}}
-		&nbsp;
-		<span class="clickToUnbanUser pointer">
-			UNBAN
-			<span class="nodisplay">{{id}}</span>
-		</span>
-		{{else}}
-		&nbsp;
-		<span class="clickToBanUser pointer">
-			BAN
-			<span class="nodisplay">{{id}}</span>
-		</span>
-		{{/if}}
-
-		{{!-- PROMOTE / DEMOTE --}}
-		{{#if admin}}
-		&nbsp;
-		<span class="clickToDemoteUser pointer">
-			DEMOTE
-			<span class="nodisplay">{{id}}</span>
-		</span>
-		{{else}}
-		&nbsp;
-		<span class="clickToPromoteUser pointer">
-			PROMOTE
-			<span class="nodisplay">{{id}}</span>
-		</span>
-		{{/if}}
-	</div>
-	{{/each}}
-
-<form style="display: none;" id="adminForm" method="POST">
-	<input type="hidden" name="authenticity_token" value="{{token}}">
-	<input type="text" name="id" id="userIDField">
-</form>
-
-
-<br>
-
-<a class="btn btn-info" href="#">
-	Home
-</a>
-
-
+	<a class="btn btn-primary btn-lg btn-block fifties" href="#">
+		Home
+	</a>
 </div>
