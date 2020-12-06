@@ -55,17 +55,7 @@
 
 _.each(document.getElementById("mainNavbar").getElementsByClassName("dropdown-item"), el => {
     el.onclick = () => {
-      if (innerWidth < 768) {
-        document.getElementById("navbarToggler").click();
-      }
-    }
-});
-
-_.each(document.getElementsByClassName("navbar-brand"), el => {
-    el.onclick = () => {
-      if (innerWidth < 768) {
-        document.getElementById("navbarToggler").click();
-      }
+      document.getElementById("navbarToggler").click();
     }
 });
 
