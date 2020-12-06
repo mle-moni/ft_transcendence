@@ -1,5 +1,5 @@
 class Game < ApplicationRecord
-	def self.start(player1, player2, is_ranked)
+	def self.start(player1, player2, game_type)
 		left, right = [player1, player2].shuffle
 		if (left != right)
 			current_match_id = 0
@@ -19,7 +19,7 @@ class Game < ApplicationRecord
 
 			game = {
 				room_name: room_name,
-				is_ranked: is_ranked,
+				game_type: game_type,
 				ball_pos_x: 0.0,
 				ball_pos_y: 0.0,
 				left_pos: 0.0,
@@ -73,7 +73,7 @@ class Game < ApplicationRecord
 				end
 			end
 
-			if ($games[room_name][:is_ranked] == "ranked")
+			if ($games[room_name][:game_type] == "ranked")
 				match = EloRating::Match.new
 				match.add_player(rating: loser_user.elo)
 				match.add_player(rating: winner_user.elo, winner: true)
