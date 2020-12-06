@@ -44,7 +44,7 @@ class Game < ApplicationRecord
 	end
 
 	def self.end_the_game(room_name, role_quit) # role_quit is 'r' or 'l' when someone gave up else 'n'
-		if (Redis.current.get("game_#{room_name}_end?") == "no") # if not already ended, end the game with actual player has loser (he left the game)
+		if (Redis.current.get("game_#{room_name}_end?") == "no" && $games[room_name] != nil) # if not already ended, end the game with actual player has loser (he left the game)
 			Redis.current.set("game_#{room_name}_end?", "yes");
 
 			if (role_quit != 'n')
@@ -92,7 +92,7 @@ class Game < ApplicationRecord
 
 			Match.create(winner: winner_user, loser: loser_user, winner_score: winner_score, loser_score: loser_score);
 			ActionCable.server.broadcast room_name, {action: 'quit'}
-			game[room_name] = nil;
+			$games[room_name] = nil;
 		end
 	end
 
