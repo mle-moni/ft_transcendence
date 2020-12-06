@@ -1,11 +1,13 @@
-{{#each user.friends}}
-<div>
-	<strong> {{nickname}} </strong>
-	({{print_status}})
-	&nbsp;
-	<span class="clickToDeleteFriend pointer">
-		DELETE
-		<span class="nodisplay">{{id}}</span>
-	</span>
-</div>
-{{/each}}
+<ul class="list-group">
+	{{#each user.friends}}
+	<li class="list-group-item">
+		<strong> {{nickname}} </strong>
+		({{print_status}})
+		&nbsp;
+		<span class="clickToDeleteFriend pointer btn btn-danger">
+			DELETE
+			<span class="nodisplay">{{id}}</span>
+		</span>
+	</li>
+	{{/each}}
+</ul>

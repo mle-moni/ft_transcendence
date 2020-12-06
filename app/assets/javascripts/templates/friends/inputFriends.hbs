@@ -1,6 +1,8 @@
-<br>{{#each friends}}
-<p class="clickToAddFriend pointer">
-	&nbsp; • &nbsp;  {{nickname}}
-	<span class="nodisplay">{{id}}</span>
-</p>
-{{/each}}
+<br><ul class="list-group">
+	{{#each friends}}
+	<li class="clickToAddFriend pointer list-group-item">
+		&nbsp; {{nickname}}
+		<span class="nodisplay">{{id}}</span>
+	</li>
+	{{/each}}
+</ul>

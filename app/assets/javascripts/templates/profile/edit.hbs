@@ -1,4 +1,4 @@
-<div class="margin25Div">
+<div class="margin25Div list-group">
 
 	<form class="edit_user" id="edit_user" action="/profile/edit" accept-charset="UTF-8" method="POST"
 		enctype="multipart/form-data">
@@ -8,36 +8,34 @@
 
 		<div class="field">
 			<label for="user_nickname">Nickname</label><br>
-			<input class="form-control-sm" autocomplete="nickname" type="text" value="{{user.nickname}}" name="nickname"
+			<input class="form-control" autocomplete="nickname" type="text" value="{{user.nickname}}" name="nickname"
 				id="user_nickname">
 		</div>
 
 		<div class="field"><br>
 			<label for="user_email">Email</label><br>
-			<input class="form-control-sm" autocomplete="email" type="email" value="{{user.email}}" name="email"
+			<input class="form-control" autocomplete="email" type="email" value="{{user.email}}" name="email"
 				id="user_email">
 		</div>
 
 		<br>
-		<img height="100px" src="{{user.image}}" id="userImageEdit">
+		<img height="200px" src="{{user.image}}" id="userImageEdit">
 		<br>
 		<div class="field">
 			<br>
 			<label for="user_image">Image</label><br>
-			<input class="form-control-sm" type="file" name="image" id="user_image"
+			<input class="form-control" type="file" name="image" id="user_image"
 				onchange="App.utils.changeImg(this, 'userImageEdit')">
 		</div>
 		<br>
 		<div class="actions">
-			<input class="btn btn-success" type="submit" name="commit" value="Update">
+			<input class="btn btn-success btn-lg btn-block" type="submit" name="commit" value="Update">
 		</div>
 	</form>
 	<br>
 	<hr>
 	<br>
-	<a class="btn btn-primary" href="#profile/auth">Change authentication settings</a>
-	<br>
-	<br>
-	<a class="btn btn-info" ref="javascript:history.back()">Back</a>
+	<a class="btn btn-primary btn-lg btn-block" href="#profile/auth">Change authentication settings</a>
+	<a class="btn btn-info btn-lg btn-block" ref="javascript:history.back()">Back</a>
 
 </div>

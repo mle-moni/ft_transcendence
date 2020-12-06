@@ -1,6 +1,6 @@
 <div class="margin25Div">
 
-	<p style="font-size: 24px;"> <strong> Your Friends 😃 </strong> </p><br>
+	<p class="" style="font-size: 24px;"> <strong> Your Friends 😃 </strong> </p><br>
 
 	<div id="onlineInfos">online infos</div>
 
@@ -8,30 +8,30 @@
 
 	<p style="font-size: 20px;"> <strong> Friend Requests </strong> </p><br>
 
-	{{#each user.invites}}
-	<div>
-		• <strong> {{nickname}} </strong> :
-		&nbsp;
-		<span class="clickToAcceptFriend pointer">
-			ACCEPT
-			<span class="nodisplay">{{id}}</span>
-		</span>
-		&nbsp;
-		<span class="clickToRejectFriend pointer">
-			REJECT
-			<span class="nodisplay">{{id}}</span>
-		</span>
-	</div>
-	{{/each}}
+	<ul class="list-group">
+		{{#each user.invites}}
+		<li class="list-group-item">
+			<strong> {{nickname}} </strong> :
+			&nbsp;
+			<span class="clickToAcceptFriend pointer btn btn-success">
+				ACCEPT
+				<span class="nodisplay">{{id}}</span>
+			</span>
+			&nbsp;
+			<span class="clickToRejectFriend pointer btn btn-danger">
+				REJECT
+				<span class="nodisplay">{{id}}</span>
+			</span>
+		</li>
+		{{/each}}
+	</ul>
 
 	<hr><br>
 
 	<p style="font-size: 20px;"> <strong> Add Friends </strong> </p>
 
-	<input autocomplete="off" type="text" name="" id="addFriend"><br>
-	<div id="userInputFriends">
-
-	</div>
+	<input class="form-control" autocomplete="off" type="text" name="" id="addFriend"><br>
+	<div id="userInputFriends"></div>
 
 	<form style="display: none;" id="friendsForm" method="POST">
 		<input type="hidden" name="authenticity_token" value="{{token}}">
@@ -39,6 +39,6 @@
 	</form>
 	<br>
 	<br>
-	<a class="btn btn-info" href="#">Home</a>
+	<a class="btn btn-info btn-lg btn-block" href="#">Home</a>
 
 </div>
