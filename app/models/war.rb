@@ -68,7 +68,10 @@ class War < ApplicationRecord
     return false unless usr1.guild_validated && usr2.guild_validated
     return false unless g1 && g2
     return false unless g1.active_war
-    return g1.active_war.confirmed? 
+    unless g1.active_war.guild1_id == g2.id || g1.active_war.guild2_id == g2.id
+      return false
+    end
+    return g1.active_war.running?
   end
 
   def self.clean(war)
@@ -96,7 +99,7 @@ class War < ApplicationRecord
 			war_time_len: war.war_time_len,
 			war_time_match: war.war_time_match,
       winner: war.winner,
-      in_war_time: war_time?
+      in_war_time: war.war_time?
     }
     return retwar
   end
