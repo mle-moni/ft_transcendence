@@ -20,12 +20,11 @@
     <%= javascript_include_tag 'application' %> <!-- using Sprockets for compatibility with rails-backbone -->
   </head>
 
-  <body>
+  <body class="back-base">
     <%= render 'layouts/navbar' %>
     <p class="notice" style="display: none;"><%= notice %></p>
     <p class="alert" style="display: none;"><%= alert %></p>
 
     <%= yield %>
-
   </body>
 </html>

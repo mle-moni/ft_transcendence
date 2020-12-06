@@ -2,17 +2,24 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
 
+
 #homePageContainer {
-  margin: 20px;
-  display: flex;
-  height: 85vh;
-  article {
-    margin: auto;
-    h3 {
-      text-align: center;
-    }
-    img {
-      max-width: 90vw;
-    }
+  height: 92vh;
+  color: white;
+  padding-top: 20vh;
+  .welcome-text {
+    background-color: rgba(29, 24, 24, 0.712);
+    font-size: 4vh !important;
+    text-align: center;
   }
+}
+
+.bg { 
+  background-image: url("/images/old_tv_home.png");
+
+  height: 100%; 
+
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }

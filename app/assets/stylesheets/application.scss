@@ -3,6 +3,42 @@
 @import "./rooms";
 @import "./home";
 
+
+.horitontal-warning {
+	visibility: hidden;
+}
+
+* {
+	padding: 0;
+	margin: 0;
+}
+
+canvas {
+	background: #000000;
+	display: block;
+	margin: 0 auto;
+	height: 60vh;
+	width: 80vh;
+}
+
+@media screen and (orientation:portrait) {
+	.horitontal-warning {
+		text-align: center;
+		visibility: visible;
+	}
+
+	canvas {
+		visibility: hidden;
+		height: 0vh;
+		width: 0vh;
+	}
+}
+
+
+.game-canvas {
+	padding-top: 5vh;
+}
+
 .acceptRequestGuild {
 	cursor: pointer;
 }
@@ -158,4 +194,223 @@
 
 .font20 {
 	font-size: 20px;
+}
+
+@import url(https://fonts.googleapis.com/css?family=Press+Start+2P);
+
+.atari {
+  font-family: 'press start 2p';
+  color: rgba(white, .9);
+  text-shadow: 0 .1em 0 #000;
+}
+
+.navbar-brand {
+	font-size: 20px !important;
+	color: lightgrey !important;
+}
+
+.navbar {
+	min-height:8vh !important;
+	padding-top:0.5vh !important; 
+	padding-bottom:0.5vh !important;
+	font-size: 20px !important;
+}
+
+.navbar-toggler-icon {
+	width: 2vw !important;
+	height: 4vh !important;
+}
+
+.dropdown-item {
+	color: lightgrey !important;
+	font-size: 20px !important;
+}
+	
+.dropdown-menu > a:hover {
+	background-color: rgb(32, 32, 32);
+}
+
+@keyframes color_anim {
+	from {
+		background-color: rgb(30, 130, 230);
+	}
+	to {
+		background-color: rgb(230, 30, 47);
+	}
+}
+
+@keyframes shadow_anim {
+	from {
+		text-shadow: 0 4px 0 darken(rgb(230, 30, 47), 9);
+	}
+	to {
+		text-shadow: 0 4px 0 darken(rgb(30, 130, 230), 9);
+	}
+}
+
+.page-title {
+	height: 92vh;
+	color: black !important;
+	padding-top: 20vh;
+	font-size: 60px;
+	text-align: center;
+	animation: color_anim 10s alternate infinite;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+.big-profile-picture {
+	width: 250px;
+	height: 180px;
+}
+
+@media (min-width: 950px) {
+	.navbar-expand-custom {
+	  flex-direction: row;
+	  flex-wrap: nowrap;
+	  justify-content: flex-start;
+	}
+	.navbar-expand-custom .navbar-nav {
+	  flex-direction: row;
+	}
+	.navbar-expand-custom .navbar-nav .nav-link {
+	  padding-right: .5rem;
+	  padding-left: .5rem;
+	}
+	.navbar-expand-custom .navbar-collapse {
+	  display: flex!important;
+	}
+	.navbar-expand-custom .navbar-toggler {
+	  display: none;
+	}
+	.navbar-expand-custom .navbar-nav .dropdown-menu {
+	  position:absolute;
+	}
+}
+
+@media screen and (max-height: 600px) {
+	.navbar-brand {
+		font-size: 10px !important;
+	}
+	
+	.navbar {
+		padding-top:0.25vh !important; 
+		padding-bottom:0.25vh !important;
+		font-size: 10px !important;
+	}
+	
+	.navbar-toggler-icon {
+		width: 1.5vw !important;
+		height: 3vh !important;
+	}
+	.dropdown-item {
+		font-size: 10px !important;
+	}
+
+	.page-title {
+		font-size: 40px;
+	}
+
+	@media (min-width: 520px) {
+		.navbar-expand-custom {
+		  flex-direction: row;
+		  flex-wrap: nowrap;
+		  justify-content: flex-start;
+		}
+		.navbar-expand-custom .navbar-nav {
+		  flex-direction: row;
+		}
+		.navbar-expand-custom .navbar-nav .nav-link {
+		  padding-right: .5rem;
+		  padding-left: .5rem;
+		}
+		.navbar-expand-custom .navbar-collapse {
+		  display: flex!important;
+		}
+		.navbar-expand-custom .navbar-toggler {
+		  display: none;
+		}
+		.navbar-expand-custom .navbar-nav .dropdown-menu {
+		  position:absolute;
+		}
+	}
+}
+
+@import url(https://fonts.googleapis.com/css?family=Lobster+Two:700italic);
+
+.fifties {
+  font-family: lobster two;
+  color: lightgray;
+}
+
+.shdw-anim {
+	animation: shadow_anim 10s alternate infinite;
+}
+
+@font-face {
+	font-family: 'Air Americana';    
+	src: url('/fonts/Air Americana.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+.profile-description {
+	margin: 0 auto;
+	text-align: center;
+}
+
+.user-name {
+	margin: 25px 0 16px;
+	text-align: center;
+}
+
+.clear {
+	clear: both;
+}
+
+.profile-align {
+	text-align: center;
+}
+
+.btn-group.special {
+	display: flex;
+}
+
+.special .btn {
+	flex: 1
+}
+
+.profile-page {
+	padding-top: 5vh;
+}
+
+.blk-text {
+	color: black;
+}
+
+.btn-rel {
+	font-size: 3vh;
+}
+
+.admin-title {
+	font-size: 50px;
+}
+
+.back-base {
+	background-color: rgb(228, 228, 228);
+}
+
+.list-group {
+	text-align: center !important;
+}
+
+.text-center {
+	text-align: center !important;
+}
+
+.atari-back {
+	background: rgb(0, 0, 0);
+	margin: 10px 0px 0px 0px !important;
+	padding: 20px 0px 0px 0px !important;
 }

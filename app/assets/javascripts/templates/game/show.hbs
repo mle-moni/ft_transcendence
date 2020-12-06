@@ -1,20 +1,11 @@
-<p>You are on the game page nb : {{ room_id }}</p>
 <div id="in_game_id" data-id="{{ room_id }}"></div>
-<style>
-    * {
-        padding: 0;
-        margin: 0;
-    }
 
-    canvas {
-        background: #013333;
-        display: block;
-        margin: 0 auto;
-    }
-</style>
+<div class="fifties blk-text text-center" id="UID"></div>
 
-<div id="UID"></div>
+<div class="game-canvas">
+    <canvas id="myCanvas" width="800" height="600"></canvas>
+</div>
 
-<canvas id="myCanvas" width="800" height="600"></canvas>
-
-<div class="btn"></div>
+<div class="horitontal-warning">
+    <p>Please turn your phone horizontaly or enlarge the window</p>
+</div>

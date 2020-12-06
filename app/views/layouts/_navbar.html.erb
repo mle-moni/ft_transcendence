@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-dark bg-dark atari navbar-expand-custom">
   <a class="navbar-brand" href="#">Transcendence</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span id="navbarToggler" class="navbar-toggler-icon"></span>
@@ -6,37 +6,46 @@
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul id="mainNavbar" class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="<%= @href %>"> <%= @name %></a>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <%= @name %>
+        </a>
+        <div class="dropdown-menu bg-dark" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="<%= @href %>">Your Profile</a>
+          <% if @superAdmin %>
+          <a class="dropdown-item" href="#admin">Admin</a>
+          <% end %>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" rel="nofollow" data-method="delete" href="/users/sign_out">Sign out</a>
+        </div>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#game">Game</a>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Game
+        </a>
+        <div class="dropdown-menu bg-dark" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="#game">Normal</a>
+          <a class="dropdown-item" href="#game_ranked">Ranked</a>
+        </div>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#game_ranked">Game Ranked</a>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Chat
+        </a>
+        <div class="dropdown-menu bg-dark" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="#room">Rooms</a>
+          <a class="dropdown-item" href="#messages">Private</a>
+        </div>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#room">Rooms</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#messages">Messages</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#profiles">Profiles</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#guilds">Guilds</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#friends">Friends</a>
-      </li>
-      <% if @superAdmin %>
-        <li class="nav-item">
-          <a class="nav-link" href="#admin">Admin</a>
-        </li>
-      <% end %>
-      <li class="nav-item">
-        <a class="nav-link" rel="nofollow" data-method="delete" href="/users/sign_out">Sign out</a>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Social
+        </a>
+        <div class="dropdown-menu bg-dark" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="#profiles">Profiles</a>
+          <a class="dropdown-item" href="#guilds">Guilds</a>
+          <a class="dropdown-item" href="#friends">Friends</a>
+        </div>
       </li>
     </ul>
   </div>
@@ -44,12 +53,13 @@
 
 <script>
 
-_.each(document.getElementById("mainNavbar").getElementsByTagName("a"), el => {
+
+_.each(document.getElementById("mainNavbar").getElementsByClassName("dropdown-item"), el => {
     el.onclick = () => {
-      if (innerWidth < 991) {
+      if (innerWidth < 950) {
         document.getElementById("navbarToggler").click();
       }
     }
 });
-  
+
 </script>
