@@ -1,6 +1,8 @@
-<br>{{#each guilds}}
-<p class="clickToCreateWar pointer">
-	&nbsp; • &nbsp;  {{name}}
-	<span class="nodisplay">{{id}}</span>
-</p>
-{{/each}}
+<ul class="list-group">
+	{{#each guilds}}
+		<li class="clickToCreateWar pointer list-group-item btn btn-primary blk-text atari sized-text">
+			⚔⚔ {{name}} ⚔⚔
+			<span class="nodisplay">{{id}}</span>
+		</li>
+	{{/each}}
+</ul>

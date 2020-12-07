@@ -209,6 +209,10 @@ canvas {
 	color: lightgrey !important;
 }
 
+.brand {
+	font-size: 40px !important;
+}
+
 .navbar {
 	min-height:8vh !important;
 	padding-top:0.5vh !important; 
@@ -271,6 +275,10 @@ canvas {
 	text-overflow: ellipsis;
 }
 
+.sized-text {
+	font-size: 40px !important;
+}
+
 @media (min-width: 950px) {
 	.navbar-expand-custom {
 	  flex-direction: row;
@@ -304,6 +312,10 @@ canvas {
 	.navbar-brand {
 		font-size: 10px !important;
 	}
+
+	.brand {
+		font-size: 20px !important;
+	}
 	
 	.navbar {
 		padding-top:0.25vh !important; 
@@ -327,6 +339,10 @@ canvas {
 		max-width: 70vw;
 		overflow: hidden;
 		text-overflow: ellipsis;
+	}
+
+	.sized-text {
+		font-size: 20px !important;
 	}
 
 	@media (min-width: 520px) {
@@ -434,6 +450,11 @@ canvas {
 
 .atari-back {
 	background: rgb(0, 0, 0);
-	margin: 10px 0px 0px 0px !important;
-	padding: 20px 0px 0px 0px !important;
+	margin: 10px 0px 0px 0px;
+	padding: 10px 20px 0px 20px;
+}
+
+.inp {
+	width: 80% !important;
+	margin-left: 10% !important;
 }
