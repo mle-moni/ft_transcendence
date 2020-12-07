@@ -27,11 +27,11 @@
 	<br>
 	<br>
 	<p class="sized-text">War start -> end</p>
-	<input class="inp2 sized-text-lg" type="datetime-local" id="dateStart" name="dateStart" required
+	<input class="inp2 sized-text-lg" placeholder="dd/mm/(yy)yy (hh:mm)" type="datetime-local" id="dateStart" name="dateStart" required
 	{{#if war.start}}
 		value="{{getDateValue war.start}}"
 	{{/if}}>
-	<input class="inp2 sized-text-lg" type="datetime-local" id="dateEnd" name="dateEnd" required
+	<input class="inp2 sized-text-lg" placeholder="dd/mm/(yy)yy (hh:mm)" type="datetime-local" id="dateEnd" name="dateEnd" required
 	{{#if war.end}}
 		value="{{getDateValue war.end}}"
 	{{/if}}>
@@ -47,7 +47,7 @@
 <form class="fifties blk-text" id="addWarTimeForm" method="POST">
 	<input type="hidden" name="authenticity_token" value="{{token}}">
 	<label class="sized-text" for="new_wt">Add new war time</label><br>
-	<input class="form-control sized-text-lg" type="datetime-local" id="new_wt" name="new_wt" required>
+	<input class="form-control sized-text-lg" placeholder="dd/mm/(yy)yy (hh:mm)" type="datetime-local" id="new_wt" name="new_wt" required>
 	<br>
 	<button class="btn btn-primary sized-text btn-block">Add</button>
 </form>

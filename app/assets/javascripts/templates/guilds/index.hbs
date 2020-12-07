@@ -1,25 +1,27 @@
 <div class="margin25Div">
 
 
-	<p style="font-size: 20px;"> <u> <strong> Guild Ladder </strong></u>  &nbsp; ⚛ </p>
+	<p class="fifties blk-text big-title text-center"> <u> <strong> Guild Ladder </strong></u>  &nbsp; ⚛ </p>
 
 	<br>
-	{{#each guilds}}
-	<div>
-		<h2> {{name}} </h2>
-		<p>{{points}} points &nbsp; Rank {{rank}}</p>
+	<ul class="list-group">
+		{{#each guilds}}
+		<li class="list-group-item">
+			<p class="fifties blk-text"> {{name}} </p>
+			<p class="atari atari-back" style="padding-bottom: 10px;">{{points}} points &nbsp; Rank {{rank}}</p>
 
-		<a style="font-size: 14px;" class="btn btn-primary" href="#guilds/{{id}}">[{{anagram}}] {{name}}</a>
+			<a style="font-size: 14px;" class="btn btn-primary btn-lg btn-block" href="#guilds/{{id}}">[{{anagram}}] {{name}}</a>
 
-	</div>
-	{{/each}}
+		</li>
+		{{/each}}
+	</ul>
 
 	<br>
 	<hr>
-	<br>
-	<a class="btn btn-success" href="#guilds/mine">My Guild</a>
-	<br><br>
-	<a class="btn btn-info" href="#">Home</a>
+	<div class="btn-group special" role="group">
+		<a class="btn btn-success" href="#guilds/mine">My Guild</a>
+		<a class="btn btn-info" href="#">Home</a>
+	</div>
 
 
 </div>

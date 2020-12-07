@@ -3,41 +3,44 @@
 
 
 {{#if guild }}
-	<div style="min-width: 100px; display: inline-block;">   Name </div> 
-		<p style="font-size: 20px; display: inline-block;">	: &nbsp; {{guild.name}} </p>
-		<br>
-	<div style="min-width: 100px;  display: inline-block;">   Anagram </div> 
-		<p style="font-size: 20px; display: inline-block;">	: &nbsp; {{guild.anagram}} </p>
-		<br>
-	<div style="min-width: 100px;  display: inline-block;">   Points </div>
-		<p style="font-size: 20px; display: inline-block;">	: &nbsp; {{guild.points}} </p>
-		<br>
 
-	<div>Users</div><br>
-	<ul>
+	<p class="fifties blk-text big-title text-center"><u></u>{{guild.name}} [{{guild.anagram}}]</p>
+
+	<div class="input-group">
+		<div class="input-group-prepend">
+			<span class="input-group-text atari atari-back">Points </span>
+		</div>
+		<p class="form-control atari atari-back text-center"> {{guild.points}} </p>
+	</div>
+	<hr>
+
+	<p class="fifties blk-text text-center big-title">Users</p>
+	<br>
+	<ul class="list-group">
 		{{#each guild.users}}
-		<li>
-			<a class="btn btn-outline-info btn-sm font20" href="#profiles/{{ id }}">{{ nickname }}</a>
+		<li class="list-group-item">
+			<img src="{{image}}" style="max-height: 50px;" class="clear">
+			<a class="btn btn-primary btn-sm font20" href="#profiles/{{ id }}">{{ nickname }}</a>
 
 			{{#if guild_owner}}
-			<b class="chip">Owner</b>
+			<sub><b class="">Owner </b></sub>
 			{{/if}}
 			{{#if guild_officer}}
-			<b class="chip">Officer</b>
+			<sub><b class="">Officer</b></sub>
 			{{/if}}
 		</li>
 		<br>
 		{{/each}}
 	</ul>
 
-	<br><hr><br>
-
 	{{#if officerRights}}
-	<p> <strong>Accept requests </strong></p>
-	<ul>
+	<br><hr><br>
+	<p class="fifties blk-text text-center big-title"> <strong>Accept requests </strong></p>
+	<ul class="list-group">
 		{{#each guild.requests}}
-		<li class="acceptRequestGuild">
-			{{nickname}}
+		<li class="acceptRequestGuild list-group-item">
+			<img src="{{image}}" style="max-height: 50px;" class="clear">
+			<a class="btn btn-primary btn-sm font20" href="#profiles/{{ id }}">{{ nickname }}</a>
 			<span class="nodisplay">{{id}}</span>
 		</li>
 		{{/each}}
@@ -46,10 +49,11 @@
 
 	<br><hr><br>
 
-	<h3>War history</h3>
+	<p class="fifties blk-text text-center big-title">War history</p>
 
+	<ul class="list-group">
 	{{#each wars}}
-		<article>
+		<article class="list-group-item">
 			<h4>
 				{{#if planning }}
 					This war is still being planned by guild owners
@@ -63,7 +67,7 @@
 					{{/if}}
 				{{/if}}
 			</h4>
-			<p> {{ you }} VS <a href="#guilds/{{ enemy.id }}">{{ enemy.name }}</a> </p>
+			<p class="atari atari-back"> {{ you }} VS <a href="#guilds/{{ enemy.id }}">{{ enemy.name }}</a> </p>
 			<p>
 				{{!-- {{#if won }}
 				{{ winner_score }} - {{ loser_score }}
@@ -71,21 +75,21 @@
 				{{ loser_score }} - {{ winner_score }}
 				{{/if}} --}}
 			</p>
-			<hr>
 		</article>
 	{{/each}}
+	</ul>
 
 	{{#if isInGuild}}
 	<form method="POST" id="quitGuildForm">
 		<input type="hidden" name="authenticity_token" value="{{token}}">
-		<input class="btn btn-danger" type="submit" value="Quit guild">
+		<input class="btn btn-danger btn-lg btn-block" type="submit" value="Quit guild">
 	</form>
 	<br>
 	{{else}}
 	<form method="POST" id="joinGuildForm">
 		<input type="hidden" name="authenticity_token" value="{{token}}">
 		<input type="hidden" name="id" value="{{guild.id}}">
-		<input class="btn btn-primary" type="submit" value="Send join request">
+		<input class="btn btn-primary btn-lg btn-block" type="submit" value="Send join request">
 	</form>
 	<br>
 	{{/if}}
@@ -94,28 +98,28 @@
 	<br><br>
 {{/if}}
 
-	{{#if owner }}
-	<a class="btn btn-info" href="#guilds/edit">Edit guild</a>
-	<br><br>
-	{{#if guild.active_war}}
-		{{#if guild.active_war.planning}}
-			<a class="btn btn-info" href="#guilds/{{guild.id}}/war">Edit war</a><br><br>
+	<div class="btn-group special">
+		{{#if owner }}
+		<a class="btn btn-info btn-lg" href="#guilds/edit">Edit guild</a>
+		<br><br>
+		{{#if guild.active_war}}
+			{{#if guild.active_war.planning}}
+				<a class="btn btn-info btn-lg" href="#guilds/{{guild.id}}/war">Edit war</a><br><br>
+			{{/if}}
+		{{else}}
+			<a class="btn btn-info btn-lg" href="#guilds/{{guild.id}}/war">Create new War</a><br><br>
 		{{/if}}
-	{{else}}
-		<a class="btn btn-info" href="#guilds/{{guild.id}}/war">Create new War</a><br><br>
-	{{/if}}
 
-	{{/if}}
+		{{/if}}
 
-	<a class="btn btn-success" href="#guilds">Guilds list</a>
-	<br><br>
-	<a class="btn btn-secondary" href="#">Home</a>
+		<a class="btn btn-success btn-lg" href="#guilds">Guilds list</a>
+		<a class="btn btn-secondary btn-lg" href="#">Home</a>
+	</div>
 	<br><br>
 	<form style="display: none;" method="POST" id="acceptRequestForm">
 		<input type="hidden" name="authenticity_token" value="{{token}}">
 		<input type="hidden" name="id" value="" id="acceptRequestIDField">
 		<input class="btn btn-success" type="submit" value="Send join request">
 	</form>
-
 
 </div>

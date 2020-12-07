@@ -1,38 +1,33 @@
 <div class="margin25Div">
 
-
-
-	<h3><u> {{titleText}}</u></h3><br>
+	<p class="fifties blk-text big-title text-center"><u> {{titleText}}</u></p>
+	<br>
 
 	<form id="{{formID}}" action="/api/guilds.json" accept-charset="UTF-8" method="{{method}}">
 		<input type="hidden" name="authenticity_token" value="{{token}}">
-		<label for="guildName">Guild name</label>
-		<input class="form-control-sm" type="text" id="guildName" value="{{guild.name}}" name="guild[name]">
+		<label class="fifties blk-text" for="guildName">Guild name</label>
+		<input class="form-control" type="text" id="guildName" value="{{guild.name}}" name="guild[name]">
 		<br>
-		<label for="guildName">Guild Anagram</label>
-		<input class="form-control-sm" type="text" id="guildAnagram" value="{{guild.anagram}}" name="guild[anagram]">
+		<label class="fifties blk-text" for="guildName">Guild Anagram</label>
+		<input class="form-control" type="text" id="guildAnagram" value="{{guild.anagram}}" name="guild[anagram]">
 		<br>
 		<br>
-		<input class="btn btn-success" type="submit" value="{{submitText}}">
+		<input class="fifties btn btn-success btn-lg btn-block" type="submit" value="{{submitText}}">
 		<br>
 	</form>
 
 	{{#if guild.name }}
+	<hr>
+	<button class="fifties btn btn-danger btn-lg btn-block" id="viewDelForm">Delete this guild</button>
 	<br>
-	<button class="btn btn-danger" id="viewDelForm">Delete this guild</button>
 	<br>
-	<br>
-	<form style="display: none;" id="guildDeleteForm" method="DELETE">
+	<form class="text-center" style="display: none;" id="guildDeleteForm" method="DELETE">
 		<input type="hidden" name="authenticity_token" value="{{token}}">
-		<label for="confirmGuildName">Confirm guild name</label>
+		<label class="fifties blk-text" for="confirmGuildName">Confirm guild name </label>
 		<input type="text" id="confirmGuildName">
-		<input class="btn btn-warning" type="submit" value="Confirm deletion">
+		<input class="fifties btn btn-danger" type="submit" value="Confirm deletion">
 	</form>
 	{{/if}}
-
-	<br>
-	<a class="btn btn-info" href="#">Home</a>
-
 </div>
 
 

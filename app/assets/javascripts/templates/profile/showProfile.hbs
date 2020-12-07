@@ -1,72 +1,75 @@
-<div class="margin25Div">
+<div class="margin25Div text-center">
 
 
 
 	{{#if user}}
-
-	<h3>
+	<p class="fifties blk-text big-title">
 		<u>
 			{{user.nickname}}
-
 		</u>
-
-	</h3>
-	<br>
+	</p>
 	<br>
 	<img src="{{user.image}}" style="max-height: 200px;">
-	<br>
-	<u>
-		<h3>Elo</h3>
-	</u>
-	<p>
-		<b>{{user.elo}}</b> points
-		<h3>
-			<br>
-			<u>
-				Guild
-			</u>
-		</h3>
-		{{#if guild}}
-		<br>
-		<a class="btn btn-success" href="#guilds/{{guild.id}}">{{guild.name}}</a>
-		{{else}}
-		This user has no guild
-		{{/if}}
-		<br>
-		<br>
+	<hr>
+	
+	<p class="fifties blk-text big-title">
+		<u>
+			ELO
+		</u>
+	</p>
+	<p class="atari atari-back sized-text" style="padding-bottom: 10px;"> <b style="color: gold;">{{user.elo}}</b> points</p>
+	
+	<hr>
 
-		 <u><h3>Game history</h3> </u>
+	<p class="fifties blk-text big-title">
+		<u>
+			Guild
+		</u>
+	</p>
+	{{#if guild}}
+	<br>
+	<a class="btn btn-success btn-lg btn-block fifties sized-text" href="#guilds/{{guild.id}}">{{guild.name}}</a>
+	{{else}}
+	<p class="fifties blk-text sized-text">This user has no guild</p>
+	{{/if}}
+	<br>
+
+	<hr>
+	<p class="fifties blk-text big-title">
+		<u>
+			Game history
+		</u>
+	</p>
+	<ul class="list-group">
 		{{#each matches}}
-		<article>
+		<li class="list-group-item">
 			<h4>
 				{{#if won }}
-				Victory
+				🎉🎉 Victory 🎉🎉
 				{{else}}
-				Defeat
+				Defeat 🤧
 				{{/if}}
 			</h4>
 			<h6>{{ dateStr }}</h6>
 			<p> {{ you }} VS <a href="#profiles/{{ enemy.id }}">{{ enemy.nickname }}</a> </p>
-			<p>
+			<p class="atari atari-back">
 				{{#if won }}
 				{{ winner_score }} - {{ loser_score }}
 				{{else}}
 				{{ loser_score }} - {{ winner_score }}
 				{{/if}}
 			</p>
-			<hr>
-		</article>
+		</li>
 		{{/each}}
-		<br>
-		{{else}}
-		<h1>This user does not seem to exist</h1>
-		<br>
-		{{/if}}
-		<br>
-		<br>
+	</ul>
+	<hr>
+	{{else}}
+	<p class="fifties blk-text big-title">This user does not seem to exist</p>
+	<br>
+	{{/if}}
+	<br>
+	<div class="btn-group special">
 		<a class="btn btn-primary" href="#profiles">Users list</a>
-		<br>
-		<br>
 		<a class="btn btn-info" href="#">Home</a>
-
+	</div>
 </div>
