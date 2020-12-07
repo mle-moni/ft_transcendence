@@ -265,6 +265,12 @@ canvas {
 	height: 180px;
 }
 
+.dropdown-toggle {
+	max-width: 70vw;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
 @media (min-width: 950px) {
 	.navbar-expand-custom {
 	  flex-direction: row;
@@ -286,6 +292,11 @@ canvas {
 	}
 	.navbar-expand-custom .navbar-nav .dropdown-menu {
 	  position:absolute;
+	}
+	.dropdown-toggle {
+		max-width: 22vw;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 }
 
@@ -312,6 +323,12 @@ canvas {
 		font-size: 40px;
 	}
 
+	.dropdown-toggle {
+		max-width: 70vw;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
 	@media (min-width: 520px) {
 		.navbar-expand-custom {
 		  flex-direction: row;
@@ -333,6 +350,12 @@ canvas {
 		}
 		.navbar-expand-custom .navbar-nav .dropdown-menu {
 		  position:absolute;
+		}
+
+		.dropdown-toggle {
+			max-width: 22vw;
+			overflow: hidden;
+			text-overflow: ellipsis;
 		}
 	}
 }
