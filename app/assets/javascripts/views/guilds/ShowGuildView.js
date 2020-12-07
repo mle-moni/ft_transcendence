@@ -81,6 +81,10 @@ AppClasses.Views.ShowGuild = class extends Backbone.View {
 					war.running = guildJSON.active_war.running;
 				}
 				const enemyID = war.guild1_id == guildJSON.id ? war.guild2_id : war.guild1_id;
+				war.response_needed = false;
+				if (war.match_request_guild == enemyID) {
+					war.response_needed = true;
+				}
 				const enemyGuild = this.model.findWhere({id: enemyID});
 				const enemyJSON = enemyGuild ? enemyGuild.toJSON() : null;
 				war.not_started = warNotEnded && war.validated == war.guild1_id + war.guild2_id;
@@ -102,6 +106,9 @@ AppClasses.Views.ShowGuild = class extends Backbone.View {
 				war.date = new Date(war.created_at);
 				war.rawDate = war.date.valueOf();
 				war.user_is_in_guild = App.models.user.isInGuild(this.guild);
+				if (war.winner == -1) {
+					war.draw = true;
+				}
 				return war;
 			});
 		}

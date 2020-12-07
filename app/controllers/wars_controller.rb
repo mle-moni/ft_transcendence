@@ -93,10 +93,51 @@ class WarsController < ApplicationController
 		return res_with_error("You need to be in a guild", :bad_request) unless guild
 		war = guild.active_war
 		return res_with_error("You need to be in war time", :bad_request) unless war && war.war_time?
+		
+		return res_with_error("There is already a match", :bad_request) if war.war_time_match
+		if war.match_request_guild != 0
+			return res_with_error("Only one match request at a time", :bad_request) if war.match_request_guild == guild.id
+			return accept_match(war, guild)
+		end
+		
+		war.match_request_usr = current_user.id
+		war.match_request_guild = guild.id
+		war.save
+
+		Thread.new do
+			war_id = war.id
+			match_count = war.match_count
+			sleep 10
+			war = War.find(war_id)
+			if match_count == war.match_count
+				guild = Guild.find(war.match_request_guild)
+				if guild
+					war.add_points(guild, 5)
+					war.match_request_usr = 0
+					war.match_request_guild = 0
+					war.save
+					war.inc_refused_matches(war.get_enemy_guild_id(guild.id))
+				end
+			end
+		end
+
 		success("Coucou")
 	end
 
 	private
+
+	def accept_match(war, guild)
+		player1 = User.find(war.match_request_usr)
+		return res_with_error("User not found", :not_found) unless player1
+		player2 = current_user
+		war.match_request_usr = 0
+		war.match_request_guild = 0
+		war.war_time_match = true
+		war.match_count += 1
+		war.save
+		# TODO launch the match
+		return success("Match accepted")
+	end
 
 	def set_war
 		@war = current_user.guild.active_war
@@ -192,6 +233,7 @@ class WarsController < ApplicationController
 			format.html { redirect_to "/", notice: msg }
 			format.json { render json: {msg: msg}, status: :ok }
 		end
+		return true
 	end
 
 end

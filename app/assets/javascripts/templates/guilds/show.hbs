@@ -67,6 +67,8 @@
 				{{else}}
 					{{#if won }}
 					Victory
+					{{else if draw}}
+					Draw
 					{{else}}
 					Defeat
 					{{/if}}
@@ -86,7 +88,25 @@
 			{{#if user_is_in_guild}}
 				{{#if in_war_time}}
 					<br>
-					<button id="warTimeFightRequest" class="btn btn-primary">Request war time fight</button>
+					{{#if war_time_match}}
+						<button class="btn btn-warning">War time match in progress</button>
+					{{else}}
+						{{#if response_needed}}
+							<button id="warTimeFightRequest" class="btn btn-danger">
+								Respond to fight request
+							</button>
+						{{else}}
+							{{#if match_request_guild}}
+								<button class="btn btn-warning">
+									Waiting other guild response
+								</button>
+							{{else}}
+								<button id="warTimeFightRequest" class="btn btn-primary">
+									Request war time fight
+								</button>
+							{{/if}}
+						{{/if}}
+					{{/if}}
 				{{/if}}
 			{{/if}}
 			<hr>

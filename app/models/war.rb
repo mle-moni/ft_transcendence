@@ -96,6 +96,32 @@ class War < ApplicationRecord
     return war.running?
   end
 
+  def get_enemy_guild_id(g_id)
+    if guild1_id == g_id
+      return guild2_id
+    else
+      return guild1_id
+    end
+  end
+
+  def check_refused_matches
+    # if g1_refused_matches >= max_refused_matches
+    #   # TODO
+    # elsif g2_refused_matches >= max_refused_matches
+
+    # end
+  end
+
+  def inc_refused_matches(g_id)
+    if guild1_id == g_id
+      self.g1_refused_matches += 1
+    else
+      self.g2_refused_matches += 1
+    end
+    save
+    check_refused_matches
+  end
+
   def add_points(guild, points)
     if guild1_id == guild.id
       self.g1_score += points

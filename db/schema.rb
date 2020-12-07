@@ -210,7 +210,7 @@ ActiveRecord::Schema.define(version: 2020_12_07_134600) do
     t.bigint "match_request_guild", default: 0
     t.integer "g1_refused_matches", default: 0
     t.integer "g2_refused_matches", default: 0
-    t.integer "max_refused_matches", default: 0
+    t.integer "max_refused_matches", default: 100
     t.index ["guild1_id"], name: "index_wars_on_guild1_id"
     t.index ["guild2_id"], name: "index_wars_on_guild2_id"
   end
