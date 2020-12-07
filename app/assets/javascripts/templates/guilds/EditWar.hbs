@@ -2,9 +2,9 @@
 
 <form class="fifties blk-text" id="updateWarForm" method="POST">
 	<input type="hidden" name="authenticity_token" value="{{token}}">
-
+	
 	<label class="sized-text" for="prize">Prize for the war</label>
-	<input class="form-control sized-text-lg" type="number" id="prize" name="prize" min="0" required
+	<input class="form-control sized-text-lg" type="number" id="prize" name="prize" min="1" required
 	{{#if war.prize}}
 		value="{{war.prize}}"
 	{{/if}}>

@@ -1,6 +1,6 @@
 class WarsController < ApplicationController
 	before_action :connect_user
-	before_action :guild_owner?
+	before_action :guild_owner?, except: [:match_request]
 	before_action :set_foe, only: [:create]
 	before_action :set_war, only: [:delete, :update, :validate, :create_war_time, :delete_war_time]
 	before_action :set_update_params, only: [:update]
@@ -86,6 +86,14 @@ class WarsController < ApplicationController
 			return res_with_error("Could not destroy war time", :unprocessable_entity)
 		end
 		success("War time destroyed")
+	end
+
+	def match_request
+		guild = current_user.guild
+		return res_with_error("You need to be in a guild", :bad_request) unless guild
+		war = guild.active_war
+		return res_with_error("You need to be in war time", :bad_request) unless war && war.war_time?
+		success("Coucou")
 	end
 
 	private

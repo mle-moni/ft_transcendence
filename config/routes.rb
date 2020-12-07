@@ -15,6 +15,7 @@ Rails.application.routes.draw do
     post '/wars/update', to: 'wars#update'
     post '/wars/create_war_time', to: 'wars#create_war_time'
     post '/wars/delete_war_time', to: 'wars#delete_war_time'
+    post '/wars/match_request', to: 'wars#match_request'
 
     # CHAT & DMS ------
     resources :rooms do 
