@@ -3,15 +3,13 @@
 
 // You can assign callbacks to the request, see at the bottom of this page
 
-App.utils.formAjax = function(targetUrl, formStrQuery, progressStrQuery = null) {
+App.utils.formAjax = function(targetUrl, formStrQuery) {
 
 	const req = $.ajax({
 		// Your server script to process the upload
 		url: targetUrl,
 		type: $(formStrQuery).attr("method") || "GET",
 
-		
-	
 		// Form data
 		data: new FormData($(formStrQuery)[0]),
 	
@@ -20,23 +18,6 @@ App.utils.formAjax = function(targetUrl, formStrQuery, progressStrQuery = null) 
 		cache: false,
 		contentType: false,
 		processData: false,
-	
-		// Custom XMLHttpRequest
-		xhr: function () {
-			var myXhr = $.ajaxSettings.xhr();
-			if (myXhr.upload && progressStrQuery) {
-				// For handling the progress of the upload
-				myXhr.upload.addEventListener('progress', function (e) {
-					if (e.lengthComputable) {
-						$(progressStrQuery).attr({
-							value: e.loaded,
-							max: e.total,
-						});
-					}
-				}, false);
-			}
-			return myXhr;
-		}
 	});
 	return (req);
 }

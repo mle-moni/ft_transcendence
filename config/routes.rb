@@ -9,9 +9,12 @@ Rails.application.routes.draw do
     post '/guild/join', to: 'guilds#join'
     post '/guild/quit', to: 'guilds#quit'
     post '/guild/accept', to: 'guilds#accept_request'
-    post '/wars/create', to: 'wars#create_war'
-    post '/wars/delete', to: 'wars#delete_war'
-    post '/wars/validate', to: 'wars#validate_war'
+    post '/wars/create', to: 'wars#create'
+    post '/wars/delete', to: 'wars#delete'
+    post '/wars/validate', to: 'wars#validate'
+    post '/wars/update', to: 'wars#update'
+    post '/wars/create_war_time', to: 'wars#create_war_time'
+    post '/wars/delete_war_time', to: 'wars#delete_war_time'
 
     # CHAT & DMS ------
     resources :rooms do 

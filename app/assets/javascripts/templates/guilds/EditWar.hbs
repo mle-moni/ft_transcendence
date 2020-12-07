@@ -1,5 +1,78 @@
-<h4 id="cancelActiveWar" class="pointer">Cancel war</h4>
-<h4 id="validateActiveWar" class="pointer">Validate war</h4>
+<h2>Edit war</h2>
+
+<form id="updateWarForm" method="POST">
+	<input type="hidden" name="authenticity_token" value="{{token}}">
+
+	<label for="prize">Prize for the war</label>
+	<input type="number" id="prize" name="prize" min="0" required
+	{{#if war.prize}}
+		value="{{war.prize}}"
+	{{/if}}>
+
+	<br>
+
+	<label for="war_time_len">War times duration</label>
+	<input type="number" id="war_time_len" name="war_time_len" min="0" required
+	{{#if war.prize}}
+		value="{{war.war_time_len}}"
+	{{/if}}>
+
+	<p>Matches that counts for this war</p>
+	<input type="checkbox" id="ladderBool" name="ladderBool" {{#if war.ladder}}checked{{/if}}>
+	<label for="ladderBool">Ladder</label>
+	<input type="checkbox" id="tournamentBool" name="tournamentBool" {{#if war.tournament}}checked{{/if}}>
+	<label for="tournamentBool">Tournament</label>
+	<input type="checkbox" id="duelBool" name="duelBool" {{#if war.duel}}checked{{/if}}>
+	<label for="duelBool">Duel</label>
+
+	<p>When does the war start?</p>
+	<input type="datetime-local" id="dateStart" name="dateStart" required
+	{{#if war.start}}
+		value="{{getDateValue war.start}}"
+	{{/if}}>
+	<br>
+	<br>
+	<p>When does the war end?</p>
+	<input type="datetime-local" id="dateEnd" name="dateEnd" required
+	{{#if war.end}}
+		value="{{getDateValue war.end}}"
+	{{/if}}>
+
+	<br>
+	<br>
+
+	<button class="btn btn-primary">Update war</button>
+</form>
+
+<br>
+
+<form id="addWarTimeForm" method="POST">
+	<input type="hidden" name="authenticity_token" value="{{token}}">
+	<label for="new_wt">Add new war time</label><br>
+	<input type="datetime-local" id="new_wt" name="new_wt" required>
+	<button class="btn btn-primary">Add war time</button>
+</form>
+
+<br>
+<hr>
+
+<h3>War times</h3>
+{{#each war.war_times }}
+	<input type="datetime-local" value="{{getDateValue start}}" readonly>
+	<span class="clickToDeleteWarTime pointer">
+		DELETE
+		<span class="nodisplay">{{id}}</span>
+	</span>
+	<br>
+{{/each}}
+
+<hr>
+<br>
+
+<button id="cancelActiveWar" class="btn btn-danger">Cancel war</button>
+{{#unless validatedByYou }}
+	<button id="validateActiveWar" class="btn btn-success">Validate war</button>
+{{/unless}}
 
 <form style="display: none;" id="deleteWarForm" method="POST">
 	<input type="hidden" name="authenticity_token" value="{{token}}">
@@ -7,4 +80,9 @@
 
 <form style="display: none;" id="validateWarForm" method="POST">
 	<input type="hidden" name="authenticity_token" value="{{token}}">
+</form>
+
+<form style="display: none;" id="deleteWarTimeForm" method="POST">
+	<input type="hidden" name="authenticity_token" value="{{token}}">
+	<input type="text" name="id" id="warTimeIDField">
 </form>
