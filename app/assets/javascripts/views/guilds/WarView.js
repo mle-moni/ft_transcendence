@@ -20,7 +20,7 @@ AppClasses.Views.War = class extends AppClasses.Views.AbstractView {
 		});
 	}
 	inputChanged(e) {
-		let regexp = new RegExp(_.escape($("#searchGuild")[0].value, "gi"));
+		let regexp = new RegExp(_.escape($("#searchGuild")[0].value.toLowerCase(), "gi"));
 		const elem = $("#userInputGuilds");
 		let search = _.filter(App.collections.guilds.toJSON(), obj => {
 			return (regexp.test(obj.name.toLowerCase()));

@@ -41,7 +41,7 @@ AppClasses.Views.Friends = class extends Backbone.View {
 		this.friendAction(e, "/api/friends/add.json", "Request sent");
 	}
 	inputChanged(e) {
-		let regexp = new RegExp(_.escape($("#addFriend")[0].value, "gi"));
+		let regexp = new RegExp(_.escape($("#addFriend")[0].value.toLowerCase(), "gi"));
 		const elem = $("#userInputFriends");
 		let search = _.filter(App.collections.allUsers.toJSON(), obj => {
 			return (regexp.test(obj.nickname.toLowerCase()));
