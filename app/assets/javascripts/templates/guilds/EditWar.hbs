@@ -1,78 +1,82 @@
-<h2>Edit war</h2>
+<p class="fifties blk-text big-title text-center">Edit war</p>
 
-<form id="updateWarForm" method="POST">
+<form class="fifties blk-text" id="updateWarForm" method="POST">
 	<input type="hidden" name="authenticity_token" value="{{token}}">
 
-	<label for="prize">Prize for the war</label>
-	<input type="number" id="prize" name="prize" min="0" required
+	<label class="sized-text" for="prize">Prize for the war</label>
+	<input class="form-control sized-text-lg" type="number" id="prize" name="prize" min="0" required
 	{{#if war.prize}}
 		value="{{war.prize}}"
 	{{/if}}>
-
 	<br>
-
-	<label for="war_time_len">War times duration</label>
-	<input type="number" id="war_time_len" name="war_time_len" min="0" required
+	<label class="sized-text" for="war_time_len">War times duration (in second) </label>
+	<input class="form-control sized-text-lg" type="number" id="war_time_len" name="war_time_len" min="0" required
 	{{#if war.prize}}
 		value="{{war.war_time_len}}"
 	{{/if}}>
+	<br>
+	<p class="sized-text">Matches that counts for this war</p>
+	<div class="atari-back atari text-center sized-text-md" style="padding-left: 5%;">
+		<input class="check" type="checkbox" id="ladderBool" name="ladderBool" {{#if war.ladder}}checked{{/if}}>
+		<label for="ladderBool">Ladder</label>
+		<input class="check" type="checkbox" id="tournamentBool" name="tournamentBool" {{#if war.tournament}}checked{{/if}}>
+		<label for="tournamentBool">Tournament</label>
+		<input class="check" type="checkbox" id="duelBool" name="duelBool" {{#if war.duel}}checked{{/if}}>
+		<label for="duelBool">Duel</label>
+	</div>
+	<br>
+	<br>
+	<p class="sized-text">War start -> end</p>
 
-	<p>Matches that counts for this war</p>
-	<input type="checkbox" id="ladderBool" name="ladderBool" {{#if war.ladder}}checked{{/if}}>
-	<label for="ladderBool">Ladder</label>
-	<input type="checkbox" id="tournamentBool" name="tournamentBool" {{#if war.tournament}}checked{{/if}}>
-	<label for="tournamentBool">Tournament</label>
-	<input type="checkbox" id="duelBool" name="duelBool" {{#if war.duel}}checked{{/if}}>
-	<label for="duelBool">Duel</label>
-
-	<p>When does the war start?</p>
-	<input type="datetime-local" id="dateStart" name="dateStart" required
+	<input class="inp2 sized-text-lg" placeholder="dd/mm/(yy)yy (hh:mm)" type="datetime-local" id="dateStart" name="dateStart" required
 	{{#if war.start}}
 		value="{{getDateValue war.start}}"
 	{{/if}}>
-	<br>
-	<br>
-	<p>When does the war end?</p>
-	<input type="datetime-local" id="dateEnd" name="dateEnd" required
+	<input class="inp2 sized-text-lg" placeholder="dd/mm/(yy)yy (hh:mm)" type="datetime-local" id="dateEnd" name="dateEnd" required
 	{{#if war.end}}
 		value="{{getDateValue war.end}}"
 	{{/if}}>
-
 	<br>
 	<br>
-
-	<button class="btn btn-primary">Update war</button>
+	<button class="btn btn-primary btn-lg btn-block">Update war</button>
 </form>
+
+<hr>
 
 <br>
 
-<form id="addWarTimeForm" method="POST">
+<form class="fifties blk-text" id="addWarTimeForm" method="POST">
 	<input type="hidden" name="authenticity_token" value="{{token}}">
-	<label for="new_wt">Add new war time</label><br>
-	<input type="datetime-local" id="new_wt" name="new_wt" required>
-	<button class="btn btn-primary">Add war time</button>
+	<label class="sized-text" for="new_wt">Add new war time</label><br>
+	<input class="form-control sized-text-lg" placeholder="dd/mm/(yy)yy (hh:mm)" type="datetime-local" id="new_wt" name="new_wt" required>
+	<br>
+	<button class="btn btn-primary sized-text btn-block">Add</button>
 </form>
 
 <br>
-<hr>
 
-<h3>War times</h3>
-{{#each war.war_times }}
-	<input type="datetime-local" value="{{getDateValue start}}" readonly>
-	<span class="clickToDeleteWarTime pointer">
-		DELETE
-		<span class="nodisplay">{{id}}</span>
-	</span>
-	<br>
-{{/each}}
+<p class="fifties sized-text-lg blk-text">War times</p>
+<ul class="list-group">
+	{{#each war.war_times }}
+		<li class="list-group-item" style="text-align: left !important;">
+			<input class="inp2" type="datetime-local" value="{{getDateValue start}}" readonly>
+			<span class="clickToDeleteWarTime pointer btn btn-danger btn-sm">
+				DELETE
+				<span class="nodisplay">{{id}}</span>
+			</span>
+		</li>
+	{{/each}}
+</ul>
 
-<hr>
+<br>
 <br>
 
-<button id="cancelActiveWar" class="btn btn-danger">Cancel war</button>
-{{#unless validatedByYou }}
-	<button id="validateActiveWar" class="btn btn-success">Validate war</button>
-{{/unless}}
+<div class="btn-group special">
+	<button id="cancelActiveWar" class="btn btn-danger">Cancel war</button>
+	{{#unless validatedByYou }}
+		<button id="validateActiveWar" class="btn btn-success">Validate war</button>
+	{{/unless}}
+</div>
 
 <form style="display: none;" id="deleteWarForm" method="POST">
 	<input type="hidden" name="authenticity_token" value="{{token}}">

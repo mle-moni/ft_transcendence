@@ -80,7 +80,7 @@ AppClasses.Views.War = class extends AppClasses.Views.AbstractView {
 				token: $('meta[name="csrf-token"]').attr('content')
 			}));
 		} else if (war.validated == war.guild1_id + war.guild2_id) {
-			this.$el.html("War is already confirmed");
+			this.$el.html("<p class=\"text-center big-title fifties blk-text\">War is already confirmed</p>");
 		} else {
 			let validatedByYou = war.validated == guildJSON.id;
 			this.$el.html(App.templates["guilds/EditWar"]({
