@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_07_134600) do
+ActiveRecord::Schema.define(version: 2020_12_08_153836) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -191,7 +191,7 @@ ActiveRecord::Schema.define(version: 2020_12_07_134600) do
     t.datetime "end"
     t.integer "prize", default: 0
     t.boolean "mods", default: false
-    t.integer "time_to_answer", default: 5
+    t.integer "time_to_answer", default: 30
     t.boolean "ladder", default: false
     t.boolean "tournament", default: false
     t.boolean "duel", default: false

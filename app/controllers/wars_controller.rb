@@ -45,6 +45,8 @@ class WarsController < ApplicationController
 
 	def update
 		@war.prize = @prize
+		@war.time_to_answer = @time_to_answer
+		@war.max_refused_matches = @max_refused_matches
 		@war.start = @dateStart
 		@war.end = @dateEnd
 		@war.ladder = @ladderBool
@@ -107,7 +109,7 @@ class WarsController < ApplicationController
 		Thread.new do
 			war_id = war.id
 			match_count = war.match_count
-			sleep 10
+			sleep war.time_to_answer
 			war = War.find(war_id)
 			if match_count == war.match_count
 				guild = Guild.find(war.match_request_guild)
@@ -150,28 +152,39 @@ class WarsController < ApplicationController
 		end
 	end
 
+	def parse_int_param(raw, min, param_name)
+		parsed = Integer(raw) rescue nil
+		if parsed == nil || parsed < min
+			res_with_error("#{param_name} must be a number >= #{min}", :bad_request)
+			return nil
+		end
+		return parsed
+	end
+
+	def all_params_are_present
+		return false unless params[:prize] && params[:dateStart]
+		return false unless params[:dateEnd] && params[:war_time_len]
+		return false unless params[:max_refused_matches] && params[:time_to_answer]
+		return true
+	end
+
 	def set_update_params
-		unless params[:prize] && params[:dateStart] && params[:dateEnd] && params[:war_time_len]
-			res_with_error("Some fields are missing from your request", :bad_request)
-			return false
+		unless all_params_are_present
+			return res_with_error("Some fields are missing from your request", :bad_request)
 		end
-		@prize = Integer(params[:prize]) rescue nil
-		if (!@prize || @prize < 0) 
-			res_with_error("Prize must be a positive number", :bad_request)
-			return false
-		end
-		@war_time_len = Integer(params[:war_time_len]) rescue nil
-		if (!@war_time_len || @war_time_len < 2)
-			res_with_error("War time duration must be a number >= 2", :bad_request)
-			return false
-		end
+		@prize = parse_int_param(params[:prize], 1, "Prize")
+		return false if @prize == nil
+		@war_time_len = parse_int_param(params[:war_time_len], 2, "War time duration")
+		return false if @war_time_len == nil
+		@max_refused_matches = parse_int_param(params[:max_refused_matches], 1, "Max refused matches")
+		return false if @max_refused_matches == nil
+		@time_to_answer = parse_int_param(params[:time_to_answer], 5, "Time to answer matches")
+		return false if @time_to_answer == nil
+		
 		@dateStart = DateTime.parse(params[:dateStart] + "+01:00") rescue nil
 		@dateEnd = DateTime.parse(params[:dateEnd] + "+01:00") rescue nil
 		check_ret = check_dates(@dateStart, @dateEnd)
-		unless check_ret == ""
-			res_with_error(check_ret, :bad_request)
-			return false
-		end
+		return res_with_error(check_ret, :bad_request) unless check_ret == ""
 		set_game_modes()
 	end
 
