@@ -121,18 +121,6 @@ canvas {
 					background-color: rgb(247, 247, 247);
 				}
 			}
-	
-			.ownMessage {
-				vertical-align: middle;
-				text-align: right;
-
-				.message {
-					vertical-align: middle;
-					background-color: rgb(24, 119, 242);
-					color:azure;
-				}
-			}
-	
 		}
 	}
 }
@@ -283,6 +271,10 @@ canvas {
 	text-overflow: ellipsis;
 }
 
+.big-title {
+	font-size: 50px;
+}
+
 
 @media (max-width: 715px) {
 	.text-maxwidth-sm {
@@ -365,6 +357,9 @@ canvas {
 		font-size: 25px !important;
 	}
 
+	.big-title {
+		font-size: 20px;
+	}
 
 	@media (min-width: 520px) {
 		.navbar-expand-custom {
@@ -453,10 +448,6 @@ canvas {
 	font-size: 3vh;
 }
 
-.big-title {
-	font-size: 50px;
-}
-
 .back-base {
 	background-color: rgb(228, 228, 228);
 }
@@ -487,4 +478,55 @@ canvas {
 
 label + .check {
     margin-left: 5%;
+}
+
+#list-message-out {
+	height: 45vh;
+    width: 100%;
+    overflow: hidden;
+}
+
+#list-message-in {
+	height: 45vh;
+    width: 100%;
+    overflow: auto;
+}
+
+#list-user-out {
+	height: 80vh;
+    overflow: hidden;
+}
+
+.list-user {
+	height: 50vh;
+    overflow: auto;
+}
+
+#list-user-in {
+	height: 80vh;
+    overflow: auto;
+}
+
+.dont-break-out {
+
+	/* These are technically the same, but use both */
+	overflow-wrap: break-word;
+	word-wrap: break-word;
+  
+	-ms-word-break: break-all;
+	/* This is the dangerous one in WebKit, as it breaks things wherever */
+	word-break: break-all;
+	/* Instead use this non-standard one: */
+	word-break: break-word;
+  
+	/* Adds a hyphen where the word breaks, if supported (No Blink) */
+	-ms-hyphens: auto;
+	-moz-hyphens: auto;
+	-webkit-hyphens: auto;
+	hyphens: auto;
+  
+}
+
+.list-group-item {
+	border-radius: 20px !important;
 }
