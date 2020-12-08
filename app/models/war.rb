@@ -21,27 +21,33 @@ class War < ApplicationRecord
     return start < now && now < self.end
   end
 
+  def end_war(winner_id)
+    self.winner = winner_id
+    save
+    if guild1_id == winner_id
+      self.guild1.points += prize
+      self.guild2.points -= prize
+    else
+      self.guild2.points += prize
+      self.guild1.points -= prize
+    end
+    self.guild1.save
+    self.guild2.save
+  end
+
   def end_if_needed
     return false unless confirmed?
     return false unless winner == 0
     now = DateTime.parse(Time.current.to_s)
     return false unless start < now && now > self.end
     if g1_score > g2_score
-      self.winner = guild1_id
-      self.guild1.points += prize
-      self.guild2.points -= prize
+      end_war(guild1_id)
     elsif g2_score > g1_score
-      self.winner = guild2_id
-      self.guild2.points += prize
-      self.guild1.points -= prize
+      end_war(guild2_id)
     else
       self.winner = -1
+      save
     end
-    if self.winner != -1
-      self.guild1.save
-      self.guild2.save
-    end
-    save
     return true
   end
 
@@ -105,11 +111,11 @@ class War < ApplicationRecord
   end
 
   def check_refused_matches
-    # if g1_refused_matches >= max_refused_matches
-    #   # TODO
-    # elsif g2_refused_matches >= max_refused_matches
-
-    # end
+    if g1_refused_matches >= max_refused_matches
+      end_war(guild2_id)
+    elsif g2_refused_matches >= max_refused_matches
+      end_war(guild1_id)
+    end
   end
 
   def inc_refused_matches(g_id)
@@ -139,6 +145,10 @@ class War < ApplicationRecord
       if war.ladder
         war.add_points(winner.guild, 1)
       end
+    when "war_time_match"
+      war.add_points(winner.guild, 2)
+      war.war_time_match = false
+      war.save
     else
       return false
     end

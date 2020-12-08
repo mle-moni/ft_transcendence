@@ -135,7 +135,7 @@ class WarsController < ApplicationController
 		war.war_time_match = true
 		war.match_count += 1
 		war.save
-		# TODO launch the match
+    	Game.start(player1.email, player2.email, "war_time_match")
 		return success("Match accepted")
 	end
 
