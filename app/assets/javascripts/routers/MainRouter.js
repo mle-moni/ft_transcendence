@@ -4,7 +4,6 @@ AppClasses.Routers.Main = class extends AppClasses.Routers.AbstractRouter {
 		// routes
 		this.route("*path", "default"); // default route (404)
 		this.route("", "index");
-		this.route("salut/:name", "salut");
 
 		// profile routes
 		App.routers.profile = new AppClasses.Routers.Profile();
@@ -21,6 +20,8 @@ AppClasses.Routers.Main = class extends AppClasses.Routers.AbstractRouter {
 		App.routers.friends = new AppClasses.Routers.FriendsRouter();
 		// admin routes
 		App.routers.admin = new AppClasses.Routers.AdminRouter();
+		// tournaments routes
+		App.routers.tournament = new AppClasses.Routers.TournamentRouter();
 
 		// create all models needed by multiple routes
 		this.models.user = new AppClasses.Models.User(App.data.user);
@@ -41,9 +42,6 @@ AppClasses.Routers.Main = class extends AppClasses.Routers.AbstractRouter {
 	}
 	index() {
 		this.basicView("home", "Home", {model: this.models.user});
-	}
-	salut(name) {
-		this.mainDiv.html(`salut ${name}`);
 	}
 	default() {
 		this.mainDiv.html(`Page not found, <a href="#">return to home page</a>`)
