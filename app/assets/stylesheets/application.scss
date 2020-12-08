@@ -86,22 +86,6 @@ canvas {
 		border: 1px solid rgb(153, 153, 153);
 	}
 
-	.list-users {
-		height: 70vh;
-		overflow-y: scroll;
-		scrollbar-color: light;
-		scrollbar-width: none;
-
-		.list-users-item {
-			justify-content: center;
-
-			.btn {
-				margin-top: 1vh;
-				margin-left: 1vh;
-			}
-		}
-	}
-
 	.list-group {
 		height: 65vh;
 		margin-left: 2%;
@@ -287,6 +271,26 @@ canvas {
 	font-size: 50px !important;
 }
 
+.text-maxwidth {
+	max-width: 40vw;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.text-maxwidth-sm {
+	max-width: 12vw;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+
+@media (max-width: 715px) {
+	.text-maxwidth-sm {
+		display: none;
+	}
+}
+
+// * screen > 950
 @media (min-width: 950px) {
 	.navbar-expand-custom {
 	  flex-direction: row;

@@ -8,136 +8,134 @@
 <div id="checkChatPresence"></div>
 <div id="userID" value="{{currentUser.id}}"></div>
 
-    <div class="mycontainer">
-        <div class="row">
+    <div class="mycontainer row">
 
-            {{!-- USER LIST --}}
-            <div class="col-2">
-            <div class="list-users">
-                {{#each allUsers}}
+        {{!-- USER LIST --}}
+        <ul class=" list-group col-4">
+            {{#each allUsers}}
 
-                <div class="list-users-item">
-                    <img src="{{attributes.image}}" style="float: left" alt="Avatar" class="avatar">
-                    {{#ifDm ../userID attributes.id ../dmRooms.models }}
-                        {{#ifCurrentDmRoom ../userID attributes.id ../dmRooms.models ../chatID  }}
-                        <a class="btn btn-outline-success btn-sm"
-                        href="#messages/{{#findDmRoom ../userID attributes.id ../dmRooms.models}}{{/findDmRoom}}">{{attributes.nickname}}</a>
-                        {{else}}
-                        <a class="btn btn-outline-primary btn-sm"
-                        href="#messages/{{#findDmRoom ../userID attributes.id ../dmRooms.models}}{{/findDmRoom}}">{{attributes.nickname}}</a>
-                        {{/ifCurrentDmRoom}}
-                        <br>
+            <li class="list-group-item fifties">
+                {{#ifDm ../userID attributes.id ../dmRooms.models}}
+                    {{#ifCurrentDmRoom ../userID attributes.id ../dmRooms.models ../chatID  }}
+                        <a class="btn btn-success btn-lg btn-block" href="#messages/{{#findDmRoom ../userID attributes.id ../dmRooms.models}}{{/findDmRoom}}">
+                            <img src="{{attributes.image}}" alt="Avatar" class="avatar">
+                            <label class="text-maxwidth-sm">{{attributes.nickname}}</label>
+                        </a>
                     {{else}}
-                        <form class="createDM" id="createDM-{{attributes.id}}" action="/api/direct_chats.json" accept-charset="UTF-8" method="POST">
+                        <a class="btn btn-primary btn-lg btn-block" href="#messages/{{#findDmRoom ../userID attributes.id ../dmRooms.models}}{{/findDmRoom}}">
+                            <img src="{{attributes.image}}" alt="Avatar" class="avatar">
+                            <label class="text-maxwidth-sm">{{attributes.nickname}}</label>
+                        </a>
+                    {{/ifCurrentDmRoom}}
+                {{else}}
+                    <form class="createDM" id="createDM-{{attributes.id}}" action="/api/direct_chats.json"
+                        accept-charset="UTF-8" method="POST">
                         <input type="hidden" name="authenticity_token" value="{{../token}}">
                         <input type="hidden" name="dmRoom[first_user_id]" value="{{../userID}}">
                         <input type="hidden" name="dmRoom[second_user_id]" value="{{attributes.id}}">
 
-                        <div style="overflow: hidden; padding-right: .5em;">
-                        <input class="btn btn-outline-primary btn-sm" type="submit" value="{{attributes.nickname}}">
-                        </div>
-                        </form>
-                    {{/ifDm}}
-                    <br>
-                </div>
-                {{/each}}
-            </div>
-            </div>
-
-
-            {{!-- CHATBOX --}}
-            <div class="col-9">
-
-
-                <div class="chatboxHeader">
-                    {{!-- LINK TO OTHER USER PROFILE --}}
-                    <h3><a class="otherUserProfile" href="#profiles/{{otherUser.id}}">{{otherUser.nickname}} </a></h3>
-
-                    {{!-- REQUEST DUAL FORM --}}
-                    <form class="dualForm" id="sendDualRequest" action="/api/direct_chats/createDualRequest" accept-charset="UTF-8"
-                        method="POST">
-                        <input type="hidden" name="authenticity_token" value="{{token}}">
-                        <input type="hidden" name="dual_request[from_id]" value="{{currentUser.id}}">
-                        <input type="hidden" name="dual_request[direct_chat_id]" value="{{chatID}}">
-                        <input class="btn btn-outline-success btn-sm" style="background-color:rgb(24, 119, 242); color:azure" type="submit" value="Send game request"> 
-                        <select class="form-control-sm" name="dual_request[is_ranked]">
-                            <option value="false">Normal</option>
-                            <option value="true">Ranked</option>
-                        </select>
+                        <button class="btn btn-secondary btn-lg btn-block" style="overflow: hidden; padding-right: .5em;" type="submit">
+                            <img src="{{attributes.image}}" alt="Avatar" class="avatar">
+                            <label class="text-maxwidth-sm">{{attributes.nickname}}</label>
+                        </button>
                     </form>
-                </div>
+                {{/ifDm}}
+            </li>
+            {{/each}}
+        </ul>
+
+        {{!-- CHATBOX --}}
+        <div class="col-7 jumbotron">
 
 
-                <ul class="list-group" id="list-message">
+            <div class="chatboxHeader">
+                {{!-- LINK TO OTHER USER PROFILE --}}
+                <h3><a class="otherUserProfile" href="#profiles/{{otherUser.id}}">{{otherUser.nickname}} </a></h3>
 
-                    {{!-- ALL MESSAGES --}}
-                        {{#each directMessages}}
-
-                        {{!-- OTHER USER MESSAGES --}}
-                        {{#when from_id "noteq" ../currentUser.id}}
-                        <li class="list-group-item">
-                            <div class="otherMessage" style="word-wrap: break-word;">
-                                <img src="{{../otherUser.image}}" alt="Avatar" class="avatar">
-
-                                {{#ifDualReq is_dual_request}}
-                                    <form id="AcceptDualRequest" action="/api/direct_chats/acceptDualRequest" accept-charset="UTF-8"
-                                        method="POST" style="display: inline;">
-                                        <input type="hidden" name="authenticity_token" value="{{../token}}">
-                                        {{!-- Room Data --}}
-                                        <input type="hidden" name="dual_request[first_user_id]" value="{{from_id}}">
-                                        <input type="hidden" name="dual_request[second_user_id]" value="{{../currentUser.id}}">
-                                        <input type="hidden" name="dual_request[is_ranked]" value={{is_ranked}}>
-                                        {{#ifRanked is_ranked}}
-                                            <input class="btn" style="background-color:rgb(94, 155, 124); color:azure" type="submit" value="Accept ranked game"> 
-                                        {{else}}
-                                            <input class="btn" style="background-color:rgb(94, 155, 124); color:azure" type="submit" value="Accept normal game"> 
-                                        {{/ifRanked}}
-                                    </form>
-                                {{else}}
-                                    <p class="message" data-role="message-text">{{message}}</p>
-                                {{/ifDualReq}}
-                            </div>
-                        </li>
-                        <br>
-                        {{/when}}
-
-                        {{!-- MY MESSAGES --}}
-                        {{#when from_id "eq" ../currentUser.id}}
-                        {{#ifDualReq is_dual_request}} {{!-- IF CURRENT USER DUAL REQUEST DISPLAY NOTHING --}}
-                        {{else}}
-                        <li class="list-group-item">
-                            <div class="ownMessage" style="word-wrap: break-word;">
-                                <p class="message" data-role="message-text">{{message}}</p>
-                                <img src="{{../currentUser.image}}" alt="Avatar" class="avatar">
-                                <br>
-                            </div>
-                        </li>
-                        {{/ifDualReq}}
-                        {{/when}}
-                        {{/each}}
-                </ul>
-                        <div class="row">
-                            <div class="col" style="justify-content: center;">
-                                <br>
-                                <br>
-                                <form id="sendRoomMessageForm" action="/api/chat_messages.json" accept-charset="UTF-8"
-                                    method="POST" style="display: inline;">
-                                    <input type="hidden" name="authenticity_token" value="{{token}}">
-                                    {{!-- Room Data --}}
-                                    <input type="hidden" id="roomOwner" name="chat_message[from_id]" value="{{currentUser.id}}">
-                                    <input type="hidden" id="roomID" name="chat_message[direct_chat_id]" value="{{chatID}}">
-
-                                    <input class="btn" style="float: right; background-color:rgb(24, 119, 242); color:azure" type="submit" value="Send"> 
-                                    <div style="overflow: hidden; padding-right: .5em;">
-                                    <input style="width: 100%;" class="form-control" autocomplete="off" placeholder="Message" type="text" id="message" name="chat_message[message]">
-                                    </div>
-
-           
-                                    <br>
-                                </form>
-                            </div>
-                        </div>
+                {{!-- REQUEST DUAL FORM --}}
+                <form class="dualForm" id="sendDualRequest" action="/api/direct_chats/createDualRequest" accept-charset="UTF-8"
+                    method="POST">
+                    <input type="hidden" name="authenticity_token" value="{{token}}">
+                    <input type="hidden" name="dual_request[from_id]" value="{{currentUser.id}}">
+                    <input type="hidden" name="dual_request[direct_chat_id]" value="{{chatID}}">
+                    <input class="btn btn-outline-success btn-sm" style="background-color:rgb(24, 119, 242); color:azure" type="submit" value="Send game request"> 
+                    <select class="form-control-sm" name="dual_request[is_ranked]">
+                        <option value="false">Normal</option>
+                        <option value="true">Ranked</option>
+                    </select>
+                </form>
             </div>
+
+
+            <ul class="list-group" id="list-message">
+
+                {{!-- ALL MESSAGES --}}
+                    {{#each directMessages}}
+
+                    {{!-- OTHER USER MESSAGES --}}
+                    {{#when from_id "noteq" ../currentUser.id}}
+                    <li class="list-group-item">
+                        <div class="otherMessage" style="word-wrap: break-word;">
+                            <img src="{{../otherUser.image}}" alt="Avatar" class="avatar">
+
+                            {{#ifDualReq is_dual_request}}
+                                <form id="AcceptDualRequest" action="/api/direct_chats/acceptDualRequest" accept-charset="UTF-8"
+                                    method="POST" style="display: inline;">
+                                    <input type="hidden" name="authenticity_token" value="{{../token}}">
+                                    {{!-- Room Data --}}
+                                    <input type="hidden" name="dual_request[first_user_id]" value="{{from_id}}">
+                                    <input type="hidden" name="dual_request[second_user_id]" value="{{../currentUser.id}}">
+                                    <input type="hidden" name="dual_request[is_ranked]" value={{is_ranked}}>
+                                    {{#ifRanked is_ranked}}
+                                        <input class="btn" style="background-color:rgb(94, 155, 124); color:azure" type="submit" value="Accept ranked game"> 
+                                    {{else}}
+                                        <input class="btn" style="background-color:rgb(94, 155, 124); color:azure" type="submit" value="Accept normal game"> 
+                                    {{/ifRanked}}
+                                </form>
+                            {{else}}
+                                <p class="message" data-role="message-text">{{message}}</p>
+                            {{/ifDualReq}}
+                        </div>
+                    </li>
+                    <br>
+                    {{/when}}
+
+                    {{!-- MY MESSAGES --}}
+                    {{#when from_id "eq" ../currentUser.id}}
+                    {{#ifDualReq is_dual_request}} {{!-- IF CURRENT USER DUAL REQUEST DISPLAY NOTHING --}}
+                    {{else}}
+                    <li class="list-group-item">
+                        <div class="ownMessage" style="word-wrap: break-word;">
+                            <p class="message" data-role="message-text">{{message}}</p>
+                            <img src="{{../currentUser.image}}" alt="Avatar" class="avatar">
+                            <br>
+                        </div>
+                    </li>
+                    {{/ifDualReq}}
+                    {{/when}}
+                    {{/each}}
+            </ul>
+                    <div class="row">
+                        <div class="col" style="justify-content: center;">
+                            <br>
+                            <br>
+                            <form id="sendRoomMessageForm" action="/api/chat_messages.json" accept-charset="UTF-8"
+                                method="POST" style="display: inline;">
+                                <input type="hidden" name="authenticity_token" value="{{token}}">
+                                {{!-- Room Data --}}
+                                <input type="hidden" id="roomOwner" name="chat_message[from_id]" value="{{currentUser.id}}">
+                                <input type="hidden" id="roomID" name="chat_message[direct_chat_id]" value="{{chatID}}">
+
+                                <input class="btn" style="float: right; background-color:rgb(24, 119, 242); color:azure" type="submit" value="Send"> 
+                                <div style="overflow: hidden; padding-right: .5em;">
+                                <input style="width: 100%;" class="form-control" autocomplete="off" placeholder="Message" type="text" id="message" name="chat_message[message]">
+                                </div>
+
+        
+                                <br>
+                            </form>
+                        </div>
+                    </div>
         </div>
     </div>
 </div>
