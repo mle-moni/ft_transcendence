@@ -73,6 +73,8 @@ class Game < ApplicationRecord
 				end
 			end
 
+			War.update_if_needed($games[room_name][:game_type], winner_user, loser_user)
+
 			if ($games[room_name][:game_type] == "ranked")
 				match = EloRating::Match.new
 				match.add_player(rating: loser_user.elo)
@@ -87,8 +89,6 @@ class Game < ApplicationRecord
 				loser_user.save
 				winner_user.save
 			end
-
-			## * Add here for other end game type conditions
 
 			Match.create(winner: winner_user, loser: loser_user, winner_score: winner_score, loser_score: loser_score);
 			ActionCable.server.broadcast room_name, {action: 'quit'}

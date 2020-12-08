@@ -17,3 +17,7 @@ Handlebars.registerHelper('getDateValue', function(date) {
 	strDate += "T" + strBase.slice(11,16);
 	return (strDate);
 });
+
+Handlebars.registerHelper('dateStr', function(dateRaw) {
+	return (new Date(dateRaw).toLocaleString("en", {timeZone: "Europe/Paris"}));
+});

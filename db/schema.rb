@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_05_144714) do
+ActiveRecord::Schema.define(version: 2020_12_08_153836) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -191,7 +191,7 @@ ActiveRecord::Schema.define(version: 2020_12_05_144714) do
     t.datetime "end"
     t.integer "prize", default: 0
     t.boolean "mods", default: false
-    t.integer "time_to_answer", default: 5
+    t.integer "time_to_answer", default: 30
     t.boolean "ladder", default: false
     t.boolean "tournament", default: false
     t.boolean "duel", default: false
@@ -205,6 +205,12 @@ ActiveRecord::Schema.define(version: 2020_12_05_144714) do
     t.integer "g2_score", default: 0
     t.integer "war_time_len", default: 5
     t.boolean "war_time_match", default: false
+    t.integer "match_count", default: 0
+    t.bigint "match_request_usr", default: 0
+    t.bigint "match_request_guild", default: 0
+    t.integer "g1_refused_matches", default: 0
+    t.integer "g2_refused_matches", default: 0
+    t.integer "max_refused_matches", default: 100
     t.index ["guild1_id"], name: "index_wars_on_guild1_id"
     t.index ["guild2_id"], name: "index_wars_on_guild2_id"
   end
