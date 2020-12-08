@@ -2,11 +2,8 @@
 
 <div class="administratorRoomView">
 
-    <a class="btn btn-primary" href="#room" role="button">Back</a>
     <br>
-    <br>
-
-    <p> Your status of <strong><u>{{status}}</u></strong> in the room <strong><u>{{room.name}}</u></strong> offers
+    <p class="fifties sized-text blk-text"> Your status of <strong><u>{{status}}</u></strong> in the room <strong><u>{{room.name}}</u></strong> offers
         some administrator rights
     </p><br>
 
@@ -18,59 +15,66 @@
             method="{{destroyForm.method}}">
             <input type="hidden" name="authenticity_token" value="{{token}}">
             <input type="hidden" id="roomID" name="room[room_id]" value="{{room.id}}">
-            <input class="btn btn-danger btn-sm" type="submit" value="Destroy Room">
-        </form> <br><br>
+            <input class="btn btn-danger btn-lg btn-block" type="submit" value="Destroy Room">
+        </form> <br><hr>
 
         <form id="promoteAdminForm" style="display: inline;" action="/api/rooms/promoteAdmin.json"
-            accept-charset="UTF-8" method="POST">
+            accept-charset="UTF-8" method="POST" class="fifties blk-text">
             <input type="hidden" name="authenticity_token" value="{{token}}">
-            <div class="sectionTitle"> <u>Promote</u></div><br>
-            <select class="form-control-sm" name="room[member]" id="member-select">
-                {{#each roomMembers}}
-                <option value="{{id}}">{{nickname}}</option>
-                {{/each}}
-            </select>
-            <input type="hidden" name="room[id]" value="{{room.id}}">
-            &nbsp;
-            <input type="submit" class="btn btn-outline-success btn-sm" value="Confirm promote">
-        </form> <br><br>
+            <div class="sectionTitle sized-text fifties blk-text"> <u>Promote</u></div><br>
+            
+            <div class="row">
+                <select class="sized-text-md col-8 form-control form-control-sm" name="room[member]" id="member-select">
+                    {{#each roomMembers}}
+                        <option value="{{id}}">{{nickname}}</option>
+                    {{/each}}
+                </select>
+                <input type="submit" class="sized-text-md btn btn-success btn-sm col-4" value="Confirm promote">
+                <input type="hidden" name="room[id]" value="{{room.id}}">
+            </div>
+        </form> <br><hr>
 
         <form id="demoteAdminForm" style="display: inline;" action="/api/rooms/demoteAdmin.json" accept-charset="UTF-8"
-            method="POST">
+            method="POST" class="fifties blk-text">
             <input type="hidden" name="authenticity_token" value="{{token}}">
-            <div class="sectionTitle"> <u>Demote</u></div><br>
-            <select class="form-control-sm" name="room[member]" id="member-select">
-                {{#each roomAdmins}}
-                <option value="{{id}}">{{nickname}}</option>
-                {{/each}}
-            </select>
-            <input type="hidden" name="room[id]" value="{{room.id}}">
-            &nbsp;
-            <input type="submit" class="btn btn-outline-warning btn-sm" value="Confirm demote">
+            <div class="sectionTitle sized-text fifties blk-text"> <u>Demote</u></div><br>
+            
+            <div class="row">
+                <select class="sized-text-md col-8 form-control form-control-sm" name="room[member]" id="member-select">
+                    {{#each roomAdmins}}
+                        <option value="{{id}}">{{nickname}}</option>
+                    {{/each}}
+                </select>
+                <input type="submit" class="sized-text-md btn btn-warning btn-sm col-4" value="Confirm demote">
+                <input type="hidden" name="room[id]" value="{{room.id}}">
+            </div>
         </form>
-
+        <br><hr>
 
         <div class="kickAdminsSection">
             <br>
-            <div class="sectionTitle"> <u>Kick Admins</u> </div><br>
+            <div class="sectionTitle sized-text fifties blk-text"> <u>Kick Admins</u> </div><br>
 
-            {{#each admins}}
+            <ul class="list-group">
+                {{#each admins}}
+                <li class="list-group-item fifties blk-text sized-text-md">
+                    {{nickname}} &nbsp;
 
-            • {{nickname}} &nbsp;
-
-            <form class="roomKickForm" id="roomKickForm-{{id}}" style="display: inline;" action="{{../kickForm.url}}"
-                accept-charset="UTF-8" method="{{../kickForm.method}}">
-                <input type="hidden" name="authenticity_token" value="{{../token}}">
-                <input type="hidden" name="room[room_id]" value="{{../room.id}}">
-                <input type="hidden" name="room[targetMemberID]" value="{{id}}">
-                &nbsp;
-                <input class="btn btn-outline-danger btn-sm" type="submit" value="Kick">
-            </form>
-            {{/each }}
+                    <form class="roomKickForm" id="roomKickForm-{{id}}" style="display: inline;" action="{{../kickForm.url}}"
+                        accept-charset="UTF-8" method="{{../kickForm.method}}">
+                        <input type="hidden" name="authenticity_token" value="{{../token}}">
+                        <input type="hidden" name="room[room_id]" value="{{../room.id}}">
+                        <input type="hidden" name="room[targetMemberID]" value="{{id}}">
+                        &nbsp;
+                        <input class="btn btn-danger btn-lg" type="submit" value="Kick">
+                    </form>
+                </li>
+                {{/each }}
+            </ul>
 
         </div>
 
-        <br>
+        <hr>
 
     </div>
     {{/ifOr}}
@@ -84,89 +88,92 @@
 
         <div class="kickMemberSection">
             <br>
-            <div class="sectionTitle"> <u>Kick Members</u> </div><br>
+            <div class="sectionTitle sized-text fifties blk-text"> <u>Kick Members</u> </div><br>
 
-            {{#each members}}
+            <ul class="list-group">
+                {{#each members}}
+                <li class="list-group-item fifties blk-text sized-text-md">
+                    {{nickname}} &nbsp;
 
-            • {{nickname}} &nbsp;
-
-            <form class="roomKickForm" id="roomKickForm-{{id}}" style="display: inline;" action="{{../kickForm.url}}"
-                accept-charset="UTF-8" method="{{../kickForm.method}}">
-                <input type="hidden" name="authenticity_token" value="{{../token}}">
-                <input type="hidden" name="room[room_id]" value="{{../room.id}}">
-                <input type="hidden" name="room[targetMemberID]" value="{{id}}">
-                &nbsp;
-                <input class="btn btn-outline-danger btn-sm" type="submit" value="Kick">
-            </form>
-            {{/each }}
-        <br><br>
+                    <form class="roomKickForm" id="roomKickForm-{{id}}" style="display: inline;" action="{{../kickForm.url}}"
+                        accept-charset="UTF-8" method="{{../kickForm.method}}">
+                        <input type="hidden" name="authenticity_token" value="{{../token}}">
+                        <input type="hidden" name="room[room_id]" value="{{../room.id}}">
+                        <input type="hidden" name="room[targetMemberID]" value="{{id}}">
+                        &nbsp;
+                        <input class="btn btn-danger btn-lg" type="submit" value="Kick">
+                    </form>
+                </li>
+                {{/each }}
+            </ul>
         </div>
+        <br><hr>
 
-        <div class="sectionTitle"> <u>Mutes and Bans</u> </div>
+        <div class="sectionTitle sized-text fifties blk-text"> <u>Mutes and Bans</u> </div>
         <br>
 
         {{!-- Here, membersPlusAdmins contains 'really' members + admins only if currentUser is owner or superAdmin, else it contains only members --}}
+        <ul class="list-group">
         {{#each membersPlusAdmins}}
+            <li class="list-group-item fifties blk-text sized-text-md">
+                <div class="memberCard">
+                    {{nickname}} &nbsp;
 
-        <div class="memberCard">
-            • {{nickname}} &nbsp;
+                    {{#ifIn id ../mutesTabIDs}}
+                    {{!-- Member is muted, form to UNMUTE --}}
+                    <form class="roomUnMuteMemberForm" id="roomUnMuteMemberForm-{{id}}" style="display: inline;"
+                        action="{{../formUnmute.url}}" accept-charset="UTF-8" method="{{../formUnmute.method}}">
+                        <input type="hidden" name="authenticity_token" value="{{../token}}">
+                        <input type="hidden" name="room[room_id]" value="{{../room.id}}">
+                        <input type="hidden" name="room[targetMemberID]" value="{{id}}">
+                        &nbsp;
+                        <input class="btn btn-success btn-sm" type="submit" value="Unmute">
+                    </form>
+                    {{/ifIn}}
+                    {{#ifNotIn id ../mutesTabIDs}}
+                    {{!-- Member is not muted, form to MUTE --}}
+                    <form class="roomMuteMemberForm" id="roomMuteMemberForm-{{id}}" style="display: inline;"
+                        action="{{../formMute.url}}" accept-charset="UTF-8" method="{{../formMute.method}}">
+                        <input type="hidden" name="authenticity_token" value="{{../token}}">
+                        <input type="hidden" name="room[room_id]" value="{{../room.id}}">
+                        <input type="hidden" name="room[targetMemberID]" value="{{id}}">
+                        <input type="time" class="form-control-sm" name="room[endTime]" value="{{../currentTime}}">
+                        &nbsp;
+                        <input class="btn btn-danger btn-sm" type="submit" value="Mute">
+                    </form>
+                    {{/ifNotIn}}
 
-            {{#ifIn id ../mutesTabIDs}}
-            {{!-- Member is muted, form to UNMUTE --}}
-            <form class="roomUnMuteMemberForm" id="roomUnMuteMemberForm-{{id}}" style="display: inline;"
-                action="{{../formUnmute.url}}" accept-charset="UTF-8" method="{{../formUnmute.method}}">
-                <input type="hidden" name="authenticity_token" value="{{../token}}">
-                <input type="hidden" name="room[room_id]" value="{{../room.id}}">
-                <input type="hidden" name="room[targetMemberID]" value="{{id}}">
-                &nbsp;
-                <input class="btn btn-outline-success btn-sm" type="submit" value="Unmute">
-            </form>
-            {{/ifIn}}
-            {{#ifNotIn id ../mutesTabIDs}}
-            {{!-- Member is not muted, form to MUTE --}}
-            <form class="roomMuteMemberForm" id="roomMuteMemberForm-{{id}}" style="display: inline;"
-                action="{{../formMute.url}}" accept-charset="UTF-8" method="{{../formMute.method}}">
-                <input type="hidden" name="authenticity_token" value="{{../token}}">
-                <input type="hidden" name="room[room_id]" value="{{../room.id}}">
-                <input type="hidden" name="room[targetMemberID]" value="{{id}}">
-                <input type="time" class="form-control-sm" name="room[endTime]" value="{{../currentTime}}">
-                &nbsp;
-                <input class="btn btn-outline-danger btn-sm" type="submit" value="Mute">
-            </form>
-            {{/ifNotIn}}
-
-            &nbsp;
-            &nbsp;
+                    &nbsp;
+                    &nbsp;
 
 
-            {{#ifIn id ../bansTabIDs}}
-            {{!-- Member is muted, form to UNBAN --}}
-            <form class="roomUnBanMemberForm" id="roomUnBanMemberForm-{{id}}" style="display: inline;"
-                action="{{../formUnBan.url}}" accept-charset="UTF-8" method="{{../formUnBan.method}}">
-                <input type="hidden" name="authenticity_token" value="{{../token}}">
-                <input type="hidden" name="room[room_id]" value="{{../room.id}}">
-                <input type="hidden" name="room[targetMemberID]" value="{{id}}">
-                &nbsp;
-                <input class="btn btn-outline-success btn-sm" type="submit" value="Unban">
-            </form>
-            {{/ifIn}}
-            {{#ifNotIn id ../bansTabIDs}}
-            {{!-- Member is not muted, form to BAN --}}
-            <form class="roomBanMemberForm" id="roomBanMemberForm-{{id}}" style="display: inline;"
-                action="{{../formBan.url}}" accept-charset="UTF-8" method="{{../formBan.method}}">
-                <input type="hidden" name="authenticity_token" value="{{../token}}">
-                <input type="hidden" name="room[room_id]" value="{{../room.id}}">
-                <input type="hidden" name="room[targetMemberID]" value="{{id}}">
-                <input type="time" class="form-control-sm" style="display: inline;" name="room[endTime]" value="{{../currentTime}}">
-                &nbsp;
-                <input class="btn btn-outline-danger btn-sm" type="submit" value="Ban">
-            </form>
-            {{/ifNotIn}}
-
-        </div>
-        <br>
-        {{/each}}
-
+                    {{#ifIn id ../bansTabIDs}}
+                    {{!-- Member is muted, form to UNBAN --}}
+                    <form class="roomUnBanMemberForm" id="roomUnBanMemberForm-{{id}}" style="display: inline;"
+                        action="{{../formUnBan.url}}" accept-charset="UTF-8" method="{{../formUnBan.method}}">
+                        <input type="hidden" name="authenticity_token" value="{{../token}}">
+                        <input type="hidden" name="room[room_id]" value="{{../room.id}}">
+                        <input type="hidden" name="room[targetMemberID]" value="{{id}}">
+                        &nbsp;
+                        <input class="btn btn-success btn-sm" type="submit" value="Unban">
+                    </form>
+                    {{/ifIn}}
+                    {{#ifNotIn id ../bansTabIDs}}
+                    {{!-- Member is not muted, form to BAN --}}
+                    <form class="roomBanMemberForm" id="roomBanMemberForm-{{id}}" style="display: inline;"
+                        action="{{../formBan.url}}" accept-charset="UTF-8" method="{{../formBan.method}}">
+                        <input type="hidden" name="authenticity_token" value="{{../token}}">
+                        <input type="hidden" name="room[room_id]" value="{{../room.id}}">
+                        <input type="hidden" name="room[targetMemberID]" value="{{id}}">
+                        <input type="time" class="form-control-sm" style="display: inline;" name="room[endTime]" value="{{../currentTime}}">
+                        &nbsp;
+                        <input class="btn btn-danger btn-sm" type="submit" value="Ban">
+                    </form>
+                    {{/ifNotIn}}
+                </div>
+            </li>
+            <br>
+            {{/each}}
+        </ul>
     </div>
-
 </div>
