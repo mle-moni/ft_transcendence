@@ -114,3 +114,8 @@ Handlebars.registerHelper('ifRanked', function(isRanked, options) {
         return options.fn(this);
     return options.inverse(this);
 });
+
+Handlebars.registerHelper('getTimeLeft', function(endTime) {
+
+    console.log(endTime)
+});

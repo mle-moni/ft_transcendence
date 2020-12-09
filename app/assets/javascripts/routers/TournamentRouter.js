@@ -5,9 +5,15 @@ AppClasses.Routers.TournamentRouter = class extends AppClasses.Routers.AbstractR
 		this.route("tournaments", "index");
 		this.route("tournaments/:tournament_id", "show");
 		this.route("tournaments/create", "create");
+
+		this.collections.tournaments = new AppClasses.Collections.Tournament();
+
 	}
 	index() {
-		this.basicView("tournamentList", "TournamentList", {model: this.models.user});
+		this.basicView("tournamentList", "TournamentList", {
+			model: this.models.user,
+			tournaments: this.collections.tournaments
+		});
 	}
 	create() {
 		this.basicView("tournamentCreate", "TournamentCreate", {model: this.models.user});

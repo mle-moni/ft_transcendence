@@ -18,6 +18,11 @@ class TournamentsController < ApplicationController
 	# POST /tournaments
 	# POST /tournaments.json
 	def create
+
+		puts "------------"
+		puts params
+		puts @dateStart
+		puts "------------"
 		t = Tournament.create({start: @dateStart})
 		format.json { render json: t, status: :created }
 	end

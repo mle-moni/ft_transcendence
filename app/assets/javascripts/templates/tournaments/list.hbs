@@ -1,1 +1,16 @@
 <h1>Tournament list</h1>
+
+<a class="btn btn-outline-primary btn-sm" href="#tournaments/create">Create tournament</a>
+<br><br>
+
+
+{{#each tournaments}}
+<div class="tournament-elem" style="border: solid;">
+    <h3>Tournament n {{id}}</h3>
+    <p>Winner: {{winner}}</p>
+    {{#if start}}
+    <p>Time left to register: {{getDateValue start}}</p>
+    {{/if}}
+</div>
+<br>
+{{/each}}
