@@ -27,6 +27,8 @@ AppClasses.Routers.Main = class extends AppClasses.Routers.AbstractRouter {
 		this.models.user = new AppClasses.Models.User(App.data.user);
 		this.models.last_seen = new AppClasses.Models.User(App.data.user);
 		this.collections.allUsers = new AppClasses.Collections.AllUsers();
+		this.collections.tournaments = new AppClasses.Collections.Tournament();
+		this.collections.tournaments.fetch();
 
 		const seconds = 10; // update every N seconds, to see users status
 		setInterval(() => {

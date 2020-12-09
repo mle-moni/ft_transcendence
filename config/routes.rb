@@ -17,6 +17,12 @@ Rails.application.routes.draw do
     post '/wars/delete_war_time', to: 'wars#delete_war_time'
     post '/wars/match_request', to: 'wars#match_request'
 
+    # Tournaments actions
+    get '/tournaments', to: 'tournaments#index'
+    post '/tournaments', to: 'tournaments#create'
+    delete '/tournaments:id', to: 'tournaments#destroy'
+    get '/tournaments:id', to: 'tournaments#show'
+
     # CHAT & DMS ------
     resources :rooms do 
       resources :members, controller: 'room/members', only: [:index, :new, :create, :destroy]

@@ -21,6 +21,9 @@ consumer.subscriptions.create({
 				App.models.user.update(App.models.user);
 				App.models.last_seen.updateLastSeen(App.models.last_seen);
 				break;
+			case "tournaments":
+				App.collections.tournaments.fetch()
+				break;
 		}
 	}
 });
