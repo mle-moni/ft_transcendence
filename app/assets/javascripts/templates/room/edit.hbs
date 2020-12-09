@@ -3,7 +3,7 @@
 
 <div class="editRoomView">
 
-	<label class="sized-text-md fifties blk-text"> {{titleText}} <u> {{name}}</u> </label>
+	<label class="sized-text fifties blk-text"> {{titleText}} <u> {{name}}</u> </label>
 	<form id="{{editID}}" action="/api/rooms/{{room_id}}.json" accept-charset="UTF-8" method="PUT">
 
 		<input type="hidden" name="authenticity_token" value="{{token}}">

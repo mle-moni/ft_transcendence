@@ -3,7 +3,7 @@
 
 <div class="newFormView">
 
-	<p> <u> {{titleText}}</u> </p>
+	<label class="sized-text fifties blk-text"> <u> {{titleText}}</u>  </label>
 
 	<form id="{{formID}}" action="/api/rooms.json" accept-charset="UTF-8" method="{{method}}">
 
@@ -17,11 +17,7 @@
 		<br>
 		<input class="form-control" placeholder="Room Password" autocomplete="off" type="text" id="roomPassword" name="room[password]">
 		<br> <br>
-		<input type="submit" class="btn btn-success" value="{{submitText}}">
+		<input type="submit" class="btn btn-success btn-lg btn-block fifties" value="{{submitText}}">
 		<br>
 	</form>
-
-	<br>
-	<a class="btn btn-primary" href="#room" role="button"> Back </a>
-
 </div>

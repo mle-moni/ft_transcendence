@@ -259,6 +259,12 @@ canvas {
 	font-size: 50px !important;
 }
 
+.text-maxwidth-lg {
+	max-width: 80vw;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
 .text-maxwidth {
 	max-width: 40vw;
 	overflow: hidden;
