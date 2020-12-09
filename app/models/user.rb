@@ -27,6 +27,8 @@ class User < ApplicationRecord
   def matches
     wins + loses
   end
+
+  belongs_to :tournament
   
   validates :nickname, uniqueness: true
   validates :email, uniqueness: true # as long as it's needed for game rooms

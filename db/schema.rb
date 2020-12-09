@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_08_153836) do
+ActiveRecord::Schema.define(version: 2020_12_08_221031) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -144,6 +144,13 @@ ActiveRecord::Schema.define(version: 2020_12_08_153836) do
     t.index ["owner_id"], name: "index_rooms_on_owner_id"
   end
 
+  create_table "tournaments", force: :cascade do |t|
+    t.datetime "start"
+    t.string "winner", default: ""
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -171,10 +178,13 @@ ActiveRecord::Schema.define(version: 2020_12_08_153836) do
     t.boolean "banned", default: false
     t.float "elo", default: 1000.0
     t.boolean "in_game", default: false
+    t.boolean "eliminated", default: false
+    t.bigint "tournament_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["guild_id"], name: "index_users_on_guild_id"
     t.index ["provider"], name: "index_users_on_provider"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["tournament_id"], name: "index_users_on_tournament_id"
     t.index ["uid"], name: "index_users_on_uid"
   end
 
@@ -227,6 +237,7 @@ ActiveRecord::Schema.define(version: 2020_12_08_153836) do
   add_foreign_key "room_mutes", "users", column: "by_id"
   add_foreign_key "rooms", "users", column: "owner_id"
   add_foreign_key "users", "guilds"
+  add_foreign_key "users", "tournaments"
   add_foreign_key "war_times", "wars"
   add_foreign_key "wars", "guilds", column: "guild1_id"
   add_foreign_key "wars", "guilds", column: "guild2_id"
