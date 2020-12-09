@@ -14,7 +14,7 @@ class TournamentsController < ApplicationController
 		if @tournament.started
 			return res_with_error("Tournament already started", :bad_request)
 		end
-		@tournament.start
+		@tournament.start_it
 		success("Tournament started")
 	end
 

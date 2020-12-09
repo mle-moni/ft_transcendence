@@ -91,6 +91,7 @@ class War < ApplicationRecord
   def self.users_at_war?(usr1, usr2)
     g1 = usr1.guild
     g2 = usr2.guild
+    return false if !g1 || !g2
     return false if g1.id == g2.id
     return false unless usr1.guild_validated && usr2.guild_validated
     return false unless g1 && g2
