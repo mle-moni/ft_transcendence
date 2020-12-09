@@ -28,7 +28,7 @@ class User < ApplicationRecord
     wins + loses
   end
 
-  belongs_to :tournament
+  belongs_to :tournament, required: false
   
   validates :nickname, uniqueness: true
   validates :email, uniqueness: true # as long as it's needed for game rooms
