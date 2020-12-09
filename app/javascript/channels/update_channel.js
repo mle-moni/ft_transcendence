@@ -1,10 +1,16 @@
 import consumer from "./consumer"
 
-consumer.subscriptions.create({
+let connected = false;
+
+window.socket = consumer.subscriptions.create({
 	channel: "UpdateChannel"
 	}, {
-	connected() {},
-	disconnected() {},
+	connected() {
+		connected = true;
+	},
+	disconnected() {
+		connected = false;
+	},
 	received(event) {
 		switch (event.target) {
 			case "guilds":
@@ -19,6 +25,8 @@ consumer.subscriptions.create({
 			case "users":
 				App.collections.allUsers.myFetch();
 				App.models.user.update(App.models.user);
+				break;
+			case "last_seen":
 				App.models.last_seen.updateLastSeen(App.models.last_seen);
 				break;
 			case "tournaments":
@@ -27,3 +35,15 @@ consumer.subscriptions.create({
 		}
 	}
 });
+
+window.addEventListener("beforeunload", e=>{
+	if (connected) {
+		window.socket.send({action: "bye"});
+	}
+});
+
+setInterval(e=>{
+	if (connected) {
+		window.socket.send({action: "alive"});
+	}
+}, 1000)

@@ -145,6 +145,10 @@ class War < ApplicationRecord
       if war.ladder
         war.add_points(winner.guild, 1)
       end
+    when "tournament"
+      if war.tournament
+        war.add_points(winner.guild, 1)
+      end
     when "war_time_match"
       war.add_points(winner.guild, 2)
       war.war_time_match = false

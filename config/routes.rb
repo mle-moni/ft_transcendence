@@ -24,6 +24,7 @@ Rails.application.routes.draw do
     get '/tournaments:id', to: 'tournaments#show'
     get '/tournaments/register/:id', to: 'tournaments#register'
     get '/tournaments/unregister/:id', to: 'tournaments#unregister'
+    get '/tournaments/start/:id', to: 'tournaments#start'
 
     # CHAT & DMS ------
     resources :rooms do 
@@ -65,7 +66,6 @@ Rails.application.routes.draw do
     post '/friends/last_seen'
     # profile actions
     post 'profile/get'
-    post 'active', to: 'profile#active'
     # admin actions
     post 'admin/ban'
     post 'admin/unban'

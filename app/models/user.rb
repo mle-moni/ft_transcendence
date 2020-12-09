@@ -42,6 +42,10 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable,
          :omniauthable, omniauth_providers: [:marvin]
 
+  def online
+    seconds_since_seen = -(last_seen - DateTime.now)
+    return seconds_since_seen < 1.6
+  end
 
   def self.from_omniauth(auth)
     where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
