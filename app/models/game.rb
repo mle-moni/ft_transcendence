@@ -13,7 +13,7 @@ class Game < ApplicationRecord
 			Redis.current.set("play_channel_#{current_match_id}_l", "#{left}")
 			Redis.current.set("play_channel_#{current_match_id}_r", "#{right}")
 	
-			clean_players_dual_requests(player1, player2)
+			clean_players_duel_requests(player1, player2)
 
 			room_name = "play_channel_#{current_match_id}"
 
@@ -96,19 +96,19 @@ class Game < ApplicationRecord
 		end
 	end
 
-	def self.clean_players_dual_requests(player1, player2)
+	def self.clean_players_duel_requests(player1, player2)
 
 		player1_id = User.where(email: player1).first.id
 		player2_id = User.where(email: player2).first.id
 
 		if player1_id && player2_id
-			RoomMessage.where(user_id: player1_id).where(is_dual_request: true).delete_all
-			DirectMessage.where(from_id: player1_id).where(is_dual_request: true).delete_all
-			RoomMessage.where(user_id: player2_id).where(is_dual_request: true).delete_all
-			DirectMessage.where(from_id: player2_id).where(is_dual_request: true).delete_all
+			RoomMessage.where(user_id: player1_id).where(is_duel_request: true).delete_all
+			DirectMessage.where(from_id: player1_id).where(is_duel_request: true).delete_all
+			RoomMessage.where(user_id: player2_id).where(is_duel_request: true).delete_all
+			DirectMessage.where(from_id: player2_id).where(is_duel_request: true).delete_all
 
-			ActionCable.server.broadcast "chat_channel", type: "dual_request", description: "delete-request"
-			ActionCable.server.broadcast "room_channel", type: "dual_request", description: "delete-request"
+			ActionCable.server.broadcast "chat_channel", type: "duel_request", description: "delete-request"
+			ActionCable.server.broadcast "room_channel", type: "duel_request", description: "delete-request"
 		end
 	end
 end

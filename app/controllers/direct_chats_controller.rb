@@ -24,10 +24,10 @@ class DirectChatsController < ApplicationController
   def edit
   end
 
-  # POST /direct_chats/createDualRequest
-  # POST /direct_chats/createDualRequest.json
-  def createDualRequest
-    filteredParams = params.require(:dual_request).permit(:from_id, :direct_chat_id, :is_ranked)
+  # POST /direct_chats/createDuelRequest
+  # POST /direct_chats/createDuelRequest.json
+  def createDuelRequest
+    filteredParams = params.require(:duel_request).permit(:from_id, :direct_chat_id, :is_ranked)
 
     user = User.find(filteredParams["from_id"]);
     dc = DirectChat.find(filteredParams["direct_chat_id"])
@@ -37,12 +37,12 @@ class DirectChatsController < ApplicationController
       return (false)
     end
 
-    @dual_request = DirectMessage.create(message: "", from: user, direct_chat: dc, is_dual_request: true, is_ranked: filteredParams["is_ranked"])
+    @duel_request = DirectMessage.create(message: "", from: user, direct_chat: dc, is_duel_request: true, is_ranked: filteredParams["is_ranked"])
 
     respond_to do |format|
-      if @dual_request.save
-          ActionCable.server.broadcast "chat_channel", type: "dual_request", description: "create-request", user: current_user
-          format.html { redirect_to @chat_message, notice: 'Dual request was successfully created.' }
+      if @duel_request.save
+          ActionCable.server.broadcast "chat_channel", type: "duel_request", description: "create-request", user: current_user
+          format.html { redirect_to @chat_message, notice: 'Duel request was successfully created.' }
           format.json { head :no_content }
       else
           format.html { render :new }
@@ -51,10 +51,10 @@ class DirectChatsController < ApplicationController
     end
   end
 
-  # POST /direct_chats/acceptDualRequest
-  # POST /direct_chats/acceptDualRequest.json
-  def acceptDualRequest
-    filteredParams = params.require(:dual_request).permit(:first_user_id, :second_user_id, :is_ranked)
+  # POST /direct_chats/acceptDuelRequest
+  # POST /direct_chats/acceptDuelRequest.json
+  def acceptDuelRequest
+    filteredParams = params.require(:duel_request).permit(:first_user_id, :second_user_id, :is_ranked)
     user1 = User.find(filteredParams["first_user_id"])
     user2 = User.find(filteredParams["second_user_id"])
 

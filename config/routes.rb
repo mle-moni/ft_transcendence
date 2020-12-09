@@ -43,16 +43,16 @@ Rails.application.routes.draw do
     post '/rooms/promoteAdmin', to: 'rooms#promoteAdmin'
     post '/rooms/demoteAdmin', to: 'rooms#demoteAdmin'
 
-    post '/rooms/createDualRequest', to: 'rooms#createDualRequest'
-    post '/rooms/acceptDualRequest', to: 'rooms#acceptDualRequest'
+    post '/rooms/createDuelRequest', to: 'rooms#createDuelRequest'
+    post '/rooms/acceptDuelRequest', to: 'rooms#acceptDuelRequest'
 
     post '/handleBlock', to: 'profile#handleBlock'
 
     resources :direct_chats
     resources :chat_messages
     
-    post '/direct_chats/createDualRequest', to: 'direct_chats#createDualRequest'
-    post '/direct_chats/acceptDualRequest', to: 'direct_chats#acceptDualRequest'
+    post '/direct_chats/createDuelRequest', to: 'direct_chats#createDuelRequest'
+    post '/direct_chats/acceptDuelRequest', to: 'direct_chats#acceptDuelRequest'
 
     # ------
     

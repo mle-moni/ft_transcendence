@@ -76,8 +76,6 @@ AppClasses.Views.TournamentList = class extends Backbone.View {
 				tournaments[count].start = new Intl.DateTimeFormat('en-GB', { dateStyle: 'full', timeStyle: 'long' }).format(formatedDate);
 			}
 		}
-		console.log(this.model.toJSON());
-		console.log(this.model);
 		this.$el.html(this.template({
 			tournaments: tournaments,
 			currentUser: this.model.toJSON(),
@@ -86,17 +84,6 @@ AppClasses.Views.TournamentList = class extends Backbone.View {
 		this.delegateEvents();
 		return (this);
 	}
-
-// 	render() {
-// 		this.delegateEvents();
-
-// 		console.log(this.tournaments);
-// 		this.$el.html(this.template({
-// 			tournaments: this.tournaments,
-// 			token: $('meta[name="csrf-token"]').attr('content')
-// 		}));
-// 		return (this);
-// 	}
 
 	render() {
 		this.updateRender();

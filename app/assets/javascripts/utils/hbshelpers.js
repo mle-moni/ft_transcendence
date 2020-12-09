@@ -101,9 +101,9 @@ Handlebars.registerHelper('ifCurrentDmRoom', function(userID, otherUserID, dmRoo
     return options.inverse(this);
 });
 
-Handlebars.registerHelper('ifDualReq', function(isDualReq, options) {
+Handlebars.registerHelper('ifDuelReq', function(isDuelReq, options) {
 
-    if (isDualReq)
+    if (isDuelReq)
         return options.fn(this);
     return options.inverse(this);
 });
@@ -116,7 +116,7 @@ Handlebars.registerHelper('ifRanked', function(isRanked, options) {
 });
 
 Handlebars.registerHelper('ifCurrentUserRegister', function(userTournamentID, tournamentID, options) {
-    
+
     if (userTournamentID && tournamentID && userTournamentID == tournamentID)
         return options.fn(this);
     return options.inverse(this);
