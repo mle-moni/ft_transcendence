@@ -22,6 +22,8 @@ Rails.application.routes.draw do
     post '/tournaments', to: 'tournaments#create'
     delete '/tournaments:id', to: 'tournaments#destroy'
     get '/tournaments:id', to: 'tournaments#show'
+    get '/tournaments/register/:id', to: 'tournaments#register'
+    get '/tournaments/unregister/:id', to: 'tournaments#unregister'
 
     # CHAT & DMS ------
     resources :rooms do 
