@@ -1,6 +1,10 @@
 AppClasses.Views.TournamentList = class extends Backbone.View {
 	constructor(opts) {
-		opts.events = {};
+		opts.events = {
+			"submit .registerTournament": "registerTournament",
+			"submit .unregisterTournament": "unregisterTournament",
+			"submit .deleteTournament": "deleteTournament"
+		};
 		super(opts);
 		this.tagName = "div";
 		this.template = App.templates["tournaments/list"];
@@ -12,11 +16,71 @@ AppClasses.Views.TournamentList = class extends Backbone.View {
 		// TODO listen to tournaments collection
 	}
 
+	registerTournament(e) {
+		e.preventDefault();
+		if (e.target.children.length < 2) return (false);
+		const tournamentID = e.target.children[1].value;
+		const selectorFormID = "#registerTournament-" + tournamentID;
+		App.utils.formAjax("/api/tournaments/register/" + tournamentID + ".json", selectorFormID)
+		.done(res => {
+			App.toast.success("Tournament Joined !", { duration: 2000, style: App.toastStyle });
+		})
+		.fail((e) => {
+			App.utils.toastError(e);
+		});
+		return (false);
+	}
+
+	unregisterTournament(e) {
+		e.preventDefault();
+		if (e.target.children.length < 2) return (false);
+		const tournamentID = e.target.children[1].value;
+		const selectorFormID = "#unregisterTournament-" + tournamentID;
+		App.utils.formAjax("/api/tournaments/unregister/" + tournamentID + ".json", selectorFormID)
+		.done(res => {
+			App.toast.success("Tournament left !", { duration: 2000, style: App.toastStyle });
+		})
+		.fail((e) => {
+			App.utils.toastError(e);
+		});
+		return (false);
+	}
+
+	deleteTournament(e) {
+		e.preventDefault();
+		if (e.target.children.length < 2) return (false);
+		const tournamentID = e.target.children[1].value;
+		const selectorFormID = "#deleteTournament-" + tournamentID;
+		App.utils.formAjax("/api/tournaments/" + tournamentID + ".json", selectorFormID)
+		.done(res => {
+			App.toast.success("Tournament Deleted !", { duration: 2000, style: App.toastStyle });
+		})
+		.fail((e) => {
+			App.utils.toastError(e);
+		});
+		return (false);
+	}
+
 	updateRender() {
 
-		console.log(this.tournaments);
+		var tournaments = this.tournaments.toJSON();
+		if (tournaments.length > 0)
+		{
+			tournaments.sort(function(a,b){
+				return new Date(a.start) - new Date(b.start);
+			});
+	
+			for (var count = 0; count < tournaments.length; count++)
+			{
+				var formatedDate = new Date(tournaments[count].start);
+				tournaments[count].start = new Intl.DateTimeFormat('en-GB', { dateStyle: 'full', timeStyle: 'long' }).format(formatedDate);
+			}
+		}
+		console.log(this.model.toJSON());
+		console.log(this.model);
 		this.$el.html(this.template({
-			tournaments: this.tournaments,
+			tournaments: tournaments,
+			currentUser: this.model.toJSON(),
 			token: $('meta[name="csrf-token"]').attr('content')
 		}));
 		this.delegateEvents();

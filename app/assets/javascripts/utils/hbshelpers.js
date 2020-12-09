@@ -115,7 +115,9 @@ Handlebars.registerHelper('ifRanked', function(isRanked, options) {
     return options.inverse(this);
 });
 
-Handlebars.registerHelper('getTimeLeft', function(endTime) {
-
-    console.log(endTime)
+Handlebars.registerHelper('ifCurrentUserRegister', function(userTournamentID, tournamentID, options) {
+    
+    if (userTournamentID && tournamentID && userTournamentID == tournamentID)
+        return options.fn(this);
+    return options.inverse(this);
 });

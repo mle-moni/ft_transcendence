@@ -18,20 +18,28 @@ class TournamentsController < ApplicationController
 	# POST /tournaments
 	# POST /tournaments.json
 	def create
-
-		puts "------------"
-		puts params
-		puts @dateStart
-		puts "------------"
 		t = Tournament.create({start: @dateStart})
-		format.json { render json: t, status: :created }
+		respond_to do |format|
+			if t.save
+				ActionCable.server.broadcast "update_channel", action: "update", target: "tournaments"
+				format.json { render json: t, status: :created }
+			else
+				format.json { render json: t.errors, status: :unprocessable_entity }
+			end
+		end
 	end
 
 	# DELETE /tournaments/1
 	# DELETE /tournaments/1.json
 	def destroy
-		@tournament.destroy
-		format.json { head :no_content }
+		respond_to do |format|
+			if @tournament.destroy
+				ActionCable.server.broadcast "update_channel", action: "delete", target: "tournaments"
+				format.json { render json: @tournament, status: :ok }
+			else
+				format.json { render json: @tournament.errors, status: :unprocessable_entity }
+			end
+		end
 	end
 
 	# GET /tournaments/1
@@ -51,6 +59,7 @@ class TournamentsController < ApplicationController
 		current_user.tournament = @tournament
 		current_user.eliminated = false
 		current_user.save
+		ActionCable.server.broadcast "update_channel", action: "update", target: "users"
 		success("Successfully registered")
 	end
 
@@ -58,6 +67,7 @@ class TournamentsController < ApplicationController
 		current_user.tournament = nil
 		current_user.eliminated = false
 		current_user.save
+		ActionCable.server.broadcast "update_channel", action: "update", target: "users"
 		success("Successfully unregistered")
 	end
 

@@ -1,16 +1,41 @@
 <h1>Tournament list</h1>
 
-<a class="btn btn-outline-primary btn-sm" href="#tournaments/create">Create tournament</a>
-<br><br>
-
+{{#if currentUser.admin}}
+    <a class="btn btn-outline-primary btn-sm" href="#tournaments/create">Create tournament</a>
+    <br>
+{{/if}}
+<br>
 
 {{#each tournaments}}
 <div class="tournament-elem" style="border: solid;">
-    <h3>Tournament n {{id}}</h3>
-    <p>Winner: {{winner}}</p>
+    <h3>Tournament #{{id}}</h3>
     {{#if start}}
-    <p>Time left to register: {{getDateValue start}}</p>
+        <p>Closing date for registration: {{start}}</p>
     {{/if}}
+
+    {{#ifCurrentUserRegister ../currentUser.tournament_id  id}}
+        <form class="unregisterTournament" id="unregisterTournament-{{id}}" action="/api/tournaments/unregister/{{id}}.json" accept-charset="UTF-8" method="GET">
+        <input type="hidden" name="authenticity_token" value="{{../token}}">
+        <input type="hidden" name="id" value="{{id}}">
+        <input class="btn btn-danger btn-sm" type="submit" value="Unregister">
+        </form>
+        
+    {{else}}
+        <form class="registerTournament" id="registerTournament-{{id}}" action="/api/tournaments/register/{{id}}.json" accept-charset="UTF-8" method="GET">
+        <input type="hidden" name="authenticity_token" value="{{../token}}">
+        <input type="hidden" name="id" value="{{id}}">
+        <input class="btn btn-primary btn-sm" type="submit" value="Register">
+        </form>
+    {{/ifCurrentUserRegister}}
+    <br>
+    {{#if ../currentUser.admin}}
+        <form class="deleteTournament" id="deleteTournament-{{id}}" action="/api/tournaments/{{id}}.json" accept-charset="UTF-8" method="DELETE">
+        <input type="hidden" name="authenticity_token" value="{{../token}}">
+        <input type="hidden" name="id" value="{{id}}">
+        <input class="btn btn-danger btn-sm" type="submit" value="Delete">
+        </form>
+    {{/if}}
+    <br>
 </div>
 <br>
 {{/each}}
