@@ -32,11 +32,6 @@ AppClasses.Routers.Main = class extends AppClasses.Routers.AbstractRouter {
 
 		const seconds = 10; // update every N seconds, to see users status
 		setInterval(() => {
-			$.ajax({
-				url:  '/api/active',
-				data: { "authenticity_token": $('meta[name="csrf-token"]').attr('content') },
-				type: 'POST'
-			});
 			if (location.hash == "#friends") {
 				this.models.last_seen.updateLastSeen(this.models.last_seen);
 			}

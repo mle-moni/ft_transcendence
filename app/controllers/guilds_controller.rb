@@ -6,7 +6,7 @@ class GuildsController < ApplicationController
   # GET /guilds
   # GET /guilds.json
   def index
-    Guild.all.map do |guild|
+    Guild.all.each do |guild|
       war = guild.active_war
       if war
         war.end_if_needed

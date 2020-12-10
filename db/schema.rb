@@ -146,9 +146,12 @@ ActiveRecord::Schema.define(version: 2020_12_09_173543) do
 
   create_table "tournaments", force: :cascade do |t|
     t.datetime "start"
-    t.string "winner", default: ""
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "winner_id", default: 0
+    t.integer "matches_started", default: 0
+    t.integer "matches_ended", default: 0
+    t.boolean "started", default: false
   end
 
   create_table "users", force: :cascade do |t|

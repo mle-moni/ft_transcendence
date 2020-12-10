@@ -90,6 +90,15 @@ class Game < ApplicationRecord
 				winner_user.save
 			end
 
+			if ($games[room_name][:game_type] == "tournament")
+				if winner_user.tournament
+					Thread.new do
+						sleep 5
+						winner_user.tournament.end_match(winner_user, loser_user)
+					end
+				end
+			end
+
 			Match.create(winner: winner_user, loser: loser_user, winner_score: winner_score, loser_score: loser_score);
 			ActionCable.server.broadcast room_name, {action: 'quit'}
 			$games[room_name] = nil;

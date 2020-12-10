@@ -1,10 +1,23 @@
 class TournamentsController < ApplicationController
 
 	before_action :connect_user
-	before_action :is_admin, only: [:create, :destroy]
+	before_action :is_admin, only: [:create, :destroy, :start]
 	before_action :set_date, only: [:create]
-	before_action :set_tournament, only: [:destroy, :show, :register, :unregister]
+	before_action :set_tournament, only: [:destroy, :show, :register, :unregister, :start]
 	
+	def start
+		Time.zone = "Europe/Paris"
+		now = DateTime.parse(Time.current.to_s)
+		if @tournament.start > now
+			return res_with_error("You must wait the subscriptions te be closed", :bad_request)
+		end
+		if @tournament.started
+			return res_with_error("Tournament already started", :bad_request)
+		end
+		@tournament.start_it
+		success("Tournament started")
+	end
+
 	# GET /tournaments
 	# GET /tournaments.json
 	def index
