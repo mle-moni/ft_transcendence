@@ -12,6 +12,7 @@ AppClasses.Routers.TournamentRouter = class extends AppClasses.Routers.AbstractR
 	index() {
 		this.basicView("tournamentList", "TournamentList", {
 			model: this.models.user,
+			allUsers: this.collections.allUsers,
 			tournaments: this.collections.tournaments
 		});
 	}

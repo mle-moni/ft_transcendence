@@ -1,3 +1,5 @@
+<div style="text-align: center;">
+
 <h1>Tournament list</h1>
 
 {{#if currentUser.admin}}
@@ -6,36 +8,47 @@
 {{/if}}
 <br>
 
-{{#each tournaments}}
-<div class="tournament-elem" style="border: solid;">
-    <h3>Tournament #{{id}}</h3>
-    {{#if start}}
-        <p>Closing date for registration: {{start}}</p>
-    {{/if}}
+<div class="row">
+    <div class="col-1"></div>
+    <div class="col-10">
+        {{#each tournaments}}
+        <div class="tournament-elem" style="border: solid;">
+            <h3>Tournament #{{page_id}}</h3>
+            {{#ifHasWinner winner}}
+                <p>Winner of the tournament: {{#findWinner winner}}{{/findWinner}}</p>
+            {{else}}
+                {{#if started}}
+                    <p>Tournament ongoing !</p>
+                {{else}}
+                <p>Closing date for registration: {{start}}</p>
+                {{/if}}
+            {{/ifHasWinner}}
 
-    {{#ifCurrentUserRegister ../currentUser.tournament_id  id}}
-        <form class="unregisterTournament" id="unregisterTournament-{{id}}" action="/api/tournaments/unregister/{{id}}.json" accept-charset="UTF-8" method="GET">
-        <input type="hidden" name="authenticity_token" value="{{../token}}">
-        <input type="hidden" name="id" value="{{id}}">
-        <input class="btn btn-danger btn-sm" type="submit" value="Unregister">
-        </form>
-        
-    {{else}}
-        <form class="registerTournament" id="registerTournament-{{id}}" action="/api/tournaments/register/{{id}}.json" accept-charset="UTF-8" method="GET">
-        <input type="hidden" name="authenticity_token" value="{{../token}}">
-        <input type="hidden" name="id" value="{{id}}">
-        <input class="btn btn-primary btn-sm" type="submit" value="Register">
-        </form>
-    {{/ifCurrentUserRegister}}
-    <br>
-    {{#if ../currentUser.admin}}
-        <form class="deleteTournament" id="deleteTournament-{{id}}" action="/api/tournaments/{{id}}.json" accept-charset="UTF-8" method="DELETE">
-        <input type="hidden" name="authenticity_token" value="{{../token}}">
-        <input type="hidden" name="id" value="{{id}}">
-        <input class="btn btn-danger btn-sm" type="submit" value="Delete">
-        </form>
-    {{/if}}
-    <br>
+            {{#ifCurrentUserRegister ../currentUser.tournament_id  id}}
+                <form class="unregisterTournament" id="unregisterTournament-{{id}}" action="/api/tournaments/unregister/{{id}}.json" accept-charset="UTF-8" method="GET">
+                <input type="hidden" name="authenticity_token" value="{{../token}}">
+                <input type="hidden" name="id" value="{{id}}">
+                <input class="btn btn-danger btn-sm" type="submit" value="Unregister">
+                </form>
+            {{else}}
+                <form class="registerTournament" id="registerTournament-{{id}}" action="/api/tournaments/register/{{id}}.json" accept-charset="UTF-8" method="GET">
+                <input type="hidden" name="authenticity_token" value="{{../token}}">
+                <input type="hidden" name="id" value="{{id}}">
+                <input class="btn btn-primary btn-sm" type="submit" value="Register">
+                </form>
+            {{/ifCurrentUserRegister}}
+            <br>
+            {{#if ../currentUser.admin}}
+                <form class="deleteTournament" id="deleteTournament-{{id}}" action="/api/tournaments/{{id}}.json" accept-charset="UTF-8" method="DELETE">
+                <input type="hidden" name="authenticity_token" value="{{../token}}">
+                <input type="hidden" name="id" value="{{id}}">
+                <input class="btn btn-danger btn-sm" type="submit" value="Delete">
+                </form>
+            {{/if}}
+            <br>
+        </div>
+        <br>
+        {{/each}}
+    </div>
 </div>
-<br>
-{{/each}}
+</div>

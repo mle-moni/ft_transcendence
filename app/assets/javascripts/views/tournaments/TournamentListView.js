@@ -10,9 +10,12 @@ AppClasses.Views.TournamentList = class extends Backbone.View {
 		this.template = App.templates["tournaments/list"];
 		
 		this.tournaments = opts.tournaments;
+		this.allUsers = opts.allUsers;
 		this.listenTo(this.tournaments, "change reset add remove", this.updateRender);
 		this.listenTo(this.model, "change", this.updateRender);
+		this.listenTo(this.allUsers, "change reset add remove", this.updateRender);
 		this.tournaments.fetch();
+		this.allUsers.myFetch();
 		// TODO listen to tournaments collection
 	}
 
@@ -74,11 +77,13 @@ AppClasses.Views.TournamentList = class extends Backbone.View {
 			{
 				var formatedDate = new Date(tournaments[count].start);
 				tournaments[count].start = new Intl.DateTimeFormat('en-GB', { dateStyle: 'full', timeStyle: 'long' }).format(formatedDate);
+				tournaments[count].page_id = (count + 1);
 			}
 		}
 		this.$el.html(this.template({
 			tournaments: tournaments,
 			currentUser: this.model.toJSON(),
+			allUsers: this.allUsers.toJSON(),
 			token: $('meta[name="csrf-token"]').attr('content')
 		}));
 		this.delegateEvents();

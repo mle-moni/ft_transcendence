@@ -121,3 +121,21 @@ Handlebars.registerHelper('ifCurrentUserRegister', function(userTournamentID, to
         return options.fn(this);
     return options.inverse(this);
 });
+
+Handlebars.registerHelper('ifHasWinner', function(winnerID, options) {
+
+    if (winnerID == 0)
+        return options.inverse(this);
+    return options.fn(this);
+});
+
+Handlebars.registerHelper('findWinner', function(winnerID, allUsers) {
+
+    if (winnerID == -1)
+        return ("Nobody");
+    for (var count = 0; count < allUsers.length; count++)
+    {
+        if (allUsers[count].id == winnerID)
+            return (allUsers[count].nickname)
+    }
+});
