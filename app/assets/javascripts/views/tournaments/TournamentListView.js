@@ -3,6 +3,7 @@ AppClasses.Views.TournamentList = class extends Backbone.View {
 		opts.events = {
 			"submit .registerTournament": "registerTournament",
 			"submit .unregisterTournament": "unregisterTournament",
+			"submit .startTournament": "startTournament",
 			"submit .deleteTournament": "deleteTournament"
 		};
 		super(opts);
@@ -49,6 +50,21 @@ AppClasses.Views.TournamentList = class extends Backbone.View {
 		return (false);
 	}
 
+	startTournament(e) {
+		e.preventDefault();
+		if (e.target.children.length < 2) return (false);
+		const tournamentID = e.target.children[1].value;
+		const selectorFormID = "#startTournament-" + tournamentID;
+		App.utils.formAjax("/api/tournaments/start/" + tournamentID + ".json", selectorFormID)
+		.done(res => {
+			App.toast.success("Tournament Started !", { duration: 2000, style: App.toastStyle });
+		})
+		.fail((e) => {
+			App.utils.toastError(e);
+		});
+		return (false);
+	}
+
 	deleteTournament(e) {
 		e.preventDefault();
 		if (e.target.children.length < 2) return (false);
@@ -76,7 +92,7 @@ AppClasses.Views.TournamentList = class extends Backbone.View {
 			for (var count = 0; count < tournaments.length; count++)
 			{
 				var formatedDate = new Date(tournaments[count].start);
-				tournaments[count].start = new Intl.DateTimeFormat('en-GB', { dateStyle: 'full', timeStyle: 'long' }).format(formatedDate);
+				tournaments[count].formatedDate = new Intl.DateTimeFormat('en-GB', { dateStyle: 'full', timeStyle: 'long' }).format(formatedDate);
 				tournaments[count].page_id = (count + 1);
 			}
 		}

@@ -14,37 +14,48 @@
         {{#each tournaments}}
         <div class="tournament-elem" style="border: solid;">
             <h3>Tournament #{{page_id}}</h3>
-            {{#ifHasWinner winner}}
-                <p>Winner of the tournament: {{#findWinner winner}}{{/findWinner}}</p>
-            {{else}}
-                {{#if started}}
-                    <p>Tournament ongoing !</p>
+            {{#ifTournamentStarted winner_id  started}}
+                {{#if winner_id}}
+                    <p>Winner of the tournament: {{#findWinner winner_id  ../allUsers}}{{/findWinner}}</p>
                 {{else}}
-                <p>Closing date for registration: {{start}}</p>
+                    <p>Tournament ongoing !</p>
                 {{/if}}
-            {{/ifHasWinner}}
-
-            {{#ifCurrentUserRegister ../currentUser.tournament_id  id}}
-                <form class="unregisterTournament" id="unregisterTournament-{{id}}" action="/api/tournaments/unregister/{{id}}.json" accept-charset="UTF-8" method="GET">
-                <input type="hidden" name="authenticity_token" value="{{../token}}">
-                <input type="hidden" name="id" value="{{id}}">
-                <input class="btn btn-danger btn-sm" type="submit" value="Unregister">
-                </form>
             {{else}}
-                <form class="registerTournament" id="registerTournament-{{id}}" action="/api/tournaments/register/{{id}}.json" accept-charset="UTF-8" method="GET">
-                <input type="hidden" name="authenticity_token" value="{{../token}}">
-                <input type="hidden" name="id" value="{{id}}">
-                <input class="btn btn-primary btn-sm" type="submit" value="Register">
-                </form>
-            {{/ifCurrentUserRegister}}
+                <p>Closing date for registration: {{formatedDate}}</p>
+            {{/ifTournamentStarted}}
+
+            {{#ifTournamentStarted winner_id  started}}
+            {{else}}
+                {{#ifCurrentUserRegister ../currentUser.tournament_id  id}}
+                    <form class="unregisterTournament" id="unregisterTournament-{{id}}" action="/api/tournaments/unregister/{{id}}.json" accept-charset="UTF-8" method="GET">
+                    <input type="hidden" name="authenticity_token" value="{{../token}}">
+                    <input type="hidden" name="id" value="{{id}}">
+                    <input class="btn btn-danger btn-sm" type="submit" value="Unregister">
+                    </form>
+                {{else}}
+                    <form class="registerTournament" id="registerTournament-{{id}}" action="/api/tournaments/register/{{id}}.json" accept-charset="UTF-8" method="GET">
+                    <input type="hidden" name="authenticity_token" value="{{../token}}">
+                    <input type="hidden" name="id" value="{{id}}">
+                    <input class="btn btn-primary btn-sm" type="submit" value="Register">
+                    </form>
+                {{/ifCurrentUserRegister}}
             <br>
             {{#if ../currentUser.admin}}
+
+                {{!-- {{#ifTournamentCanStart start}} --}}
+                <form class="startTournament" id="startTournament-{{id}}" action="/api/tournaments/start/{{id}}.json" accept-charset="UTF-8" method="GET">
+                <input type="hidden" name="authenticity_token" value="{{../token}}">
+                <input type="hidden" name="id" value="{{id}}">
+                <input class="btn btn-success btn-sm" type="submit" value="Start">
+                <br><br>
+                {{!-- {{/ifTournamentCanStart}} --}}
                 <form class="deleteTournament" id="deleteTournament-{{id}}" action="/api/tournaments/{{id}}.json" accept-charset="UTF-8" method="DELETE">
                 <input type="hidden" name="authenticity_token" value="{{../token}}">
                 <input type="hidden" name="id" value="{{id}}">
                 <input class="btn btn-danger btn-sm" type="submit" value="Delete">
                 </form>
             {{/if}}
+            {{/ifTournamentStarted}}
             <br>
         </div>
         <br>

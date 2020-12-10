@@ -52,6 +52,14 @@ class Tournament < ApplicationRecord
 		end
 	end
 
+	def free_users
+		users.each do |usr|
+			usr.eliminated = false
+			usr.tournament = nil
+			usr.save
+		end
+	end
+
 	def finish
 		players_alive = Tournament.find(id).alive
 		if players_alive.length == 1
@@ -59,9 +67,11 @@ class Tournament < ApplicationRecord
 			save
 			notice_txt = "#{players_alive.first.nickname} just won a tournament!"
 			ActionCable.server.broadcast "update_channel", action: "notice", notice: notice_txt
+			free_users
 			return true
 		end
 		self.winner_id = -1
+		free_users
 		save
 		return false
 	end

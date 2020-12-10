@@ -122,9 +122,9 @@ Handlebars.registerHelper('ifCurrentUserRegister', function(userTournamentID, to
     return options.inverse(this);
 });
 
-Handlebars.registerHelper('ifHasWinner', function(winnerID, options) {
+Handlebars.registerHelper('ifTournamentStarted', function(winnerID, started, options) {
 
-    if (winnerID == 0)
+    if (winnerID == 0 && !started)
         return options.inverse(this);
     return options.fn(this);
 });
@@ -138,4 +138,16 @@ Handlebars.registerHelper('findWinner', function(winnerID, allUsers) {
         if (allUsers[count].id == winnerID)
             return (allUsers[count].nickname)
     }
+});
+
+Handlebars.registerHelper('ifTournamentCanStart', function(TournamentDate, options) {
+
+    if (TournamentDate)
+    {
+        var tournament = new Date(TournamentDate);
+        var now = new Date();
+        if (now < tournament)
+            return options.inverse(this);
+    }
+    return options.fn(this);
 });
