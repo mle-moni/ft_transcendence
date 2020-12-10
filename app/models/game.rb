@@ -92,7 +92,10 @@ class Game < ApplicationRecord
 
 			if ($games[room_name][:game_type] == "tournament")
 				if winner_user.tournament
-					winner_user.tournament.end_match(winner_user, loser_user)
+					Thread.new do
+						sleep 5
+						winner_user.tournament.end_match(winner_user, loser_user)
+					end
 				end
 			end
 

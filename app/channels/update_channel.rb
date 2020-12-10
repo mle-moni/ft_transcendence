@@ -8,7 +8,7 @@ class UpdateChannel < ApplicationCable::Channel
 	end
 
 	def receive(data)
-		case data["action"]
+		case data["action_str"]
 		when "alive"
 			alive
 		when "bye"

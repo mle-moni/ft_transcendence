@@ -12,16 +12,17 @@ class Tournament < ApplicationRecord
 	def start_it
 		return false if started
 		self.started = true
-		self.matches_started = 0
-		self.matches_ended = 0
 		save
 		ActionCable.server.broadcast "update_channel", action: "update", target: "tournaments"
 		next_step
 	end
 
 	def next_step
+		self.matches_started = 0
+		self.matches_ended = 0
+		save
 		eliminate_users_not_ready
-		if alive.length <= 1
+		if Tournament.find(id).alive.length <= 1
 			finish
 			ActionCable.server.broadcast "update_channel", action: "update", target: "tournaments"
 			return
@@ -40,15 +41,6 @@ class Tournament < ApplicationRecord
 		end
 	end
 
-	def reset
-		users.each do |u|
-			u.eliminated = false
-			u.save
-		end
-		self.started = false
-		save
-	end
-
 	def end_match(winner, loser)
 		self.matches_ended += 1
 		save
@@ -56,20 +48,32 @@ class Tournament < ApplicationRecord
 		puts "eliminated #{loser.email}"
 		loser.save
 		if self.matches_started == self.matches_ended
-			sleep 0.5
 			next_step
 		end
 	end
 
 	def finish
-		if alive.length == 1
-			self.winner_id = alive.first.id
+		players_alive = Tournament.find(id).alive
+		if players_alive.length == 1
+			self.winner_id = players_alive.first.id
 			save
+			notice_txt = "#{players_alive.first.nickname} just won a tournament!"
+			ActionCable.server.broadcast "update_channel", action: "notice", notice: notice_txt
 			return true
 		end
 		self.winner_id = -1
 		save
 		return false
+	end
+
+	def reset
+		users.each do |u|
+			u.eliminated = false
+			u.save
+		end
+		self.started = false
+		self.winner_id = 0
+		save
 	end
 
 	private
@@ -85,7 +89,7 @@ class Tournament < ApplicationRecord
 	end
 
 	def mkpairs
-		users = alive.shuffle
+		users = Tournament.find(id).alive.shuffle
 		pairs = []
 		while users.length > 1
 			pairs.push([users.shift, users.pop])

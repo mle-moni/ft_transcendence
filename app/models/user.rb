@@ -43,6 +43,7 @@ class User < ApplicationRecord
          :omniauthable, omniauth_providers: [:marvin]
 
   def online
+    return false unless last_seen
     seconds_since_seen = -(last_seen - DateTime.now)
     return seconds_since_seen < 1.6
   end
