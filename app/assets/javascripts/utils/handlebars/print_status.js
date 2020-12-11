@@ -1,4 +1,7 @@
 Handlebars.registerHelper('print_status', function () {
+	if (this.in_game) {
+		return ("In game");
+	}
 	const online = false;
 	const secondsToBeOffline = 2; // user is considered offline after N scd
 	if (!this.last_seen) {
