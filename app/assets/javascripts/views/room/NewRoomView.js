@@ -1,13 +1,18 @@
 AppClasses.Views.NewRoom = class extends Backbone.View {
 	constructor(opts) {
 		opts.events = {
-			"submit #createRoomForm": "submit"
+			"submit #createRoomForm": "submit",
+			"click .form-check-input": "displayPasswordField",
 		}
 		super(opts);
 		this.tagName = "div";
 		this.template = App.templates["room/form"];
 		this.updateRender();
 
+	}
+
+	displayPasswordField() {
+		$("#togglePasswordField").toggle();
 	}
 	
 	submit(e) {

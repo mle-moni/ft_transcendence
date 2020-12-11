@@ -158,12 +158,14 @@ class RoomsController < ApplicationController
   # POST /rooms.json
   def create
     
-    # client side validation to add
     filteredParams = params.require(:room).permit(:name, :owner_id, :privacy, :password)
-    if !["", "public", "private"].include?(filteredParams["privacy"])
-      res_with_error("Privacy field must be either empty, public or private", :bad_request)
-      return (false)
-    end
+
+    if filteredParams["privacy"] && filteredParams["privacy"] == "on"
+      filteredParams["privacy"] = "private"
+    else
+      filteredParams["privacy"] = "public"
+    end 
+
     if filteredParams["name"].empty?
       res_with_error("Invalid parameters", :bad_request)
       return (false)
@@ -202,10 +204,17 @@ class RoomsController < ApplicationController
 
     filteredParams = params.require(:room).permit(:name, :privacy, :password, :id)
     @room = Room.find(filteredParams["id"])
-    if !["", "public", "private"].include?(filteredParams["privacy"])
-      res_with_error("Privacy field must be either empty, public or private", :bad_request)
-      return (false)
-    end
+
+    if filteredParams["privacy"] && filteredParams["privacy"] == "on"
+      filteredParams["privacy"] = "private"
+    else
+      filteredParams["privacy"] = "public"
+    end 
+
+    # if !["", "public", "private"].include?(filteredParams["privacy"])
+    #   res_with_error("Privacy field must be either empty, public or private", :bad_request)
+    #   return (false)
+    # end
 
     if filteredParams["privacy"] == "private"
       if filteredParams["password"].empty?

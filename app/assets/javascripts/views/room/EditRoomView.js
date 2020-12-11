@@ -3,17 +3,16 @@ AppClasses.Views.EditRoom = class extends Backbone.View {
 		opts.events = {
 			"submit #editRoomForm": "submit",
 			"click #displayDeleteForm": "displayDeleteForm",
-			"submit #deleteRoomForm": "delete"
+			"submit #deleteRoomForm": "delete",
+			"click .form-check-input": "displayPasswordFieldEdit",
+
 		}
 		super(opts);
-
 		this.room_id = opts.room_id;
 		this.user = opts.user;
 		this.tagName = "div";
 		this.template = App.templates["room/edit"];
-
 		this.listenTo(App.collections.rooms, "change reset add remove", this.updateRender);
-
 		this.model.fetch();
 		this.updateRender();
 
@@ -22,7 +21,11 @@ AppClasses.Views.EditRoom = class extends Backbone.View {
 	displayDeleteForm() {
 		$("#deleteRoomForm").show()
 	}
-	
+
+	displayPasswordFieldEdit() {
+		$("#togglePasswordField").toggle();
+	}
+
 	submit(e) {
 		e.preventDefault();
 		App.utils.formAjax(`/api/rooms/${this.room_id}.json`, "#editRoomForm")
