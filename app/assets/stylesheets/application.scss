@@ -536,3 +536,39 @@ label + .check {
 .list-group-item {
 	border-radius: 20px !important;
 }
+
+.btn-block {
+	width: 60% !important;
+	margin-left: 20%!important;
+}
+
+.btn-primary.raised {
+	box-shadow: 0 3px 0 0 #007299;
+}
+
+.btn-primary.raised:active, .btn-primary.raised.active {
+	background: #33a6cc;
+	box-shadow: none;
+	margin-bottom: -3px;
+	margin-top: 3px;
+}
+
+
+input[type="text"],
+input[type="file"],
+select.form-control {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #000000;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  border-radius: 0;
+  width: 80%;
+}
+
+input[type="text"]:focus,
+input[type="file"]:focus,
+select.form-control:focus {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}

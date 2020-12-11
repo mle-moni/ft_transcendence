@@ -19,14 +19,16 @@
 	<ul class="list-group">
 		{{#each guild.users}}
 		<li class="list-group-item">
-			<img src="{{image}}" style="max-height: 50px;" class="clear">
-			<a class="btn btn-primary btn-sm font20" href="#profiles/{{ id }}">{{ nickname }}</a>
+			<a class="btn btn-sm font20" href="#profiles/{{ id }}">
+				<img src="{{image}}" style="max-height: 50px;" class="clear">
+				<label class="text-maxwidth-sm">{{ nickname }}</label>
+			</a>
 
 			{{#if guild_owner}}
-			<sub><b class="">Owner </b></sub>
+				<sub><b class="">Owner </b></sub>
 			{{/if}}
 			{{#if guild_officer}}
-			<sub><b class="">Officer</b></sub>
+				<sub><b class="">Officer</b></sub>
 			{{/if}}
 		</li>
 		<br>
