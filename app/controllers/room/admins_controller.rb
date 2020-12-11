@@ -64,7 +64,8 @@ class Room::AdminsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_room_admin
-      @room_admin = Room::Admin.find(params[:id])
+      @room_admin = Room::Admin.find(params[:id]) rescue nil
+      return res_with_error("Admin not found", :not_found) unless @room_admin
     end
 
     # Only allow a list of trusted parameters through.

@@ -64,7 +64,8 @@ class Room::MembersController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_room_member
-      @room_member = Room::Member.find(params[:id])
+      @room_member = Room::Member.find(params[:id]) rescue nil
+      return res_with_error("Member not found", :not_found) unless @room_member
     end
 
     # Only allow a list of trusted parameters through.

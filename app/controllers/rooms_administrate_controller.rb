@@ -5,8 +5,8 @@ class RoomsAdministrateController < ApplicationController
   def mute
 
     filteredParams = params.require(:room).permit(:room_id, :targetMemberID, :endTime)
-    @room = Room.find(filteredParams["room_id"])
-    userTargeted = User.find(filteredParams["targetMemberID"])
+    @room = Room.find(filteredParams["room_id"]) rescue nil
+    userTargeted = User.find(filteredParams["targetMemberID"]) rescue nil
     endDateTimeFormat = DateTime.parse(filteredParams["endTime"])
    
     if @room == nil || userTargeted == nil
@@ -33,8 +33,8 @@ class RoomsAdministrateController < ApplicationController
 
   def unmute
     filteredParams = params.require(:room).permit(:room_id, :targetMemberID)
-    @room = Room.find(filteredParams["room_id"])
-    userTargeted = User.find(filteredParams["targetMemberID"])
+    @room = Room.find(filteredParams["room_id"]) rescue nil
+    userTargeted = User.find(filteredParams["targetMemberID"]) rescue nil
     if @room == nil || userTargeted == nil
       res_with_error("Room or Targeted User invalid", :bad_request)
       return false
@@ -51,8 +51,8 @@ class RoomsAdministrateController < ApplicationController
   def ban
 
     filteredParams = params.require(:room).permit(:room_id, :targetMemberID, :endTime)
-    @room = Room.find(filteredParams["room_id"])
-    userTargeted = User.find(filteredParams["targetMemberID"])
+    @room = Room.find(filteredParams["room_id"]) rescue nil
+    userTargeted = User.find(filteredParams["targetMemberID"]) rescue nil
     endDateTimeFormat = DateTime.parse(filteredParams["endTime"])
     if @room == nil || userTargeted == nil
       res_with_error("Room or Targeted User invalid", :bad_request)
@@ -78,8 +78,8 @@ class RoomsAdministrateController < ApplicationController
 
   def unban
     filteredParams = params.require(:room).permit(:room_id, :targetMemberID)
-    @room = Room.find(filteredParams["room_id"])
-    userTargeted = User.find(filteredParams["targetMemberID"])
+    @room = Room.find(filteredParams["room_id"]) rescue nil
+    userTargeted = User.find(filteredParams["targetMemberID"]) rescue nil
     if @room == nil || userTargeted == nil
       res_with_error("Room or Targeted User invalid", :bad_request)
       return false
@@ -94,8 +94,8 @@ class RoomsAdministrateController < ApplicationController
 
   def kick
     filteredParams = params.require(:room).permit(:room_id, :targetMemberID)
-    @room = Room.find(filteredParams["room_id"])
-    userTargeted = User.find(filteredParams["targetMemberID"])
+    @room = Room.find(filteredParams["room_id"]) rescue nil
+    userTargeted = User.find(filteredParams["targetMemberID"]) rescue nil
     if @room == nil || userTargeted == nil
       res_with_error("Room or Targeted User invalid", :bad_request)
       return false
@@ -114,26 +114,10 @@ class RoomsAdministrateController < ApplicationController
 
   private
 
-    def res_with_error(msg, error)
-      respond_to do |format|
-        format.html { redirect_to "/", alert: "#{msg}" }
-        format.json { render json: {alert: "#{msg}"}, status: error }
-      end
-    end
-
     def res_with_info(msg)
       respond_to do |format|
         format.html { redirect_to "/", notice: "#{msg}" }
         format.json { render json: {msg: "#{msg}"}} #status: :ok
-      end
-    end
-
-    def connect_user
-      unless user_signed_in?
-        respond_to do |format|
-          format.html { redirect_to "/", alert: "You need to be connected for this action" }
-          format.json { render json: {alert: "You need to be connected for this action"}, status: :unprocessable_entity }
-        end
       end
     end
 

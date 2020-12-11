@@ -42,7 +42,8 @@ class AdminController < ApplicationController
 	private
 
 	def set_user_from_param
-		@user_from_param = User.find(params[:id])
+		@user_from_param = User.find(params[:id]) rescue nil
+		return res_with_error("User not found", :not_found) unless @user_from_param
 		if current_user.id == @user_from_param.id
 			return res_with_error("You can't change your settings", :bad_request)
 		end

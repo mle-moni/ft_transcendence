@@ -32,8 +32,8 @@ class ChatMessagesController < ApplicationController
         # res_with_error("You're currently muted", :bad_request)
         # return false
         # end 
-        user = User.find(filteredParams["from_id"])
-        dc = DirectChat.find(filteredParams["direct_chat_id"])
+        user = User.find(filteredParams["from_id"]) rescue nil
+        dc = DirectChat.find(filteredParams["direct_chat_id"]) rescue nil
         if !user || !dc
             res_with_error("Unknow DirectChat or User", :bad_request)
             return (false)
@@ -80,13 +80,6 @@ class ChatMessagesController < ApplicationController
         # Only allow a list of trusted parameters through.
         def chat_message_params
             params.require(:chat_message).permit(:user_id, :room_id)
-        end
-
-        def res_with_error(msg, error)
-            respond_to do |format|
-                format.html { redirect_to "/", alert: "#{msg}" }
-                format.json { render json: {alert: "#{msg}"}, status: error }
-            end
         end
 
         def reset_temporary_restrictions

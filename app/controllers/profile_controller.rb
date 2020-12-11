@@ -12,30 +12,24 @@ class ProfileController < ApplicationController
 
 	def disable_otp
 		current_user.otp_required_for_login = false
-		current_user.save!
-		respond_to do |format|
-			format.html { redirect_to "/#profile", notice: 'Two factor auth disabled' }
-			format.json { render json: {msg: "Two factor auth successfully disabled"}, status: :ok }
-		end
+		current_user.save
+		success("Two factor auth successfully disabled")
 	end
 	def enable_otp
 		if current_user.provider == "marvin" && !current_user.has_set_pwd
-			update_error("You need to set a password first")
+			res_with_error("You need to set a password first", :bad_request)
 			return
 		end
 		current_user.otp_secret = User.generate_otp_secret
 		current_user.otp_required_for_login = true
-		current_user.save!
+		current_user.save
 		uri = current_user.otp_provisioning_uri(current_user.email, issuer: "ft_transcendence")
-		respond_to do |format|
-			format.html { redirect_to "/#profile", notice: 'Two factor auth enabled' }
-			format.json { render json: {msg: uri}, status: :ok }
-		end
+		success(uri)
 	end
 
 	def change_password
 		unless params[:id] && params[:password]
-			update_error("Some fields are missing from your request")
+			res_with_error("Some fields are missing from your request", :bad_request)
 		end
 		_change_pwd(params[:password])
 		respond_to do |format|
@@ -46,19 +40,19 @@ class ProfileController < ApplicationController
 
 	def update
 		if lack_parameter
-			update_error("Some fields are missing in your request")
+			res_with_error("Some fields are missing from your request", :bad_request)
 			return
 		end
-		@user = User.find(params[:id]) # get user by his unique ID
+		@user = User.find(params[:id]) rescue nil # get user by his unique ID
 		
 		# if the user connected is not the same as @user, the request is a forgery
 		if !@user || current_user.id != @user.id
-			update_error("UserIDs does not match")
+			res_with_error("UserIDs does not match", :bad_request)
 			return
 		end
 
 		if save_image # error
-			update_error("Could not update image (only .jpg and .png accepted)")
+			res_with_error("Could not update image (only .jpg and .png accepted)", :bad_request)
 			return
 		end
 		
@@ -67,11 +61,8 @@ class ProfileController < ApplicationController
 
 	def handleBlock
 		filteredParams = params.permit(:targetUserID, :typeAction)
-		targetUser = User.find(filteredParams["targetUserID"])
-		if !targetUser
-			res_with_error("Unknow User", :bad_request)
-			return false
-		end
+		targetUser = User.find(filteredParams["targetUserID"]) rescue nil
+		return res_with_error("Unknow User", :bad_request) unless targetUser
 		if filteredParams["typeAction"] == "block" && !Block.where(user: current_user, toward: targetUser).exists?
 				@newBlock = Block.create(user: current_user, toward: targetUser)
 		elsif filteredParams["typeAction"] == "unblock" && Block.where(user: current_user, toward: targetUser).exists?
@@ -87,22 +78,6 @@ class ProfileController < ApplicationController
 	end 
 
 	private
-
-	def res_with_error(msg, error)
-		respond_to do |format|
-		  format.html { redirect_to "/", alert: "#{msg}" }
-		  format.json { render json: {alert: "#{msg}"}, status: error }
-		end
-	end
-  
-
-	# TODO better HTTP codes: https://gist.github.com/mlanett/a31c340b132ddefa9cca
-	def update_error(msg)
-		respond_to do |format|
-			format.html { redirect_to "/#profile", alert: "#{msg}" }
-			format.json { render json: {alert: "#{msg}"}, status: :unprocessable_entity }
-		end
-	end
 
 	def lack_parameter
 		unless params[:email] && params[:id] && params[:nickname]
@@ -122,7 +97,7 @@ class ProfileController < ApplicationController
 			ActionCable.server.broadcast "update_channel", action: "update", target: "users"
 			ActionCable.server.broadcast "update_channel", action: "update", target: "guilds"
 		else
-			update_error("Could not save profile")
+			res_with_error("Could not save profile", :unprocessable_entity)
 		end
 	end
 
@@ -150,22 +125,7 @@ class ProfileController < ApplicationController
 		new_hashed_password = User.new(:password => pwd).encrypted_password
 		current_user.encrypted_password = new_hashed_password
 		current_user.has_set_pwd = true
-		current_user.save!
+		current_user.save
 	end
 
-	def connect_user
-		unless user_signed_in?
-			respond_to do |format|
-				format.html { redirect_to "/", alert: "You need to be connected for this action" }
-				format.json { render json: {alert: "You need to be connected for this action"}, status: :unprocessable_entity }
-			end
-		end
-		if user_signed_in? && current_user.banned
-			respond_to do |format|
-				format.html { redirect_to "/", alert: "You are banned" }
-				format.json { render json: {alert: "You are banned"}, status: :unauthorized }
-			end
-		end
-	end
 end
-  

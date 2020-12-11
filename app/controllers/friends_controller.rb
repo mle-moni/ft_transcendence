@@ -30,10 +30,7 @@ class FriendsController < ApplicationController
 		if user_friendship
 			user_friendship.destroy
 		end
-		respond_to do |format|
-			format.html { redirect_to guilds_url, notice: 'Friendship successfully destroyed.' }
-			format.json { render json: {msg: "Friendship successfully destroyed"}, status: :ok }
-		end
+		success("Friendship successfully destroyed")
 	end
 
 	def add
@@ -45,10 +42,7 @@ class FriendsController < ApplicationController
 		else
 			current_user.friendships.create({friend_id: @friend_id})
 		end
-		respond_to do |format|
-			format.html { redirect_to guilds_url, notice: 'Friend request sent.' }
-			format.json { render json: {msg: "Friend request sent"}, status: :ok }
-		end
+		success("Friend request sent")
 	end
 
 	def accept
@@ -61,10 +55,7 @@ class FriendsController < ApplicationController
 		user_friendship.confirmed = true
 		user_friendship.save
 		current_user.friendships.create({friend_id: @friend_id, confirmed: true})
-		respond_to do |format|
-			format.html { redirect_to guilds_url, notice: 'Friend request accepted.' }
-			format.json { render json: {msg: "Friend request accepted"}, status: :ok }
-		end
+		success("Friend request accepted")
 	end
 
 	def reject
@@ -74,10 +65,7 @@ class FriendsController < ApplicationController
 			return false
 		end
 		other_friendship.destroy
-		respond_to do |format|
-			format.html { redirect_to guilds_url, notice: 'Friend request rejected.' }
-			format.json { render json: {msg: "Friend request rejected"}, status: :ok }
-		end
+		success("Friend request rejected")
 	end
 
 	private
@@ -90,34 +78,12 @@ class FriendsController < ApplicationController
 		end
 	end
 
-	def res_with_error(msg, error)
-		respond_to do |format|
-			format.html { redirect_to "/", alert: "#{msg}" }
-			format.json { render json: {alert: "#{msg}"}, status: error }
-		end
-	end
-
 	def check_in_friendlist
 		if current_user.friendships.where(friend_id: @friend_id).exists?
 			res_with_error("User already in your list", :bad_request)
 			return false
 		end
 		return (true)
-	end
-
-	def connect_user
-		unless user_signed_in?
-			respond_to do |format|
-				format.html { redirect_to "/", alert: "You need to be connected for this action" }
-				format.json { render json: {alert: "You need to be connected for this action"}, status: :unprocessable_entity }
-			end
-		end
-		if user_signed_in? && current_user.banned
-			respond_to do |format|
-				format.html { redirect_to "/", alert: "You are banned" }
-				format.json { render json: {alert: "You are banned"}, status: :unauthorized }
-			end
-		end
 	end
 
 end

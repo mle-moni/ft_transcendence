@@ -65,8 +65,7 @@ class GuildsController < ApplicationController
   # PATCH/PUT /guilds/1.json
   def update
     unless current_user.guild.owner == current_user
-      res_with_error("You need to own the guild to edit it", :unauthorized)
-      return false
+      return res_with_error("You need to own the guild to edit it", :unauthorized)
     end
 
     g_params = guild_params()
@@ -130,27 +129,24 @@ class GuildsController < ApplicationController
   end
 
   def accept_request
-    new_usr = User.find(params[:id])
+    new_usr = User.find(params[:id]) rescue nil
+    return res_with_error("User not found", :not_found) unless new_usr
     unless new_usr.guild_id == current_user.guild_id
-      res_with_error("Bad request", :bad_request)
-      return false
+      return res_with_error("Bad request", :bad_request)
     end
     unless User.has_officer_rights(current_user)
-      res_with_error("Action unauthorized", :unauthorized)
-      return false
+      return res_with_error("Action unauthorized", :unauthorized)
     end
     new_usr.guild_validated = true
     new_usr.save
-    respond_to do |format|
-      format.html { redirect_to guilds_url, notice: 'Joining request accepted.' }
-      format.json { render json: {msg: "Joining request accepted"}, status: :ok }
-    end
+    success("Joining request accepted")
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_guild
-      @guild = Guild.find(params[:id])
+      @guild = Guild.find(params[:id]) rescue nil
+      return res_with_error("Guild not found", :not_found) unless @guild
     end
 
     # Only allow a list of trusted parameters through.
@@ -158,34 +154,12 @@ class GuildsController < ApplicationController
     def guild_params
       g_params = params.require(:guild).permit(:name, :anagram)
       if !g_params['name'] || check_len(g_params['name'], 3, 20)
-        res_with_error("Name length must be >= 3 and <= 20", :bad_request)
-        return false
+        return res_with_error("Name length must be >= 3 and <= 20", :bad_request)
       end
       if !g_params['anagram'] || check_len(g_params['anagram'], 2, 5)
-        res_with_error("Anagram length must be >= 2 and <= 5", :bad_request)
-        return false
+        return res_with_error("Anagram length must be >= 2 and <= 5", :bad_request)
       end
       return (g_params)
-    end
-
-    # TODO this is the same function as in profile_controller, DRY it later
-    def connect_user
-      unless user_signed_in?
-        respond_to do |format|
-          format.html { redirect_to "/", alert: "You need to be connected for this action" }
-          format.json { render json: {alert: "You need to be connected for this action"}, status: :unprocessable_entity }
-        end
-      end
-      if user_signed_in? && current_user.banned
-        res_with_error("You are banned", :unauthorized)
-      end
-    end
-
-    def res_with_error(msg, error)
-      respond_to do |format|
-        format.html { redirect_to "/", alert: "#{msg}" }
-        format.json { render json: {alert: "#{msg}"}, status: error }
-      end
     end
 
     def check_len(str, minlen, maxlen)
@@ -197,8 +171,7 @@ class GuildsController < ApplicationController
 
     def has_guild
       if current_user.guild
-        res_with_error("You already are in a guild", :bad_request)
-        return false
+        return res_with_error("You already are in a guild", :bad_request)
       end
     end
 end
