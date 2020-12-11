@@ -21,6 +21,10 @@ canvas {
 	width: 80vh;
 }
 
+.game-canvas {
+	padding-top: 5vh;
+}
+
 @media screen and (orientation:portrait) {
 	.horitontal-warning {
 		text-align: center;
@@ -32,11 +36,13 @@ canvas {
 		height: 0vh;
 		width: 0vh;
 	}
-}
 
-
-.game-canvas {
-	padding-top: 5vh;
+	.game-canvas {
+		visibility: hidden;
+		height: 0vh;
+		width: 0vh;
+	}
+	
 }
 
 .acceptRequestGuild {
