@@ -22,15 +22,22 @@ class FriendsController < ApplicationController
 	end
 
 	def destroy
+		destroy_success = false
 		other_friendship = Friendship.where(user_id: @friend_id, friend_id: current_user.id).first
 		if other_friendship
 			other_friendship.destroy
+			destroy_success = true
 		end
 		user_friendship = Friendship.where(user_id: current_user.id, friend_id: @friend_id).first
 		if user_friendship
 			user_friendship.destroy
+			destroy_success = true
 		end
-		success("Friendship successfully destroyed")
+		if destroy_success
+			success("Friendship successfully destroyed")
+		else
+			res_with_error("Friend not found", :not_found)
+		end
 	end
 
 	def add
@@ -76,6 +83,8 @@ class FriendsController < ApplicationController
 			res_with_error("You can't be friend with yourself", :bad_request)
 			return (false)
 		end
+		usr = User.find(@friend_id) rescue nil
+		return res_with_error("User not found", :not_found) unless usr
 	end
 
 	def check_in_friendlist
