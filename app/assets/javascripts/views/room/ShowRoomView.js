@@ -52,7 +52,6 @@ AppClasses.Views.ShowRoom = class extends Backbone.View {
 			return ;
 		App.utils.formAjax("/api/room_messages.json", "#sendRoomMessageForm")
 		.done(res => {
-			App.toast.success("Message sent", { duration: 1000, style: App.toastStyle });
 			this.model.fetch();
 			location.hash = `#rooms/` + this.room_id;
 		})

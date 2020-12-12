@@ -69,9 +69,7 @@ AppClasses.Views.Conversations = class extends AppClasses.Views.AbstractView {
 		if (!e.currentTarget.message || (e.currentTarget.message && e.currentTarget.message.value == ""))
 			return ;
 		App.utils.formAjax("/api/chat_messages.json", "#sendRoomMessageForm")
-		.done(res => {
-			App.toast.success("Message sent", { duration: 1000, style: App.toastStyle });
-		})
+		.done(res => {})
 		.fail((e) => {
 			App.utils.toastError(e);
 		});

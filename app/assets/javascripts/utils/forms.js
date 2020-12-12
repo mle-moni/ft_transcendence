@@ -57,7 +57,7 @@ App.utils.toastError = (e) => {
 		errorMsg += ` : ${e.responseJSON.alert}`
 	}
 	App.toast.alert(errorMsg, { duration: 2000, style: App.toastStyle });
-	console.error(`Error details: ${errorMsg}`);
+	console.error(`Details: ${errorMsg}`);
 }
 
 

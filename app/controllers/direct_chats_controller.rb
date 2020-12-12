@@ -33,7 +33,7 @@ class DirectChatsController < ApplicationController
     dc = DirectChat.find(filteredParams["direct_chat_id"]) rescue nil
 
     if !user || !dc
-      res_with_error("Unknow DirectChat or User", :bad_request)
+      res_with_error("Unknown DirectChat or User", :bad_request)
       return (false)
     end
 
