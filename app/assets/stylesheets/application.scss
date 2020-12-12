@@ -281,6 +281,12 @@ canvas {
 	text-overflow: ellipsis;
 }
 
+.text-maxwidth-md {
+	max-width: 20vw;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
 .text-maxwidth-sm {
 	max-width: 5vw;
 	overflow: hidden;

@@ -18,19 +18,23 @@
 	<br>
 	<ul class="list-group">
 		{{#each guild.users}}
-		<li class="list-group-item">
-			<a class="btn btn-sm font20" href="#profiles/{{ id }}">
-				<img src="{{image}}" style="max-height: 50px;" class="clear">
-				<label class="text-maxwidth-sm">{{ nickname }}</label>
-			</a>
-
-			{{#if guild_owner}}
-				<sub><b class="">Owner </b></sub>
-			{{/if}}
-			{{#if guild_officer}}
-				<sub><b class="">Officer</b></sub>
-			{{/if}}
-		</li>
+			<li class="list-group-item">
+				<a class="btn btn-sm font20 avatar-btn" href="#profiles/{{ id }}">
+					<img src="{{image}}" class="clear avatar">
+					<label class="text-maxwidth-md sized-text-md">
+						{{ nickname }}
+						{{#if guild_owner}}
+							(Owner)
+						{{/if}}
+						{{#if guild_officer}}
+							(Officer)
+						{{/if}}
+					</label>
+					{{#if user.in_game}}
+						<a class="btn btn-secondary sized-text-md" href="#game/{{user.roomid}}">Look player Game</a>
+					{{/if}}
+				</a>
+			</li>
 		<br>
 		{{/each}}
 	</ul>
@@ -42,7 +46,7 @@
 		{{#each guild.requests}}
 		<li class="acceptRequestGuild list-group-item">
 			<img src="{{image}}" style="max-height: 50px;" class="clear">
-			<a class="btn btn-primary btn-sm font20" href="#profiles/{{ id }}">{{ nickname }}</a>
+			<a class="btn btn-primary btn-sm font20 text-maxwidth-md" href="#profiles/{{ id }}">{{ nickname }}</a>
 			<span class="nodisplay">{{id}}</span>
 		</li>
 		{{/each}}

@@ -1,13 +1,18 @@
 <ul class="list-group">
 	{{#each user.friends}}
-	<li class="list-group-item">
-		<strong> {{nickname}} </strong>
-		({{print_status}})
+	<li class="list-group-item fifties blk-text">
+		<label class="sized-text-md"><strong> {{nickname}} </strong>
+		({{print_status}})</label>
 		&nbsp;
-		<span class="clickToDeleteFriend pointer btn btn-danger">
-			DELETE
-			<span class="nodisplay">{{id}}</span>
-		</span>
+		<div class="btn-group">
+			<span class="clickToDeleteFriend pointer btn btn-danger sized-text-md">
+				DELETE
+				<span class="nodisplay">{{id}}</span>
+			</span>
+			{{#if user.in_game}}
+				<a class="btn btn-secondary sized-text-md" href="#game/{{user.roomid}}">Look player Game</a>
+			{{/if}}
+		</div>
 	</li>
 	{{/each}}
 </ul>

@@ -45,7 +45,7 @@
     {{!-- CHATBOX --}}
     <div class="col-7" style="padding-top: 10px!important;">
         <nav class="navbar navbar-dark bg-dark fifties" id="nav">
-            <a class="navbar-brand sized-text-md" href="#profiles/{{otherUser.id}}">{{otherUser.nickname}}</a>
+            <a class="navbar-brand sized-text-md text-maxwidth-md" href="#profiles/{{otherUser.id}}">{{otherUser.nickname}}</a>
             <div id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item active">
@@ -133,6 +133,9 @@
                 </form>
             </div>
         </div>
+        {{#if user.in_game}}
+            <a class="btn btn-secondary btn-block fifties sized-text text-maxwidth-md" href="#game/{{user.roomid}}">Look player Game</a>
+        {{/if}}
     </div>
 </div>
 
