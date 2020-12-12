@@ -71,6 +71,9 @@
 	<div class="btn-group special">
 		<a class="btn btn-primary" href="#profiles">Users list</a>
 		<a class="btn btn-info" href="#">Home</a>
+		{{#if user.in_game}}
+			<a class="btn btn-info" href="#games/{{user.roomid}}">Active Game</a>
+		{{/if}}
 	</div>
 </div>
 <a class="btn btn-info btn-lg btn-block" href="javascript:history.back()">Back</a>

@@ -4,10 +4,12 @@ class PlayChannel < ApplicationCable::Channel
     if (params[:role] == "r")
       tmp = User.find_by(email: Redis.current.get("play_channel_#{params[:game_room_id]}_r"))
       tmp.in_game = true
+      tmp.roomid = params[:game_room_id]
       tmp.save
     elsif (params[:role] == "l")
       tmp = User.find_by(email: Redis.current.get("play_channel_#{params[:game_room_id]}_l"))
       tmp.in_game = true
+      tmp.roomid = params[:game_room_id]
       tmp.save
     end
   end
