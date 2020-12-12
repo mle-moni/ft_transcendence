@@ -192,9 +192,9 @@ canvas {
 }
 
 .navbar {
-	min-height:8vh !important;
-	padding-top:0.5vh !important; 
-	padding-bottom:0.5vh !important;
+	min-height:20px !important;
+	padding-top:5px !important; 
+	padding-bottom:5px!important;
 	font-size: 20px !important;
 }
 
@@ -257,8 +257,12 @@ canvas {
 	font-size: 40px !important;
 }
 
-.sized-text-md {
+.sized-text-sm {
 	font-size: 20px !important;
+}
+
+.sized-text-md {
+	font-size: 35px !important;
 }
 
 .sized-text-lg {
@@ -278,7 +282,7 @@ canvas {
 }
 
 .text-maxwidth-sm {
-	max-width: 12vw;
+	max-width: 5vw;
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
@@ -288,7 +292,7 @@ canvas {
 }
 
 
-@media (max-width: 715px) {
+@media (max-width: 900px) {
 	.text-maxwidth-sm {
 		display: none;
 	}
@@ -324,7 +328,28 @@ canvas {
 	}
 }
 
-@media screen and (max-height: 600px) {
+.avatar {
+	margin-bottom: 80px;
+	width: 80px;
+	height: 80px;
+}
+
+.avatar-btn {
+	height: 100px !important;
+}
+
+@media screen and (max-height: 600px), (orientation:portrait) {
+
+
+	.avatar-btn {
+		height: 50px !important;
+	}
+	.avatar {
+		margin-bottom: 35px;
+		width: 35px;
+		height: 35px;
+	}
+	
 	.navbar-brand {
 		font-size: 10px !important;
 	}
@@ -343,6 +368,7 @@ canvas {
 		width: 1.5vw !important;
 		height: 3vh !important;
 	}
+	
 	.dropdown-item {
 		font-size: 10px !important;
 	}
@@ -361,8 +387,12 @@ canvas {
 		font-size: 20px !important;
 	}
 
-	.sized-text-md {
+	.sized-text-sm {
 		font-size: 10px !important;
+	}
+
+	.sized-text-md {
+		font-size: 17.5px !important;
 	}
 
 	.sized-text-lg {

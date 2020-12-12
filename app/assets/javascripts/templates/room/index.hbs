@@ -12,11 +12,11 @@
         <p class="sized-text"> &nbsp; &nbsp; <strong> Owned Rooms </strong> </p>
         {{#each roomJoinedAsOwner}}
         {{!-- roomJoinedAsOwner --}}
-        <li class="list-group-item"> <label class="sized-text-md">{{name}} &nbsp; [{{privacy}}] &nbsp;</label>
+        <li class="list-group-item"> <label class="sized-text-sm">{{name}} &nbsp; [{{privacy}}] &nbsp;</label>
             <div class="btn-group">
-                <a class="btn btn-success btn-sm sized-text-md" href="#rooms/{{id}}">Open</a>
-                <a class="btn btn-primary btn-sm sized-text-md" href="#room/edit/{{id}}">Edit</a>
-                <a class="btn btn-info btn-sm sized-text-md" href="#room/administrate/{{id}}?{{../administrateStatusOwner}}">Administrate</a>
+                <a class="btn btn-success btn-sm sized-text-sm" href="#rooms/{{id}}">Open</a>
+                <a class="btn btn-primary btn-sm sized-text-sm" href="#room/edit/{{id}}">Edit</a>
+                <a class="btn btn-info btn-sm sized-text-sm" href="#room/administrate/{{id}}?{{../administrateStatusOwner}}">Administrate</a>
                 {{!-- QUIT Form --}}
                 <form class="roomQuitForm" id="roomQuitForm-{{id}}" style="display: inline;" action="{{../quitForm.url}}"
                     accept-charset="UTF-8" method="{{../quitForm.method}}">
@@ -24,7 +24,7 @@
                     <input type="hidden" id="roomID" name="room[room_id]" value="{{id}}">
                     <input type="hidden" id="roomOwner" name="room[owner_id]" value="{{owner_id}}">
                     <input type="hidden" id="userRoomGrade" name="room[userRoomGrade]" value="Owner">
-                    <input class="btn btn-outline-danger btn-sm sized-text-md" type="submit" value="{{../quitForm.submitText}}">
+                    <input class="btn btn-outline-danger btn-sm sized-text-sm" type="submit" value="{{../quitForm.submitText}}">
                 </form>
             </div>
         </li><br>
@@ -36,7 +36,7 @@
 
         {{#each roomJoinedAsRoomAdmin}}
         {{!-- roomJoinedAsRoomAdmin --}}
-        <li class="list-group-item"><label class="sized-text-md">{{name}} &nbsp; [{{privacy}}] &nbsp;</label>
+        <li class="list-group-item"><label class="sized-text-sm">{{name}} &nbsp; [{{privacy}}] &nbsp;</label>
             <div class="btn-group">
                 <a class="btn btn-success btn-sm" href="#rooms/{{id}}">Open</a>
                 <a class="btn btn-info btn-sm" href="#room/administrate/{{id}}?{{../administrateStatusAdmin}}">Administrate</a>
@@ -58,7 +58,7 @@
 
         {{#each roomJoinedAsMember}}
         {{!-- roomJoinedAsMember --}}
-        <li class="list-group-item"><label class="sized-text-md"> {{name}} &nbsp; [{{privacy}}] &nbsp;</label>
+        <li class="list-group-item"><label class="sized-text-sm"> {{name}} &nbsp; [{{privacy}}] &nbsp;</label>
             <div class="btn-group">
                 <a class="btn btn-success btn-sm" href="#rooms/{{id}}">Open</a>
                 <form class="roomQuitForm" id="roomQuitForm-{{id}}" style="display: inline;" action="{{../quitForm.url}}"
@@ -80,7 +80,7 @@
         {{#each notJoinedRooms}}
         {{!-- notJoinedRooms --}}
 
-        <li class="list-group-item"><label class="sized-text-md"> {{name}} &nbsp; [{{privacy}}] &nbsp;</label>
+        <li class="list-group-item"><label class="sized-text-sm"> {{name}} &nbsp; [{{privacy}}] &nbsp;</label>
             <div class="btn-group">
                 {{#when privacy "eq" "private" }}
                 <form class="privateRoomAuthForm" id="privateRoomAuthForm-{{id}}" style="display: inline;"
