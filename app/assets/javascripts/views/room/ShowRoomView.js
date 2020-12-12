@@ -2,8 +2,8 @@ AppClasses.Views.ShowRoom = class extends Backbone.View {
 	constructor(opts) {
 		opts.events = {
 			"submit #sendRoomMessageForm": "submit",
-			"submit #sendDualRequest": "sendDualRequest",
-			"submit #AcceptDualRequest": "AcceptDualRequest",
+			"submit #sendDuelRequest": "sendDuelRequest",
+			"submit #AcceptDuelRequest": "AcceptDuelRequest",
 		}
         super(opts);
 		this.room_id = opts.room_id;
@@ -18,12 +18,12 @@ AppClasses.Views.ShowRoom = class extends Backbone.View {
 		this.updateRender();
 	}
 	
-	AcceptDualRequest(e)
+	AcceptDuelRequest(e)
 	{
 		e.preventDefault();
-		App.utils.formAjax("/api/rooms/acceptDualRequest.json", "#AcceptDualRequest")
+		App.utils.formAjax("/api/rooms/acceptDuelRequest.json", "#AcceptDuelRequest")
 		.done(res => {
-			App.toast.success("Dual request accepted !", { duration: 1500, style: App.toastStyle });
+			App.toast.success("Duel request accepted !", { duration: 1500, style: App.toastStyle });
 		})
 		.fail((e) => {
 			App.utils.toastError(e);
@@ -31,13 +31,13 @@ AppClasses.Views.ShowRoom = class extends Backbone.View {
 		return (false);
 	}
 
-	sendDualRequest(e)
+	sendDuelRequest(e)
 	{
 		e.preventDefault();
 		if (!this.verif_infos(e)) return (false);
-		App.utils.formAjax("/api/rooms/createDualRequest.json", "#sendDualRequest")
+		App.utils.formAjax("/api/rooms/createDuelRequest.json", "#sendDuelRequest")
 		.done(res => {
-			App.toast.success("Dual request sent !", { duration: 1500, style: App.toastStyle });
+			App.toast.success("Duel request sent !", { duration: 1500, style: App.toastStyle });
 		})
 		.fail((e) => {
 			App.utils.toastError(e);

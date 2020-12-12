@@ -17,6 +17,15 @@ Rails.application.routes.draw do
     post '/wars/delete_war_time', to: 'wars#delete_war_time'
     post '/wars/match_request', to: 'wars#match_request'
 
+    # Tournaments actions
+    get '/tournaments', to: 'tournaments#index'
+    post '/tournaments', to: 'tournaments#create'
+    delete '/tournaments/:id', to: 'tournaments#destroy'
+    get '/tournaments/:id', to: 'tournaments#show'
+    get '/tournaments/register/:id', to: 'tournaments#register'
+    get '/tournaments/unregister/:id', to: 'tournaments#unregister'
+    get '/tournaments/start/:id', to: 'tournaments#start'
+
     # CHAT & DMS ------
     resources :rooms do 
       resources :members, controller: 'room/members', only: [:index, :new, :create, :destroy]
@@ -35,16 +44,16 @@ Rails.application.routes.draw do
     post '/rooms/promoteAdmin', to: 'rooms#promoteAdmin'
     post '/rooms/demoteAdmin', to: 'rooms#demoteAdmin'
 
-    post '/rooms/createDualRequest', to: 'rooms#createDualRequest'
-    post '/rooms/acceptDualRequest', to: 'rooms#acceptDualRequest'
+    post '/rooms/createDuelRequest', to: 'rooms#createDuelRequest'
+    post '/rooms/acceptDuelRequest', to: 'rooms#acceptDuelRequest'
 
     post '/handleBlock', to: 'profile#handleBlock'
 
     resources :direct_chats
     resources :chat_messages
     
-    post '/direct_chats/createDualRequest', to: 'direct_chats#createDualRequest'
-    post '/direct_chats/acceptDualRequest', to: 'direct_chats#acceptDualRequest'
+    post '/direct_chats/createDuelRequest', to: 'direct_chats#createDuelRequest'
+    post '/direct_chats/acceptDuelRequest', to: 'direct_chats#acceptDuelRequest'
 
     # ------
     
@@ -57,7 +66,6 @@ Rails.application.routes.draw do
     post '/friends/last_seen'
     # profile actions
     post 'profile/get'
-    post 'active', to: 'profile#active'
     # admin actions
     post 'admin/ban'
     post 'admin/unban'

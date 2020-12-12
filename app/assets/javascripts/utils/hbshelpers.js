@@ -101,9 +101,9 @@ Handlebars.registerHelper('ifCurrentDmRoom', function(userID, otherUserID, dmRoo
     return options.inverse(this);
 });
 
-Handlebars.registerHelper('ifDualReq', function(isDualReq, options) {
+Handlebars.registerHelper('ifDuelReq', function(isDuelReq, options) {
 
-    if (isDualReq)
+    if (isDuelReq)
         return options.fn(this);
     return options.inverse(this);
 });
@@ -113,4 +113,41 @@ Handlebars.registerHelper('ifRanked', function(isRanked, options) {
     if (isRanked)
         return options.fn(this);
     return options.inverse(this);
+});
+
+Handlebars.registerHelper('ifCurrentUserRegister', function(userTournamentID, tournamentID, options) {
+
+    if (userTournamentID && tournamentID && userTournamentID == tournamentID)
+        return options.fn(this);
+    return options.inverse(this);
+});
+
+Handlebars.registerHelper('ifTournamentStarted', function(winnerID, started, options) {
+
+    if (winnerID == 0 && !started)
+        return options.inverse(this);
+    return options.fn(this);
+});
+
+Handlebars.registerHelper('findWinner', function(winnerID, allUsers) {
+
+    if (winnerID == -1)
+        return ("Nobody");
+    for (var count = 0; count < allUsers.length; count++)
+    {
+        if (allUsers[count].id == winnerID)
+            return (allUsers[count].nickname)
+    }
+});
+
+Handlebars.registerHelper('ifTournamentCanStart', function(TournamentDate, options) {
+
+    if (TournamentDate)
+    {
+        var tournament = new Date(TournamentDate);
+        var now = new Date();
+        if (now < tournament)
+            return options.inverse(this);
+    }
+    return options.fn(this);
 });

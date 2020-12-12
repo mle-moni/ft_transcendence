@@ -3,8 +3,8 @@ AppClasses.Views.Conversations = class extends AppClasses.Views.AbstractView {
 		opts.events = {
 			"submit #sendRoomMessageForm": "submit",
 			"submit .createDM": "createDM",
-			"submit #sendDualRequest": "sendDualRequest",
-			"submit #AcceptDualRequest": "AcceptDualRequest",
+			"submit #sendDuelRequest": "sendDuelRequest",
+			"submit #AcceptDuelRequest": "AcceptDuelRequest",
 		}
 		super(opts);
 		this.user = App.models.user;
@@ -20,13 +20,13 @@ AppClasses.Views.Conversations = class extends AppClasses.Views.AbstractView {
 		this.updateRender();
 	}
 
-	AcceptDualRequest(e)
+	AcceptDuelRequest(e)
 	{
 		e.preventDefault();
 		if (!this.verif_accept_request(e)) return (false);
-		App.utils.formAjax("/api/direct_chats/acceptDualRequest.json", "#AcceptDualRequest")
+		App.utils.formAjax("/api/direct_chats/acceptDuelRequest.json", "#AcceptDuelRequest")
 		.done(res => {
-			App.toast.success("Dual request accepted !", { duration: 1500, style: App.toastStyle });
+			App.toast.success("Duel request accepted !", { duration: 1500, style: App.toastStyle });
 		})
 		.fail((e) => {
 			App.utils.toastError(e);
@@ -34,13 +34,13 @@ AppClasses.Views.Conversations = class extends AppClasses.Views.AbstractView {
 		return (false);
 	}
 
-	sendDualRequest(e)
+	sendDuelRequest(e)
 	{
 		e.preventDefault();
 		if (!this.verif_infos(e)) return (false);
-		App.utils.formAjax("/api/direct_chats/createDualRequest.json", "#sendDualRequest")
+		App.utils.formAjax("/api/direct_chats/createDuelRequest.json", "#sendDuelRequest")
 		.done(res => {
-			App.toast.success("Dual request sent !", { duration: 1500, style: App.toastStyle });
+			App.toast.success("Duel request sent !", { duration: 1500, style: App.toastStyle });
 		})
 		.fail((e) => {
 			App.utils.toastError(e);

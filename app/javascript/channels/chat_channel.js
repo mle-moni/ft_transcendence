@@ -11,25 +11,18 @@ function manageDirectChat() {
         }, {
         connected() {
           // Called when the subscription is ready for use on the server
-          // console.log("Connected DM");
         },
     
         disconnected() {
           // Called when the subscription has been terminated by the server
-          // console.log("Disconnected DM");
         },
     
         received(data) {
           // Called when there's incoming data on the websocket for this channel
           if (subDirectChatPreviousDataReceived != data) {
-            // console.log("Received DM - New Data - Fetching");
             window.App.collections.DirectMessagesRoom.fetch();
             subDirectChatPreviousDataReceived = data;
           }
-          // else {
-          //   console.log("Received DM - Identic Data - No Fetch");
-          // }
-
         }
       });
     } else {

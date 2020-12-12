@@ -91,6 +91,7 @@ class War < ApplicationRecord
   def self.users_at_war?(usr1, usr2)
     g1 = usr1.guild
     g2 = usr2.guild
+    return false if !g1 || !g2
     return false if g1.id == g2.id
     return false unless usr1.guild_validated && usr2.guild_validated
     return false unless g1 && g2
@@ -143,6 +144,10 @@ class War < ApplicationRecord
     case game_type
     when "ranked"
       if war.ladder
+        war.add_points(winner.guild, 1)
+      end
+    when "tournament"
+      if war.tournament
         war.add_points(winner.guild, 1)
       end
     when "war_time_match"
