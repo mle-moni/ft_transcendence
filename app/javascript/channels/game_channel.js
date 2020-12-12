@@ -390,6 +390,7 @@ let keyboard = {
   up: false,
   down: false
 }
+
 function getRandomBetween(min, max) {
   return Math.random() * (max - min) + min;
 }
@@ -610,12 +611,11 @@ function game_loop() {
     }
 
     game.ball_speed = Math.min(game.ball_speed, 1.4);
-
   }
 
   if (game.consumer.role != 'v') {
     game.send_datas();
-    game.check_end();  
+    game.check_end();
   }
   game.draw_datas();
   //console.log("1 frame");
@@ -641,6 +641,27 @@ function subscription_loop() {
   const ingameelement = document.getElementById("in_game_id")
   let ranked = true;
   const ranked_el = document.getElementById("ranked")
+
+  const up_button = document.getElementById("up_button")
+  const down_button = document.getElementById("down_button")
+
+  if (up_button != null) {
+    up_button.addEventListener("mousedown", event => {
+      keyboard["up"] = true;
+    })
+  
+    up_button.addEventListener("mouseup", event => {
+      keyboard["up"] = false;
+    })
+  
+    down_button.addEventListener("mousedown", event => {
+      keyboard["down"] = true;
+    })
+  
+    down_button.addEventListener("mouseup", event => {
+      keyboard["down"] = false;
+    })
+  }
 
   if (ranked_el === null)
     ranked = false;
@@ -715,6 +736,7 @@ function subscription_loop() {
       console.log(data);
       if (data.action === 'game_start') {
         location.hash = "#game/" + data.match_room_id;
+
         consumer.subscriptions.create({channel: "PlayChannel", game_room_id: data.match_room_id, role: data.msg}, {
           room: undefined,
           connected() {
@@ -730,6 +752,11 @@ function subscription_loop() {
             UID.innerHTML = `You have the ${this.role} paddle`
             game = new Game(this.room, ctx, 0, 0, 0, 0, this)
             game.draw_datas();
+            
+            document.addEventListener("visibilitychange", function(e) {
+              game.consumer.perform("end_the_game", {room_name: game.room_name})
+            });
+
             setTimeout(function() {
               game.consumer.perform("connect_to_game", { room_name: game.room_name, player: game.consumer.role });
             }, 500)

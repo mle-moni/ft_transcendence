@@ -1,39 +1,31 @@
 <div id="checkChatPresence"></div>
-<br><p style="font-size: 20px;margin: 25px;"> <u> <strong> Private talks </strong></u> 🤫 </p>
+<br><p class="big-title fifties blk-text text-center"> <u> <strong> Private talks </strong></u> 🤫 </p>
 
-<div class="mycontainer">
-    <div class="row">
-        {{!-- USER LIST --}}
-        <div class="col-3">
-            <div class="list-users">
-                {{#each allUsers}}
+<div class="mycontainer text-center">
+    {{!-- USER LIST --}}
+    <ul class="list-user list-group">
+        {{#each allUsers}}
 
-                <div class="list-users-item">
+        <li class="list-group-item fifties">
+            {{#ifDm ../userID attributes.id ../dmRooms.models}}
+                <a class="btn btn-primary btn-lg btn-block" href="#messages/{{#findDmRoom ../userID attributes.id ../dmRooms.models}}{{/findDmRoom}}">
+                    <img src="{{attributes.image}}" alt="Avatar" class="avatar">
+                    <label class="text-maxwidth">{{attributes.nickname}}</label>
+                </a>
+            {{else}}
+                <form class="createDM" id="createDM-{{attributes.id}}" action="/api/direct_chats.json"
+                    accept-charset="UTF-8" method="POST">
+                    <input type="hidden" name="authenticity_token" value="{{../token}}">
+                    <input type="hidden" name="dmRoom[first_user_id]" value="{{../userID}}">
+                    <input type="hidden" name="dmRoom[second_user_id]" value="{{attributes.id}}">
 
-                    <img src="{{attributes.image}}" style="float: left" alt="Avatar" class="avatar">
-
-                    {{#ifDm ../userID attributes.id ../dmRooms.models}}
-                    <a class="btn btn-outline-primary btn-sm" 
-                        href="#messages/{{#findDmRoom ../userID attributes.id ../dmRooms.models}}{{/findDmRoom}}">{{attributes.nickname}}</a>
-                    <br> &nbsp;&nbsp;
-                    {{else}}
-                    <form class="createDM" id="createDM-{{attributes.id}}" action="/api/direct_chats.json"
-                        accept-charset="UTF-8" method="POST">
-                        <input type="hidden" name="authenticity_token" value="{{../token}}">
-                        <input type="hidden" name="dmRoom[first_user_id]" value="{{../userID}}">
-                        <input type="hidden" name="dmRoom[second_user_id]" value="{{attributes.id}}">
-
-                        <div style="overflow: hidden; padding-right: .5em;">
-                            <input class="btn btn-outline-primary btn-sm" type="submit"
-                                value="{{attributes.nickname}}">
-                        </div>
-
-                    </form>
-                    {{/ifDm}}
-                    <br>
-                </div>
-                {{/each}}
-            </div>
-        </div>
-    </div>
+                    <button class="btn btn-secondary btn-lg btn-block" style="overflow: hidden; padding-right: .5em;" type="submit">
+                        <img src="{{attributes.image}}" alt="Avatar" class="avatar">
+                        <label class="text-maxwidth">{{attributes.nickname}}</label>
+                    </button>
+                </form>
+            {{/ifDm}}
+        </li>
+        {{/each}}
+    </ul>
 </div>

@@ -166,7 +166,7 @@ Please respect the following rules:
 Any way is acceptable, your game simply must not crash.																									
 																									
 #### Additionnal features																									
-- The user can add various features like power-ups, boosts, dual-player or anything that comes to mind. If there are such modifications, you can choose which to enable for duels/tournaments.
+- The user can add various features like power-ups, boosts, duel-player or anything that comes to mind. If there are such modifications, you can choose which to enable for duels/tournaments.
 
 #### Ladder																									
 - There must be a permanent ladder system on which the users can play, with a ranking system. Users can play on ladder or casual, which will have no impact on their ladder rating.																									
