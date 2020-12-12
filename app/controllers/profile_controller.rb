@@ -3,6 +3,15 @@ require 'fileutils'
 class ProfileController < ApplicationController
 	before_action :connect_user
 
+	def first_time
+		current_user.first_time = false
+		current_user.save
+		respond_to do |format|
+			format.html { redirect_to "/", notice: '' }
+			format.json { head :no_content }
+		end
+	end
+
 	def get
 		respond_to do |format|
 			format.html { redirect_to "/#profile", notice: 'Profile infos updated' }

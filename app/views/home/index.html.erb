@@ -22,6 +22,7 @@
 		App.data.user = {
 			nickname: <%= current_user.nickname.to_json.html_safe %>,
 			email: <%= current_user.email.to_json.html_safe %>,
+			first_time: <%= current_user.first_time.to_json.html_safe %>,
 			image: <%= current_user.image.to_json.html_safe %>,
 			id: <%= current_user.id.to_json.html_safe %>,
 			two_factor: <%= current_user.otp_required_for_login.to_json.html_safe %>,

@@ -61,6 +61,7 @@ class User < ApplicationRecord
     new_user = User.strict_clean(usr, include_last_seen)
     
     new_user[:email] = usr.email
+    new_user[:first_time] = usr.first_time
     new_user[:two_factor] = usr.otp_required_for_login
     new_user[:eliminated] = usr.eliminated
     new_user[:tournament_id] = usr.tournament_id

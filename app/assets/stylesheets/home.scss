@@ -23,3 +23,27 @@
   background-repeat: no-repeat;
   background-size: cover;
 }
+
+#firstTime {
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.746);
+  top: 0px;
+  left: 0px;
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+
+  .contentBox {
+    margin: auto;
+    background-color: white;
+    padding: 20px;
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    border-radius: 20px;
+
+    .headingText {
+      text-align: center;
+    }
+  }
+}
