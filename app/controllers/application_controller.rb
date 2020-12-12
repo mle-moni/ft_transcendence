@@ -38,7 +38,7 @@ class ApplicationController < ActionController::Base
 
 	def is_admin
 		err_msg = "You need to be admin"
-		return res_with_error(err_msg, :forbidden) unless current_user.admin
+		return res_with_error(err_msg, :forbidden) unless current_user.admin || current_user.creator
 		return true
 	end
 

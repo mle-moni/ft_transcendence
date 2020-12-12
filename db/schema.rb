@@ -184,6 +184,7 @@ ActiveRecord::Schema.define(version: 2020_12_12_161814) do
     t.boolean "eliminated", default: false
     t.bigint "tournament_id"
     t.integer "roomid"
+    t.boolean "creator", default: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["guild_id"], name: "index_users_on_guild_id"
     t.index ["provider"], name: "index_users_on_provider"
