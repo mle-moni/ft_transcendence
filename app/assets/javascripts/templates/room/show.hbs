@@ -45,14 +45,14 @@
                                     alt="Avatar" class="avatar">
                                 </a>
 
-                                {{#ifDualReq is_dual_request}}
-                                    <form id="AcceptDualRequest" action="/api/direct_chats/acceptDualRequest" accept-charset="UTF-8"
+                                {{#ifDuelReq is_duel_request}}
+                                    <form id="AcceptDuelRequest" action="/api/direct_chats/acceptDuelRequest" accept-charset="UTF-8"
                                         method="POST" style="display: inline;">
                                         <input type="hidden" name="authenticity_token" value="{{../token}}">
                                         {{!-- Room Data --}}
-                                        <input type="hidden" name="dual_request[first_user_id]" value="{{user_id}}">
-                                        <input type="hidden" name="dual_request[second_user_id]" value="{{../currentUser.id}}">
-                                        <input type="hidden" name="dual_request[is_ranked]" value={{is_ranked}}>
+                                        <input type="hidden" name="duel_request[first_user_id]" value="{{user_id}}">
+                                        <input type="hidden" name="duel_request[second_user_id]" value="{{../currentUser.id}}">
+                                        <input type="hidden" name="duel_request[is_ranked]" value={{is_ranked}}>
                                         {{#ifRanked is_ranked}}
                                             <input class="btn btn-success" type="submit" value="Accept ranked game"> 
                                         {{else}}
@@ -65,7 +65,6 @@
                             </div>
                         </li>
                     {{/when}}
-
                     {{#when user_id "eq" ../currentUser.id}}
                         {{#ifDualReq is_dual_request}} {{!-- IF CURRENT USER DUAL REQUEST DISPLAY NOTHING --}}
                         {{else}}

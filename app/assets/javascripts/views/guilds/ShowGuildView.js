@@ -3,7 +3,8 @@ AppClasses.Views.ShowGuild = class extends Backbone.View {
 		opts.events = {
 			"submit #quitGuildForm": "quit",
 			"submit #joinGuildForm": "join",
-			"click .acceptRequestGuild": "accept"
+			"click .acceptRequestGuild": "accept",
+			"click #warTimeFightRequest": "warTimeFightRequest"
 		}
 		super(opts);
 		this.guild_id = opts.guild_id;
@@ -60,25 +61,54 @@ AppClasses.Views.ShowGuild = class extends Backbone.View {
 		});
 		return (false);
 	}
+	warTimeFightRequest() {
+		App.utils.formAjax("/api/wars/match_request.json", "#warTimeFightRequestForm")
+		.done(res => {
+			App.toast.success("Request sent!");
+		})
+		.fail((e) => {
+			App.utils.toastError(e);
+		});
+	}
 	getWars(guildJSON) {
 		let wars = [];
 		if (guildJSON) {
 			wars = guildJSON.wars.map(war => {
 				const warNotEnded = guildJSON.active_war && war.id === guildJSON.active_war.id;
+				if (warNotEnded) {
+					war.war_times = guildJSON.active_war.war_times;
+					war.in_war_time = guildJSON.active_war.in_war_time;
+					war.running = guildJSON.active_war.running;
+				}
 				const enemyID = war.guild1_id == guildJSON.id ? war.guild2_id : war.guild1_id;
+				war.response_needed = false;
+				if (war.match_request_guild == enemyID) {
+					war.response_needed = true;
+				}
 				const enemyGuild = this.model.findWhere({id: enemyID});
 				const enemyJSON = enemyGuild ? enemyGuild.toJSON() : null;
-				war.pending = warNotEnded && war.validated == war.guild1_id + war.guild2_id;
-				war.planning = warNotEnded && !war.pending;
+				war.not_started = warNotEnded && war.validated == war.guild1_id + war.guild2_id;
+				war.planning = warNotEnded && !war.not_started;
 				war.won = war.winner == guildJSON.id;
 				war.you = guildJSON.name;
+				if (war.guild1_id == guildJSON.id) {
+					war.enemy_score = war.g2_score;
+					war.your_score = war.g1_score;
+				} else {
+					war.enemy_score = war.g1_score;
+					war.your_score = war.g2_score;
+				}
 				war.enemy = enemyJSON ? {name: enemyJSON.name, id: enemyID} : null;
 				if (guildJSON.active_war && guildJSON.active_war.id === war.id) {
-					guildJSON.active_war.pending = war.pending;
+					guildJSON.active_war.not_started = war.not_started;
 					guildJSON.active_war.planning = war.planning;
 				}
 				war.date = new Date(war.created_at);
 				war.rawDate = war.date.valueOf();
+				war.user_is_in_guild = App.models.user.isInGuild(this.guild);
+				if (war.winner == -1) {
+					war.draw = true;
+				}
 				return war;
 			});
 		}

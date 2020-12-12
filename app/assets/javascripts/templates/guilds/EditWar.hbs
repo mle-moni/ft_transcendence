@@ -2,17 +2,29 @@
 
 <form class="fifties blk-text" id="updateWarForm" method="POST">
 	<input type="hidden" name="authenticity_token" value="{{token}}">
-
+	
 	<label class="sized-text" for="prize">Prize for the war</label>
-	<input class="form-control sized-text-lg" type="number" id="prize" name="prize" min="0" required
+	<input class="form-control sized-text-lg" type="number" id="prize" name="prize" min="1" required
 	{{#if war.prize}}
 		value="{{war.prize}}"
 	{{/if}}>
 	<br>
-	<label class="sized-text" for="war_time_len">War times duration (in second) </label>
-	<input class="form-control sized-text-lg" type="number" id="war_time_len" name="war_time_len" min="0" required
-	{{#if war.prize}}
+	<label class="sized-text" for="war_time_len">War times duration (in minutes) </label>
+	<input class="form-control sized-text-lg" type="number" id="war_time_len" name="war_time_len" min="2" required
+	{{#if war.war_time_len}}
 		value="{{war.war_time_len}}"
+	{{/if}}>
+	<br>
+	<label class="sized-text" for="max_refused_matches">Max number of non accepted war time matches </label>
+	<input class="form-control sized-text-lg" type="number" id="max_refused_matches" name="max_refused_matches" min="1" required
+	{{#if war.max_refused_matches}}
+		value="{{war.max_refused_matches}}"
+	{{/if}}>
+	<br>
+	<label class="sized-text" for="time_to_answer">Time to answer war time match requests (in seconds) </label>
+	<input class="form-control sized-text-lg" type="number" id="time_to_answer" name="time_to_answer" min="5" required
+	{{#if war.time_to_answer}}
+		value="{{war.time_to_answer}}"
 	{{/if}}>
 	<br>
 	<p class="sized-text">Matches that counts for this war</p>

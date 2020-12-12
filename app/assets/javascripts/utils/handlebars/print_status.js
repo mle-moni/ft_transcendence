@@ -1,6 +1,6 @@
 Handlebars.registerHelper('print_status', function () {
 	const online = false;
-	const secondsToBeOffline = 15; // user is considered offline after N scd
+	const secondsToBeOffline = 2; // user is considered offline after N scd
 	if (!this.last_seen) {
 		return ("Offline");
 	}
@@ -16,4 +16,8 @@ Handlebars.registerHelper('getDateValue', function(date) {
 	let strDate = strDateRaw.split("/").reverse().join("-");	
 	strDate += "T" + strBase.slice(11,16);
 	return (strDate);
+});
+
+Handlebars.registerHelper('dateStr', function(dateRaw) {
+	return (new Date(dateRaw).toLocaleString("en", {timeZone: "Europe/Paris"}));
 });

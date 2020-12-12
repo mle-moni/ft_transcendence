@@ -36,7 +36,8 @@
 			blocked: <%= current_user.blocked.to_json.html_safe %>,
 			banned: <%= current_user.banned.to_json.html_safe %>,
 			in_game: <%= current_user.in_game.to_json.html_safe %>,
-			admin: <%= current_user.admin.to_json.html_safe %>
+			admin: <%= current_user.admin.to_json.html_safe %>,
+			tournament_id: <%= current_user.tournament_id.to_json.html_safe %>
 		};
 		App.data.links = {
 			signin: `<%= signinLink %>`,

@@ -27,6 +27,8 @@ class User < ApplicationRecord
   def matches
     wins + loses
   end
+
+  belongs_to :tournament, required: false
   
   validates :nickname, uniqueness: true
   validates :email, uniqueness: true # as long as it's needed for game rooms
@@ -40,6 +42,11 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable,
          :omniauthable, omniauth_providers: [:marvin]
 
+  def online
+    return false unless last_seen
+    seconds_since_seen = -(last_seen - DateTime.now)
+    return seconds_since_seen < 1.6
+  end
 
   def self.from_omniauth(auth)
     where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
@@ -55,6 +62,8 @@ class User < ApplicationRecord
     
     new_user[:email] = usr.email
     new_user[:two_factor] = usr.otp_required_for_login
+    new_user[:eliminated] = usr.eliminated
+    new_user[:tournament_id] = usr.tournament_id
     new_user[:friends] = usr.friends.map do |friend|
       User.strict_clean(friend, include_last_seen)
     end

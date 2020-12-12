@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_05_144714) do
+ActiveRecord::Schema.define(version: 2020_12_09_173543) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -39,7 +39,7 @@ ActiveRecord::Schema.define(version: 2020_12_05_144714) do
     t.text "message"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.boolean "is_dual_request", default: false
+    t.boolean "is_duel_request", default: false
     t.boolean "is_ranked", default: false
     t.index ["direct_chat_id"], name: "index_direct_messages_on_direct_chat_id"
     t.index ["from_id"], name: "index_direct_messages_on_from_id"
@@ -116,7 +116,7 @@ ActiveRecord::Schema.define(version: 2020_12_05_144714) do
     t.bigint "room_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.boolean "is_dual_request", default: false
+    t.boolean "is_duel_request", default: false
     t.boolean "is_ranked", default: false
     t.index ["room_id"], name: "index_room_messages_on_room_id"
     t.index ["user_id"], name: "index_room_messages_on_user_id"
@@ -142,6 +142,16 @@ ActiveRecord::Schema.define(version: 2020_12_05_144714) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["owner_id"], name: "index_rooms_on_owner_id"
+  end
+
+  create_table "tournaments", force: :cascade do |t|
+    t.datetime "start"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.bigint "winner_id", default: 0
+    t.integer "matches_started", default: 0
+    t.integer "matches_ended", default: 0
+    t.boolean "started", default: false
   end
 
   create_table "users", force: :cascade do |t|
@@ -171,10 +181,13 @@ ActiveRecord::Schema.define(version: 2020_12_05_144714) do
     t.boolean "banned", default: false
     t.float "elo", default: 1000.0
     t.boolean "in_game", default: false
+    t.boolean "eliminated", default: false
+    t.bigint "tournament_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["guild_id"], name: "index_users_on_guild_id"
     t.index ["provider"], name: "index_users_on_provider"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["tournament_id"], name: "index_users_on_tournament_id"
     t.index ["uid"], name: "index_users_on_uid"
   end
 
@@ -191,7 +204,7 @@ ActiveRecord::Schema.define(version: 2020_12_05_144714) do
     t.datetime "end"
     t.integer "prize", default: 0
     t.boolean "mods", default: false
-    t.integer "time_to_answer", default: 5
+    t.integer "time_to_answer", default: 30
     t.boolean "ladder", default: false
     t.boolean "tournament", default: false
     t.boolean "duel", default: false
@@ -205,6 +218,12 @@ ActiveRecord::Schema.define(version: 2020_12_05_144714) do
     t.integer "g2_score", default: 0
     t.integer "war_time_len", default: 5
     t.boolean "war_time_match", default: false
+    t.integer "match_count", default: 0
+    t.bigint "match_request_usr", default: 0
+    t.bigint "match_request_guild", default: 0
+    t.integer "g1_refused_matches", default: 0
+    t.integer "g2_refused_matches", default: 0
+    t.integer "max_refused_matches", default: 100
     t.index ["guild1_id"], name: "index_wars_on_guild1_id"
     t.index ["guild2_id"], name: "index_wars_on_guild2_id"
   end
@@ -221,6 +240,7 @@ ActiveRecord::Schema.define(version: 2020_12_05_144714) do
   add_foreign_key "room_mutes", "users", column: "by_id"
   add_foreign_key "rooms", "users", column: "owner_id"
   add_foreign_key "users", "guilds"
+  add_foreign_key "users", "tournaments"
   add_foreign_key "war_times", "wars"
   add_foreign_key "wars", "guilds", column: "guild1_id"
   add_foreign_key "wars", "guilds", column: "guild2_id"

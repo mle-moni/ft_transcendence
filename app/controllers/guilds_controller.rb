@@ -6,6 +6,12 @@ class GuildsController < ApplicationController
   # GET /guilds
   # GET /guilds.json
   def index
+    Guild.all.each do |guild|
+      war = guild.active_war
+      if war
+        war.end_if_needed
+      end
+    end
     @guilds = Guild.all.map do |guild|
       Guild.clean(guild)
     end

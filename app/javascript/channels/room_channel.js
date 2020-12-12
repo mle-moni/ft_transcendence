@@ -13,25 +13,18 @@ function manageRoomChat() {
         }, {
         connected() {
           // Called when the subscription is ready for use on the server
-          // console.log("Connected Room");
         },
     
         disconnected() {
           // Called when the subscription has been terminated by the server
-          // console.log("Disconnected Room");
         },
     
         received(data) {
           // Called when there's incoming data on the websocket for this channel
           if (subRoomPreviousDataReceived != data) {
-            // console.log("Received Room - New Data - Fetching");
             window.App.collections.rooms.fetch();
             subRoomPreviousDataReceived = data;
           }
-          // else {
-          //   console.log("Received Room - Identic Data - No Fetch");
-          // }
-
         }
       });
     } else {

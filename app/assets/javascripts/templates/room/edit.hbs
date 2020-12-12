@@ -12,9 +12,15 @@
 		<input class="form-control" type="text" autocomplete="off" id="roomName" placeholder="Room Name" name="room[name]">
   
 		<br>
-		<input class="form-control" type="text" autocomplete="off" id="roomPrivacy" placeholder="Room Privacy" name="room[privacy]">
+		{{!-- <input class="form-control" type="text" autocomplete="off" id="roomPrivacy" placeholder="Room Privacy" name="room[privacy]"> --}}
+
+		&nbsp;
+		<label class="form-check-label" for="exampleCheck1"> 🔐 &nbsp; Private </label> &nbsp;&nbsp;
+		<input style="margin-left: 10px;" type="checkbox" class="form-check-input" name="room[privacy]" id="roomPrivacy">
+
 		<br>
-		<input class="form-control" type="text" autocomplete="off" id="roomPassword" placeholder="Room Password" name="room[password]">
+		<br>
+		<input class="form-control" type="text" autocomplete="off" id="togglePasswordField" style="display: none;" placeholder="Room Password" name="room[password]">
 
 		<input type="hidden" name="room[id]" value="{{room_id}}">
 

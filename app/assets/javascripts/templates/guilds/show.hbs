@@ -56,27 +56,62 @@
 	<ul class="list-group">
 	{{#each wars}}
 		<article class="list-group-item">
+			<p class="atari atari-back">
+				{{ you }} VS <a href="#guilds/{{ enemy.id }}">{{ enemy.name }}</a>
+			</p>
 			<h4>
 				{{#if planning }}
 					This war is still being planned by guild owners
-				{{else if pending }}
+				{{else if running }}
 					This war is active
+				{{else if not_started}}
+					This war will start soon
 				{{else}}
 					{{#if won }}
 					Victory
+					{{else if draw}}
+					Draw
 					{{else}}
 					Defeat
 					{{/if}}
 				{{/if}}
 			</h4>
-			<p class="atari atari-back"> {{ you }} VS <a href="#guilds/{{ enemy.id }}">{{ enemy.name }}</a> </p>
-			<p>
-				{{!-- {{#if won }}
-				{{ winner_score }} - {{ loser_score }}
-				{{else}}
-				{{ loser_score }} - {{ winner_score }}
-				{{/if}} --}}
-			</p>
+			{{your_score}} - {{enemy_score}}
+			<p>Start {{dateStr start}}</p>
+			<p>End {{dateStr end}}</p>
+			{{#if running}}
+				<h6>War time timetable</h6>
+				(each war time will last {{war_time_len}} minutes)
+				<br>
+				{{#each war_times}}
+					{{dateStr start}}
+				{{/each}}
+			{{/if}}
+			{{#if user_is_in_guild}}
+				{{#if in_war_time}}
+					<br>
+					{{#if war_time_match}}
+						<button class="btn btn-warning">War time match in progress</button>
+					{{else}}
+						{{#if response_needed}}
+							<button id="warTimeFightRequest" class="btn btn-danger">
+								Respond to fight request
+							</button>
+						{{else}}
+							{{#if match_request_guild}}
+								<button class="btn btn-warning">
+									Waiting other guild response
+								</button>
+							{{else}}
+								<button id="warTimeFightRequest" class="btn btn-primary">
+									Request war time fight
+								</button>
+							{{/if}}
+						{{/if}}
+					{{/if}}
+				{{/if}}
+			{{/if}}
+			<hr>
 		</article>
 	{{/each}}
 	</ul>
@@ -122,6 +157,10 @@
 		<input type="hidden" name="authenticity_token" value="{{token}}">
 		<input type="hidden" name="id" value="" id="acceptRequestIDField">
 		<input class="btn btn-success" type="submit" value="Send join request">
+	</form>
+
+	<form style="display: none;" method="POST" id="warTimeFightRequestForm">
+		<input type="hidden" name="authenticity_token" value="{{token}}">
 	</form>
 
 </div>
