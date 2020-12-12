@@ -22,6 +22,8 @@ AppClasses.Routers.Main = class extends AppClasses.Routers.AbstractRouter {
 		App.routers.admin = new AppClasses.Routers.AdminRouter();
 		// tournaments routes
 		App.routers.tournament = new AppClasses.Routers.TournamentRouter();
+		// rules routes
+		App.routers.rules = new AppClasses.Routers.RulesRouter();
 
 		// create all models needed by multiple routes
 		this.models.user = new AppClasses.Models.User(App.data.user);
