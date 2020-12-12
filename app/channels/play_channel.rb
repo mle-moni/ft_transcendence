@@ -6,11 +6,13 @@ class PlayChannel < ApplicationCable::Channel
       tmp.in_game = true
       tmp.roomid = params[:game_room_id]
       tmp.save
+			ActionCable.server.broadcast "update_channel", action: "update", target: "users"
     elsif (params[:role] == "l")
       tmp = User.find_by(email: Redis.current.get("play_channel_#{params[:game_room_id]}_l"))
       tmp.in_game = true
       tmp.roomid = params[:game_room_id]
       tmp.save
+			ActionCable.server.broadcast "update_channel", action: "update", target: "users"
     end
   end
 
