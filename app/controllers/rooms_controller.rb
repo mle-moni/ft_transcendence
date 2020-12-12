@@ -30,8 +30,6 @@ class RoomsController < ApplicationController
       return (false)
     end
 
-    # The 'if' shouldn't be needed since the "Join" action is offer only 1 time, but by prevention we keep it
-    # Owner is admin with the differences vs other admin that he match the room owner_id
     if !current_user.rooms_as_member.include?(@room) && current_user.id != @room.owner_id
       @rlm = RoomLinkMember.new(room: @room, user: current_user)
       @rlm.save
@@ -114,7 +112,6 @@ class RoomsController < ApplicationController
 
 
   def quit
-  # Quitter une room ne reset pas les restrictions, autrement on quitte/re-rentre en boucle
     filteredParams = params.require(:room).permit(:room_id, :owner_id, :userRoomGrade)
     grade = filteredParams["userRoomGrade"]
     owner = User.find(filteredParams["owner_id"])
@@ -132,7 +129,9 @@ class RoomsController < ApplicationController
     else
       res_with_error("Unexpected Grade - Error", :bad_request)
       return false
-    end 
+    end
+
+    RoomMessage.where(room: @room, user: current_user).destroy_all
     
     if grade == "Owner"
       @room.members.destroy_all
@@ -178,6 +177,11 @@ class RoomsController < ApplicationController
         roomPassword = BCrypt::Password.create filteredParams["password"]
         filteredParams["password"] = roomPassword
       end
+    end
+
+    if !filteredParams["name"] || filteredParams["name"].length == 0 || filteredParams["name"].blank?
+      res_with_error("Empty Room Name", :bad_request)
+      return (false)
     end
 
     @room = Room.create(filteredParams)
@@ -236,7 +240,7 @@ class RoomsController < ApplicationController
       end
     end
 
-    if !filteredParams["name"]
+    if !filteredParams["name"] || filteredParams["name"].length == 0 || filteredParams["name"].blank?
       res_with_error("Empty Room Name", :bad_request)
       return (false)
     end

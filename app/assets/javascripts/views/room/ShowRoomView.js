@@ -85,6 +85,8 @@ AppClasses.Views.ShowRoom = class extends Backbone.View {
 	}
 
 	updateRender() {
+
+		var inspectMode = false
 		const { attributes } = App.models.user;
 		this.rooms = this.model;
 		var currentRoom = this.rooms ? this.rooms.toJSON() : null;
@@ -136,6 +138,7 @@ AppClasses.Views.ShowRoom = class extends Backbone.View {
 				location.hash = '#room';
 				return false;
 			}
+			if (attributes) inspectMode = App.utils.assertRoomCurrentUserIsOnlySuperAdmin(attributes, currentRoom);
 
 		}
 		this.$el.html(this.template({
@@ -151,8 +154,8 @@ AppClasses.Views.ShowRoom = class extends Backbone.View {
 				titleText: "Send a message",
 				submitText: "Send",
 				formID: "sendRoomMessageForm",
-			}
-		
+			},
+			inspectMode: inspectMode
 		}));
 		this.delegateEvents();
 		return (this);

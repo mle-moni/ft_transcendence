@@ -33,6 +33,12 @@ class RoomMessagesController < ApplicationController
       res_with_error("You're currently muted", :bad_request)
       return false
     end
+
+    if !filteredParams["message"] || filteredParams["message"].length == 0 || filteredParams["message"].blank?
+      res_with_error("Empty Message", :bad_request)
+      return (false)
+    end
+
     @room_message = RoomMessage.create(filteredParams)
     respond_to do |format|
       if @room_message.save

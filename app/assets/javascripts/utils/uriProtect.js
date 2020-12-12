@@ -47,3 +47,20 @@ App.utils.assertRoomCurrentUserIsMember = (currentUser, room) => {
     return App.utils.assertRoomCurrentUserIsAdminOrOwnerOrSuperAdmin(currentUser, room);
 }
 
+App.utils.assertRoomCurrentUserIsOnlySuperAdmin = (currentUser, room) => {
+    if (currentUser == null || room == null)
+        return true;
+    x = true;
+    room.members.forEach(mb => {
+        if (mb.id == currentUser.id)
+            x = false;
+    });
+    room.admins.forEach(adm => {
+        if (adm.id == currentUser.id)
+            x = false;
+    });
+    if (room.owner_id != currentUser.id && currentUser.admin == true)
+        return x; /* Sera à TRUE si non membre, non admin, non owner mais superAdmin */
+    return false;
+}
+
