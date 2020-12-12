@@ -49,13 +49,13 @@
             <div id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item active">
-                        <form class="dualForm nav-item active" id="sendDualRequest" action="/api/direct_chats/createDualRequest" accept-charset="UTF-8"
+                        <form class="duelForm nav-item active" id="sendDuelRequest" action="/api/direct_chats/createDuelRequest" accept-charset="UTF-8"
                             method="POST">
                             <input type="hidden" name="authenticity_token" value="{{token}}">
-                            <input type="hidden" name="dual_request[from_id]" value="{{currentUser.id}}">
-                            <input type="hidden" name="dual_request[direct_chat_id]" value="{{chatID}}">
+                            <input type="hidden" name="duel_request[from_id]" value="{{currentUser.id}}">
+                            <input type="hidden" name="duel_request[direct_chat_id]" value="{{chatID}}">
                             <input class="btn btn-outline-success btn-sm" style="background-color:rgb(24, 119, 242); color:azure" type="submit" value="Send game request"> 
-                            <select class="form-control-sm" name="dual_request[is_ranked]">
+                            <select class="form-control-sm" name="duel_request[is_ranked]">
                                 <option value="false">Normal</option>
                                 <option value="true">Ranked</option>
                             </select>
@@ -78,14 +78,14 @@
                                 <div class="otherMessage dont-break-out">
                                     <img src="{{../otherUser.image}}" alt="Avatar" class="avatar">
 
-                                    {{#ifDualReq is_dual_request}}
-                                        <form id="AcceptDualRequest" action="/api/direct_chats/acceptDualRequest" accept-charset="UTF-8"
+                                    {{#ifDuelReq is_duel_request}}
+                                        <form id="AcceptDuelRequest" action="/api/direct_chats/acceptDuelRequest" accept-charset="UTF-8"
                                             method="POST" style="display: inline;">
                                             <input type="hidden" name="authenticity_token" value="{{../token}}">
                                             {{!-- Room Data --}}
-                                            <input type="hidden" name="dual_request[first_user_id]" value="{{from_id}}">
-                                            <input type="hidden" name="dual_request[second_user_id]" value="{{../currentUser.id}}">
-                                            <input type="hidden" name="dual_request[is_ranked]" value={{is_ranked}}>
+                                            <input type="hidden" name="duel_request[first_user_id]" value="{{from_id}}">
+                                            <input type="hidden" name="duel_request[second_user_id]" value="{{../currentUser.id}}">
+                                            <input type="hidden" name="duel_request[is_ranked]" value={{is_ranked}}>
                                             {{#ifRanked is_ranked}}
                                                 <input class="btn btn-success" type="submit" value="Accept ranked game"> 
                                             {{else}}
@@ -94,14 +94,14 @@
                                         </form>
                                     {{else}}
                                         <label class="message sized-text-md" data-role="message-text">{{message}}</label>
-                                    {{/ifDualReq}}
+                                    {{/ifDuelReq}}
                                 </div>
                             </li>
                         {{/when}}
 
                         {{!-- MY MESSAGES --}}
                         {{#when from_id "eq" ../currentUser.id}}
-                            {{#ifDualReq is_dual_request}} {{!-- IF CURRENT USER DUAL REQUEST DISPLAY NOTHING --}}
+                            {{#ifDuelReq is_duel_request}} {{!-- IF CURRENT USER DUAL REQUEST DISPLAY NOTHING --}}
                             {{else}}
                                 <li class="list-group-item fifties" style="background: rgb(0, 106, 255); margin-left: 20%; margin-right: 10px;">
                                     <div class="dont-break-out" style="text-align: right;">
@@ -109,7 +109,7 @@
                                         <img src="{{../currentUser.image}}" alt="Avatar" class="avatar">
                                     </div>
                                 </li>
-                            {{/ifDualReq}}
+                            {{/ifDuelReq}}
                         {{/when}}
                         <br>
                     {{/each}}
