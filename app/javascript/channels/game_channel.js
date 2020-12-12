@@ -446,9 +446,8 @@ function clear() {
 }
 
 class Game {
-  constructor(room_name, ctx, player_left, player_right, score_left, score_right, consumer) {
+  constructor(room_name, player_left, player_right, score_left, score_right, consumer) {
     this.room_name = room_name;
-    this.ctx = ctx;
     this.player_left = player_left;
     this.player_right = player_right;
     this.left_action = 'w';
@@ -538,6 +537,8 @@ class Game {
   }
 }
 
+let inter;
+
 function update_datas(data) {
     ball.x = data["ball_pos_x"];
     ball.y = data["ball_pos_y"];
@@ -617,7 +618,10 @@ function game_loop() {
     game.send_datas();
     game.check_end();
   }
-  game.draw_datas();
+
+  if (canvas != null)
+    game.draw_datas();
+  
   //console.log("1 frame");
   if (game.consumer.role == 'r') {
     setTimeout(function () {
@@ -691,10 +695,15 @@ function subscription_loop() {
           this.room = `play_channel_${match_id}`;
           console.log("your role is : " + this.role);
           console.log(this.room);
-          canvas = document.getElementById("myCanvas");
-          ctx = canvas.getContext('2d');
-          game = new Game(this.room, ctx, 0, 0, 0, 0, this)
-          game_loop(game);
+          inter = setInterval(() => {
+            canvas = document.getElementById("myCanvas");
+            if (canvas != null) {
+              ctx = canvas.getContext('2d');
+              game_loop(game);
+              clearInterval(inter);
+            }
+          }, 50);
+          game = new Game(this.room, 0, 0, 0, 0, this)
         },
 
         disconnected() {
@@ -746,12 +755,17 @@ function subscription_loop() {
             this.room = `play_channel_${data.match_room_id}`;
             console.log("your role is : " + this.role);
             console.log(this.room);
-            canvas = document.getElementById("myCanvas");
-            ctx = canvas.getContext('2d');
+            inter = setInterval(() => {
+              canvas = document.getElementById("myCanvas");
+              if (canvas != null) {
+                ctx = canvas.getContext('2d');
+                game.draw_datas();
+                clearInterval(inter);
+              }
+            }, 80);
             const UID = document.getElementById("UID");
             UID.innerHTML = `You have the ${this.role} paddle`
-            game = new Game(this.room, ctx, 0, 0, 0, 0, this)
-            game.draw_datas();
+            game = new Game(this.room, 0, 0, 0, 0, this)
             
             document.addEventListener("visibilitychange", function(e) {
               game.consumer.perform("end_the_game", {room_name: game.room_name})
