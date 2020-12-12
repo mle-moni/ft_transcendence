@@ -47,7 +47,8 @@
                 <input type="hidden" name="authenticity_token" value="{{../token}}">
                 <input type="hidden" name="id" value="{{id}}">
                 <input class="btn btn-success btn-sm" type="submit" value="Start">
-                <br><br>
+                </form>
+                <br>
                 {{!-- {{/ifTournamentCanStart}} --}}
                 <form class="deleteTournament" id="deleteTournament-{{id}}" action="/api/tournaments/{{id}}.json" accept-charset="UTF-8" method="DELETE">
                 <input type="hidden" name="authenticity_token" value="{{../token}}">
