@@ -61,9 +61,9 @@ class DirectChatsController < ApplicationController
     if !user1 || !user2
       res_with_error("Unknow User(s)", :bad_request)
       return (false)
-    end 
+    end
 
-    Game.start(user1.email, user2.email, filteredParams["is_ranked"] ? "ranked" : "unranked")
+    Game.start(user1.email, user2.email, if filteredParams["is_ranked"] == "true" then "duel_ranked" else "duel_unranked" end)
   end
 
 

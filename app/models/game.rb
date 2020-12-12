@@ -75,7 +75,7 @@ class Game < ApplicationRecord
 
 			War.update_if_needed($games[room_name][:game_type], winner_user, loser_user)
 
-			if ($games[room_name][:game_type] == "ranked")
+			if ($games[room_name][:game_type] == "ranked" || $games[room_name][:game_type] == "duel_ranked")
 				match = EloRating::Match.new
 				match.add_player(rating: loser_user.elo)
 				match.add_player(rating: winner_user.elo, winner: true)

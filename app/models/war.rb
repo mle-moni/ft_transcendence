@@ -146,6 +146,10 @@ class War < ApplicationRecord
       if war.ladder
         war.add_points(winner.guild, 1)
       end
+    when "duel_ranked"
+      if war.duel
+        war.add_points(winner.guild, 1)
+      end
     when "tournament"
       if war.tournament
         war.add_points(winner.guild, 1)

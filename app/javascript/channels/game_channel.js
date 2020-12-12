@@ -653,6 +653,14 @@ function subscription_loop() {
     up_button.addEventListener("mousedown", event => {
       keyboard["up"] = true;
     })
+
+    up_button.addEventListener("touchstart", event => {
+      keyboard["up"] = true;
+    })
+  
+    up_button.addEventListener("touchend", event => {
+      keyboard["up"] = false;
+    })
   
     up_button.addEventListener("mouseup", event => {
       keyboard["up"] = false;
@@ -663,6 +671,14 @@ function subscription_loop() {
     })
   
     down_button.addEventListener("mouseup", event => {
+      keyboard["down"] = false;
+    })
+
+    down_button.addEventListener("touchstart", event => {
+      keyboard["down"] = true;
+    })
+  
+    down_button.addEventListener("touchend", event => {
       keyboard["down"] = false;
     })
   }
