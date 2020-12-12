@@ -318,7 +318,7 @@ class RoomsController < ApplicationController
       return (false)
     end 
 
-    Game.start(user1.email, user2.email, filteredParams["is_ranked"] ? "ranked" : "unranked")
+    Game.start(user1.email, user2.email, filteredParams["is_ranked"] ? "duel_ranked" : "duel_unranked")
   end
 
   private
