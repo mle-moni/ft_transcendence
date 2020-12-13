@@ -757,68 +757,87 @@ function subscription_loop() {
       canvas = null;
     },
 
+
     received(data) {
       console.log(data);
       if (data.action === 'game_start') {
-        location.hash = "#game/" + data.match_room_id;
+        setTimeout(function() {
+          $.ajax({
+              url:  `/api/games/${data.match_room_id}/${window.App.models.user.toJSON().id}.json`,
+              data: { "authenticity_token": $('meta[name="csrf-token"]').attr('content') },
+              type: 'GET'
+          })
+          .done(res => {
+            console.log(res)
+            if (res == null) {
+              location.hash = "#game/" + data.match_room_id;
 
-        consumer.subscriptions.create({channel: "PlayChannel", game_room_id: data.match_room_id, role: data.msg}, {
-          room: undefined,
-          connected() {
-            // Called when the subscription is ready for use on the server
-            console.log("Now Playing, with paddle :" + data.msg);
-            this.role = data.msg;
-            this.room = `play_channel_${data.match_room_id}`;
-            console.log("your role is : " + this.role);
-            console.log(this.room);
-            inter = setInterval(() => {
-              canvas = document.getElementById("myCanvas");
-              if (canvas != null) {
-                ctx = canvas.getContext('2d');
-                game.draw_datas();
-                clearInterval(inter);
-              }
-            }, 80);
-            const UID = document.getElementById("UID");
-            UID.innerHTML = `You have the ${this.role} paddle`
-            game = new Game(this.room, 0, 0, 0, 0, this)
-            
-            document.addEventListener("visibilitychange", function(e) {
-              game.consumer.perform("end_the_game", {room_name: game.room_name})
-            });
+              consumer.subscriptions.create({channel: "PlayChannel", game_room_id: data.match_room_id, role: data.msg}, {
+                room: undefined,
+                connected() {
+                  // Called when the subscription is ready for use on the server
+                  console.log("Now Playing, with paddle :" + data.msg);
+                  this.role = data.msg;
+                  this.room = `play_channel_${data.match_room_id}`;
+                  console.log("your role is : " + this.role);
+                  console.log(this.room);
+                  inter = setInterval(() => {
+                    canvas = document.getElementById("myCanvas");
+                    if (canvas != null) {
+                      ctx = canvas.getContext('2d');
+                      game.draw_datas();
+                      clearInterval(inter);
+                    }
+                  }, 80);
+                  const UID = document.getElementById("UID");
+                  UID.innerHTML = `You have the ${this.role} paddle`
+                  game = new Game(this.room, 0, 0, 0, 0, this)
+                  
+                  document.addEventListener("visibilitychange", function(e) {
+                    game.consumer.perform("end_the_game", {room_name: game.room_name})
+                  });
 
-            setTimeout(function() {
-              game.consumer.perform("connect_to_game", { room_name: game.room_name, player: game.consumer.role });
-            }, 500)
-            setTimeout(function() {
-              currentTime = Date.now();
-              game.consumer.perform("check_users_connection", { room_name: game.room_name })
-              game_loop(game);
-            }, 2000);
-          },
+                  setTimeout(function() {
+                    game.consumer.perform("connect_to_game", { room_name: game.room_name, player: game.consumer.role });
+                  }, 500)
+                  setTimeout(function() {
+                    currentTime = Date.now();
+                    game.consumer.perform("check_users_connection", { room_name: game.room_name })
+                    game_loop(game);
+                  }, 2000);
+                },
 
-          disconnected() {
-            // Called when the subscription has been terminated by the server
-            console.log("I am disconnected of the room");
-            ball.x = 0.0;
-            ball.y = 0.0;
-            this.perform("quit", {room_name: game.room_name, player: this.role}); // default action
-            console.log("perform ok");
-            ctx = null;
-            canvas = null;
-          },
+                disconnected() {
+                  // Called when the subscription has been terminated by the server
+                  console.log("I am disconnected of the room");
+                  ball.x = 0.0;
+                  ball.y = 0.0;
+                  this.perform("quit", {room_name: game.room_name, player: this.role}); // default action
+                  console.log("perform ok");
+                  ctx = null;
+                  canvas = null;
+                },
 
-          received(data_nest) {
-            if (data_nest != null) {
-              if (data_nest['action'] == 'quit')
+                received(data_nest) {
+                  if (data_nest != null) {
+                    if (data_nest['action'] == 'quit')
+                      location.hash = "#";
+                    if (data_nest['ball_speed'] != null) {
+                      update_datas(data_nest)
+                      game_loop(game);
+                    }
+                  }
+                }
+              });
+            } else {
+              window.App.toast.success("The Game was launch in another window");
+              if (location.hash == "#game" || location.hash == "#game_ranked")
                 location.hash = "#";
-              if (data_nest['ball_speed'] != null) {
-                update_datas(data_nest)
-                game_loop(game);
-              }
             }
-          }
-        });
+          })
+          .fail((e) => {
+          });
+        }, Math.random() * 1000);
       }
     }
   });

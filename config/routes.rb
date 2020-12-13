@@ -28,6 +28,8 @@ Rails.application.routes.draw do
     get '/tournaments/register/:id', to: 'tournaments#register'
     get '/tournaments/unregister/:id', to: 'tournaments#unregister'
 
+    get '/games/:room_id/:user_id', to: 'games#is_connected'
+
     # CHAT & DMS ------
     resources :rooms do 
       resources :members, controller: 'room/members', only: [:index, :new, :create, :destroy]
