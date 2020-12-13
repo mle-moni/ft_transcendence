@@ -194,7 +194,7 @@ class RoomsController < ApplicationController
         format.json { render :show, status: :created, location: @room }
       else
         format.html { render :new }
-        format.json { render json: @room.errors, status: :unprocessable_entity }
+        format.json { render json: {alert: "Name already taken"}, status: :unprocessable_entity }
       end
     end
   end

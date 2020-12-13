@@ -75,8 +75,6 @@ Rails.application.routes.draw do
     post 'admin/demote'
   end
 
-
-
   # profile actions, I might move it to the API scope
   post '/profile/edit', to: 'profile#update'
   post '/profile/password', to: 'profile#change_password'
@@ -91,6 +89,8 @@ Rails.application.routes.draw do
   devise_scope :user do
     delete 'sign_out', :to => 'devise/sessions#destroy', :as => :destroy_user_session_path
   end
+
+  match "*path", to: "application#page_not_found", :via => [:get, :post, :delete, :put, :patch]
 
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end

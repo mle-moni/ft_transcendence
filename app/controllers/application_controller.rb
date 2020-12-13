@@ -42,6 +42,16 @@ class ApplicationController < ActionController::Base
 		return true
 	end
 
+	def page_not_found
+		respond_to do |format|
+			format.html {redirect_to "/404"}
+			format.json  { render json: {
+				content: "Sorry, we could not find find this page",
+				 status: 404
+			}, status: 404 }
+		end
+	end
+
 	protected
 
 	def configure_permitted_parameters
