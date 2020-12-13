@@ -86,6 +86,24 @@ class Tournament < ApplicationRecord
 		save
 	end
 
+	def self.automated_creation
+		start_date = DateTime.parse("17:00 +01:00")
+		t = Tournament.create({start: start_date})
+		if t.save
+			ActionCable.server.broadcast "update_channel", action: "update", target: "tournaments"
+		end
+	end
+
+	def self.start_if_needed
+		Time.zone = "Europe/Paris"
+		now = DateTime.parse(Time.current.to_s)
+		Tournament.where(started: false).each do |t|
+			if t.started == false && t.start < now
+				t.start_it
+			end
+		end
+	end
+
 	private
 
 	def eliminate_users_not_ready

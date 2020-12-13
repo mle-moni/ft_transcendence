@@ -1,26 +1,14 @@
 class TournamentsController < ApplicationController
 
 	before_action :connect_user
-	before_action :is_admin, only: [:create, :destroy, :start]
+	before_action :is_admin, only: [:create, :destroy]
 	before_action :set_date, only: [:create]
-	before_action :set_tournament, only: [:destroy, :show, :register, :unregister, :start]
-	
-	def start
-		Time.zone = "Europe/Paris"
-		now = DateTime.parse(Time.current.to_s)
-		if @tournament.start > now
-			return res_with_error("You must wait the subscriptions te be closed", :bad_request)
-		end
-		if @tournament.started
-			return res_with_error("Tournament already started", :bad_request)
-		end
-		@tournament.start_it
-		success("Tournament started")
-	end
+	before_action :set_tournament, only: [:destroy, :show, :register, :unregister]
 
 	# GET /tournaments
 	# GET /tournaments.json
 	def index
+		Tournament.start_if_needed
 		@tournaments = Tournament.all
 		respond_to do |format|
 			format.html { redirect_to "/", notice: ':)' }
@@ -32,13 +20,10 @@ class TournamentsController < ApplicationController
 	# POST /tournaments.json
 	def create
 		t = Tournament.create({start: @dateStart})
+		ActionCable.server.broadcast "update_channel", action: "update", target: "tournaments"
 		respond_to do |format|
-			if t.save
-				ActionCable.server.broadcast "update_channel", action: "update", target: "tournaments"
-				format.json { render json: t, status: :created }
-			else
-				format.json { render json: t.errors, status: :unprocessable_entity }
-			end
+			start_when_time_comes(@dateStart, t.id)
+			format.json { render json: t, status: :created }
 		end
 	end
 
@@ -99,6 +84,21 @@ class TournamentsController < ApplicationController
 		@dateStart = DateTime.parse(params[:dateStart] + "+01:00") rescue nil
 		if @dateStart == nil || @dateStart < now
 			return res_with_error("Date must be in the future", :bad_request)
+		end
+		return true
+	end
+
+	def start_when_time_comes(date, id)
+		Time.zone = "Europe/Paris"
+		now = DateTime.parse(Time.current.to_s)
+		seconds_to_wait = ((date - now) * 24 * 60 * 60).to_i
+		return false if seconds_to_wait < 0
+		Thread.new do
+			sleep seconds_to_wait + 1
+			t = Tournament.find(id) rescue nil
+			if t && t.started == false
+				t.start_it
+			end
 		end
 		return true
 	end

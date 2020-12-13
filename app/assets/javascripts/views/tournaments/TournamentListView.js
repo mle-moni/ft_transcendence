@@ -3,7 +3,6 @@ AppClasses.Views.TournamentList = class extends Backbone.View {
 		opts.events = {
 			"submit .registerTournament": "registerTournament",
 			"submit .unregisterTournament": "unregisterTournament",
-			"submit .startTournament": "startTournament",
 			"submit .deleteTournament": "deleteTournament"
 		};
 		super(opts);
@@ -43,21 +42,6 @@ AppClasses.Views.TournamentList = class extends Backbone.View {
 		App.utils.formAjax("/api/tournaments/unregister/" + tournamentID + ".json", selectorFormID)
 		.done(res => {
 			App.toast.success("Tournament left !", { duration: 2000, style: App.toastStyle });
-		})
-		.fail((e) => {
-			App.utils.toastError(e);
-		});
-		return (false);
-	}
-
-	startTournament(e) {
-		e.preventDefault();
-		if (e.target.children.length < 2) return (false);
-		const tournamentID = e.target.children[1].value;
-		const selectorFormID = "#startTournament-" + tournamentID;
-		App.utils.formAjax("/api/tournaments/start/" + tournamentID + ".json", selectorFormID)
-		.done(res => {
-			App.toast.success("Tournament Started !", { duration: 2000, style: App.toastStyle });
 		})
 		.fail((e) => {
 			App.utils.toastError(e);

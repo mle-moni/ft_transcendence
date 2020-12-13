@@ -20,7 +20,6 @@ AppClasses.Views.Home = class extends Backbone.View {
 			type: 'POST'
 		})
 		.done(res => {
-			console.log("mhh?")
 			this.model.set("first_time", false);
 		})
 		.fail((e) => {

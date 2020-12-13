@@ -7,6 +7,7 @@ window.socket = consumer.subscriptions.create({
 	}, {
 	connected() {
 		connected = true;
+		window.socket.send({action_str: "alive"});
 	},
 	disconnected() {
 		connected = false;
