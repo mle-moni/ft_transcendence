@@ -79,6 +79,7 @@ AppClasses.Views.TournamentList = class extends Backbone.View {
 				tournaments[count].formatedDate = new Intl.DateTimeFormat('en-GB', { dateStyle: 'full', timeStyle: 'long' }).format(formatedDate);
 				tournaments[count].page_id = (count + 1);
 			}
+			tournaments.reverse();
 		}
 		this.$el.html(this.template({
 			tournaments: tournaments,
