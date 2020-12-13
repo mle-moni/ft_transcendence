@@ -105,8 +105,17 @@ class User < ApplicationRecord
     usr.save
   end
 
-  def self.has_officer_rights(usr)
-    return (usr.guild_owner || usr.guild_officer)
+  def has_officer_rights
+    return guild_owner || guild_officer
+  end
+
+  def in_guild?
+    return guild && guild_validated
+  end
+
+  def same_guild?(usr)
+    return false unless in_guild? && usr.in_guild?
+    return guild_id == usr.guild_id
   end
       
 end

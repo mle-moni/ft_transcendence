@@ -3,8 +3,9 @@ AppClasses.Views.ShowGuild = class extends Backbone.View {
 		opts.events = {
 			"submit #quitGuildForm": "quit",
 			"submit #joinGuildForm": "join",
-			"click .acceptRequestGuild": "accept",
-			"click #warTimeFightRequest": "warTimeFightRequest"
+			"click .resToRequestGuild": "resToRequest",
+			"click #warTimeFightRequest": "warTimeFightRequest",
+			"click .officerToggle": "officerToggle"
 		}
 		super(opts);
 		this.guild_id = opts.guild_id;
@@ -15,14 +16,26 @@ AppClasses.Views.ShowGuild = class extends Backbone.View {
 		this.guild = null;
 		this.updateRender();
 	}
-	accept(e) {
+	officerToggle(e) {
+		const usrID = e.target.getElementsByClassName("nodisplay")[0].innerText;
+		const action = e.target.getElementsByClassName("nodisplay")[1].innerText;
+		$("#officerIdField").attr("value", usrID);
+		App.utils.formAjax(`/api/guild/${action}.json`, "#officerToggleForm")
+		.done(res => {
+			App.toast.success(res.msg, { duration: 2000, style: App.toastStyle });
+		})
+		.fail((e) => {
+			App.utils.toastError(e);
+		});
+	}
+	resToRequest(e) {
 		e.preventDefault();
 		const usrID = e.target.getElementsByClassName("nodisplay")[0].innerText;
+		const action = e.target.getElementsByClassName("nodisplay")[1].innerText;
 		$("#acceptRequestIDField").attr("value", usrID);
-		App.utils.formAjax("/api/guild/accept.json", "#acceptRequestForm")
+		App.utils.formAjax(`/api/guild/${action}.json`, "#acceptRequestForm")
 		.done(res => {
-			App.toast.success("Request accepted !", { duration: 2000, style: App.toastStyle });
-			this.model.fetch();
+			App.toast.success(res.msg, { duration: 2000, style: App.toastStyle });
 		})
 		.fail((e) => {
 			App.utils.toastError(e);

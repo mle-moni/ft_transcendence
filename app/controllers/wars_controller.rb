@@ -110,8 +110,8 @@ class WarsController < ApplicationController
 			war_id = war.id
 			match_count = war.match_count
 			sleep war.time_to_answer
-			war = War.find(war_id)
-			if match_count == war.match_count
+			war = War.find(war_id) rescue nil
+			if war && match_count == war.match_count
 				guild = Guild.find(war.match_request_guild) rescue nil
 				if guild
 					war.add_points(guild, 2)

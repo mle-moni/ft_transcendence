@@ -289,6 +289,7 @@ canvas {
 
 .text-maxwidth-sm {
 	max-width: 5vw;
+	display: inline;
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
@@ -332,6 +333,12 @@ canvas {
 		overflow: hidden;
 		text-overflow: ellipsis;
 	}
+}
+
+.avatar2 {
+	-webkit-border-radius: 25px;
+	-moz-border-radius: 25px;
+	border-radius: 25px;
 }
 
 .avatar {
@@ -599,6 +606,9 @@ label + .check {
 	margin-top: 3px;
 }
 
+.font14 {
+	font-size: 14px;
+}
 
 input[type="text"],
 input[type="file"],

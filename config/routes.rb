@@ -8,7 +8,10 @@ Rails.application.routes.draw do
     resources :guilds
     post '/guild/join', to: 'guilds#join'
     post '/guild/quit', to: 'guilds#quit'
+    post '/guild/promote', to: 'guilds#promote'
+    post '/guild/demote', to: 'guilds#demote'
     post '/guild/accept', to: 'guilds#accept_request'
+    post '/guild/reject', to: 'guilds#reject_request'
     post '/wars/create', to: 'wars#create'
     post '/wars/delete', to: 'wars#delete'
     post '/wars/validate', to: 'wars#validate'

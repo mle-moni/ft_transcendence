@@ -1,6 +1,8 @@
 class GuildsController < ApplicationController
+  before_action :connect_user
   before_action :set_guild, only: [:show, :edit, :update, :destroy, :join]
-  before_action :connect_user, only: [:new, :edit, :update, :destroy, :join, :quit, :accept_request]
+  before_action :set_user, only: [:promote, :demote]
+  before_action :officer_checks, only: [:promote, :demote]
   before_action :has_guild, only: [:new, :join]
 
   # GET /guilds
@@ -110,6 +112,7 @@ class GuildsController < ApplicationController
       return true
     end
     User.reset_guild(current_user)
+    ActionCable.server.broadcast "update_channel", action: "update", target: "guilds", reset: true
     respond_to do |format|
       format.html { redirect_to guilds_url, notice: 'You quitted your guild' }
       format.json { render json: User.clean(current_user), status: :ok }
@@ -122,6 +125,7 @@ class GuildsController < ApplicationController
     current_user.guild_owner = false
     current_user.guild_validated = false
     current_user.save
+    ActionCable.server.broadcast "update_channel", action: "update", target: "guilds"
     respond_to do |format|
       format.html { redirect_to guilds_url, notice: 'Joining request sent.' }
       format.json { render json: User.clean(current_user), status: :ok }
@@ -134,19 +138,68 @@ class GuildsController < ApplicationController
     unless new_usr.guild_id == current_user.guild_id
       return res_with_error("Bad request", :bad_request)
     end
-    unless User.has_officer_rights(current_user)
+    unless current_user.has_officer_rights
       return res_with_error("Action unauthorized", :unauthorized)
     end
     new_usr.guild_validated = true
     new_usr.save
+    ActionCable.server.broadcast "update_channel", action: "update", target: "guilds"
     success("Joining request accepted")
   end
 
+  def reject_request
+    new_usr = User.find(params[:id]) rescue nil
+    return res_with_error("User not found", :not_found) unless new_usr
+    unless new_usr.guild_id == current_user.guild_id
+      return res_with_error("Bad request", :bad_request)
+    end
+    unless current_user.has_officer_rights
+      return res_with_error("Action unauthorized", :unauthorized)
+    end
+    new_usr.guild = nil
+    new_usr.save
+    ActionCable.server.broadcast "update_channel", action: "update", target: "guilds"
+    ActionCable.server.broadcast "update_channel", action: "update", target: "users"
+    success("Request rejected")
+  end
+
+  def promote
+    @user.guild_officer = true
+    @user.save
+    ActionCable.server.broadcast "update_channel", action: "update", target: "guilds"
+    success("User promoted")
+  end
+
+  def demote
+    @user.guild_officer = false
+    @user.save
+    ActionCable.server.broadcast "update_channel", action: "update", target: "guilds"
+    success("User demoted")
+  end
+
   private
+
+    def officer_checks
+      unless current_user.has_officer_rights
+        return res_with_error("You need to have officer rights", :bad_request)
+      end
+      unless current_user.same_guild?(@user)
+        return res_with_error("Guild IDs do not match", :bad_request)
+      end
+      if @user.guild_owner
+        return res_with_error("You cannot promote/demote the guild owner")
+      end
+    end
+  
     # Use callbacks to share common setup or constraints between actions.
     def set_guild
       @guild = Guild.find(params[:id]) rescue nil
       return res_with_error("Guild not found", :not_found) unless @guild
+    end
+
+    def set_user
+      @user = User.find(params[:id]) rescue nil
+      return res_with_error("User not found", :not_found) unless @user
     end
 
     # Only allow a list of trusted parameters through.

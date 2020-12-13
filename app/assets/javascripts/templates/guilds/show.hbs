@@ -18,36 +18,55 @@
 	<br>
 	<ul class="list-group">
 		{{#each guild.users}}
-			<li class="list-group-item">
-				<a class="btn btn-sm font20 avatar-btn" href="#profiles/{{ id }}">
-					<img src="{{image}}" class="clear avatar">
-					<label class="text-maxwidth-md sized-text-md">
-						{{ nickname }}
-						{{#if guild_owner}}
-							(Owner)
-						{{/if}}
-						{{#if guild_officer}}
-							(Officer)
-						{{/if}}
-					</label>
-					{{#if user.in_game}}
-						<a class="btn btn-secondary sized-text-md" href="#game/{{user.roomid}}">Look player Game</a>
-					{{/if}}
-				</a>
-			</li>
+		<li class="list-group-item">
+			<a class="btn btn-sm font20" href="#profiles/{{ id }}">
+				<img src="{{image}}" style="max-height: 50px;" class="clear avatar2">
+				<p class="text-maxwidth-sm">{{ nickname }}</p>
+			</a>
+
+			{{#if guild_owner}}
+				<b class="font14">Owner </b>
+			{{else if guild_officer}}
+				<b class="font14">Officer </b>
+				{{#if ../officerRights}}
+					<button class="officerToggle btn btn-success">
+						Demote
+						<span class="nodisplay">{{id}}</span>
+						<span class="nodisplay">demote</span>
+					</button>
+				{{/if}}
+			{{else if ../officerRights}}
+				<button class="officerToggle btn btn-success">
+					Promote
+					<span class="nodisplay">{{id}}</span>
+					<span class="nodisplay">promote</span>
+				</button>
+			{{/if}}
+		</li>
 		<br>
 		{{/each}}
 	</ul>
 
 	{{#if officerRights}}
 	<br><hr><br>
-	<p class="fifties blk-text text-center big-title"> <strong>Accept requests </strong></p>
+	<p class="fifties blk-text text-center big-title"> <strong>Users requests </strong></p>
 	<ul class="list-group">
 		{{#each guild.requests}}
-		<li class="acceptRequestGuild list-group-item">
-			<img src="{{image}}" style="max-height: 50px;" class="clear">
-			<a class="btn btn-primary btn-sm font20 text-maxwidth-md" href="#profiles/{{ id }}">{{ nickname }}</a>
-			<span class="nodisplay">{{id}}</span>
+		<li class="list-group-item">
+			<a class="btn btn-sm font20" href="#profiles/{{ id }}">
+				<img src="{{image}}" style="max-height: 50px;" class="clear avatar2">
+				<p class="text-maxwidth-sm">{{ nickname }}</p>
+			</a>
+			<button class="resToRequestGuild btn btn-success">
+				Accept
+				<span class="nodisplay">{{id}}</span>
+				<span class="nodisplay">accept</span>
+			</button>
+			<button class="resToRequestGuild btn btn-danger">
+				Reject
+				<span class="nodisplay">{{id}}</span>
+				<span class="nodisplay">reject</span>
+			</button>
 		</li>
 		{{/each}}
 	</ul>
@@ -160,11 +179,15 @@
 	<form style="display: none;" method="POST" id="acceptRequestForm">
 		<input type="hidden" name="authenticity_token" value="{{token}}">
 		<input type="hidden" name="id" value="" id="acceptRequestIDField">
-		<input class="btn btn-success" type="submit" value="Send join request">
 	</form>
 
 	<form style="display: none;" method="POST" id="warTimeFightRequestForm">
 		<input type="hidden" name="authenticity_token" value="{{token}}">
+	</form>
+
+	<form style="display: none;" method="POST" id="officerToggleForm">
+		<input type="hidden" name="authenticity_token" value="{{token}}">
+		<input type="hidden" name="id" value="" id="officerIdField">
 	</form>
 
 </div>
