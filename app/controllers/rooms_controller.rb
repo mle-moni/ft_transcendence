@@ -26,7 +26,7 @@ class RoomsController < ApplicationController
 
     @room = Room.find(params["room"]["room_id"]) rescue nil
     if !@room 
-      return res_with_error("Unknow Room", :bad_request)
+      return res_with_error("Unknown Room", :bad_request)
     end
 
     if !current_user.rooms_as_member.include?(@room) && current_user.id != @room.owner_id
@@ -44,7 +44,7 @@ class RoomsController < ApplicationController
   def joinPrivate
     @room = Room.find(params["room"]["room_id"]) rescue nil
     if !@room
-      return res_with_error("Unknow Room", :bad_request)
+      return res_with_error("Unknown Room", :bad_request)
     end
     # https://coderwall.com/p/sjegjq/use-bcrypt-for-passwords
     roomPass = BCrypt::Password.new(@room.password)
@@ -243,7 +243,7 @@ class RoomsController < ApplicationController
     end
 
     if @room == nil
-      res_with_error("Unknow Room", :bad_request)
+      res_with_error("Unknown Room", :bad_request)
       return (false)
     end
     
@@ -266,7 +266,7 @@ class RoomsController < ApplicationController
     filteredParams = params.require(:room).permit(:room_id)
     @room = Room.find(filteredParams["room_id"]) rescue nil
     if !@room
-      res_with_error("Unknow room", :bad_request)
+      res_with_error("Unknown room", :bad_request)
       return (false)
     end 
     @room.members.destroy_all
@@ -310,16 +310,24 @@ class RoomsController < ApplicationController
   # POST /rooms/acceptDuelRequest
   # POST /rooms/acceptDuelRequest.json
   def acceptDuelRequest
-    filteredParams = params.require(:duel_request).permit(:first_user_id, :second_user_id, :is_ranked)
+    filteredParams = params.require(:duel_request).permit(:room_id, :duel_id, :first_user_id, :second_user_id, :is_ranked)
 
+    duel = Room.find(filteredParams["room_id"]).room_messages.find(filteredParams["duel_id"]) rescue nil
+
+    if !duel || duel.is_duel_request == false
+      return res_with_error("Unknown duel request", :bad_request)
+    end 
     user1 = User.find(filteredParams["first_user_id"]) rescue nil
     user2 = User.find(filteredParams["second_user_id"]) rescue nil
-
     if !user1 || !user2
-      res_with_error("Unknow User(s)", :bad_request)
-      return (false)
+      return res_with_error("Unknown User(s)", :bad_request)
+    end
+    if user1.id != duel.user_id
+      return res_with_error("Wrong user", :bad_request)
+    end
+    if duel.is_ranked && filteredParams["is_ranked"] == "false" || !duel.is_ranked && filteredParams["is_ranked"] == "true"
+      return res_with_error("Wrong game type", :bad_request)
     end 
-
     Game.start(user1.email, user2.email,  if filteredParams["is_ranked"] == "true" then "duel_ranked" else "duel_unranked" end)
   end
 

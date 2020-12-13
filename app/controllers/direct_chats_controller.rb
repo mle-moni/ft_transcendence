@@ -54,15 +54,20 @@ class DirectChatsController < ApplicationController
   # POST /direct_chats/acceptDuelRequest
   # POST /direct_chats/acceptDuelRequest.json
   def acceptDuelRequest
-    filteredParams = params.require(:duel_request).permit(:first_user_id, :second_user_id, :is_ranked)
+    filteredParams = params.require(:duel_request).permit(:chat_id, :duel_id, :first_user_id, :second_user_id, :is_ranked)
+
+    duel = DirectChat.find(filteredParams["chat_id"]).direct_messages.find(filteredParams["duel_id"]) rescue nil
+    if !duel || duel.is_duel_request == false
+      return res_with_error("Unknown duel request", :bad_request)
+    end 
     user1 = User.find(filteredParams["first_user_id"]) rescue nil
     user2 = User.find(filteredParams["second_user_id"]) rescue nil
-
     if !user1 || !user2
-      res_with_error("Unknow User(s)", :bad_request)
-      return (false)
+      return res_with_error("Unknown User(s)", :bad_request)
     end
-
+    if duel.is_ranked && filteredParams["is_ranked"] == "false" || !duel.is_ranked && filteredParams["is_ranked"] == "true"
+      return res_with_error("Wrong game type", :bad_request)
+    end
     Game.start(user1.email, user2.email, if filteredParams["is_ranked"] == "true" then "duel_ranked" else "duel_unranked" end)
   end
 
@@ -74,7 +79,7 @@ class DirectChatsController < ApplicationController
     first_user = User.find(filteredParams["first_user_id"]) rescue nil
     second_user = User.find(filteredParams["second_user_id"]) rescue nil
     if !first_user || !second_user
-      res_with_error("Unknow User", :bad_request)
+      res_with_error("Unknown User", :bad_request)
       return (false)
     end 
     @direct_chat = DirectChat.new(user1_id: filteredParams["first_user_id"], user2_id: filteredParams["second_user_id"])

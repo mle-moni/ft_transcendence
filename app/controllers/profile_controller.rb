@@ -71,7 +71,7 @@ class ProfileController < ApplicationController
 	def handleBlock
 		filteredParams = params.permit(:targetUserID, :typeAction)
 		targetUser = User.find(filteredParams["targetUserID"]) rescue nil
-		return res_with_error("Unknow User", :bad_request) unless targetUser
+		return res_with_error("Unknown User", :bad_request) unless targetUser
 		if filteredParams["typeAction"] == "block" && !Block.where(user: current_user, toward: targetUser).exists?
 				@newBlock = Block.create(user: current_user, toward: targetUser)
 		elsif filteredParams["typeAction"] == "unblock" && Block.where(user: current_user, toward: targetUser).exists?
