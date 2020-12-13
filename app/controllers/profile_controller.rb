@@ -69,7 +69,7 @@ class ProfileController < ApplicationController
 		filteredParams = params.permit(:targetUserID, :typeAction)
 		targetUser = User.find(filteredParams["targetUserID"])
 		if !targetUser
-			res_with_error("Unknow User", :bad_request)
+			res_with_error("Unknown User", :bad_request)
 			return false
 		end
 		if filteredParams["typeAction"] == "block" && !Block.where(user: current_user, toward: targetUser).exists?

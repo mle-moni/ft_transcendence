@@ -59,7 +59,7 @@ class DirectChatsController < ApplicationController
     duel = DirectChat.find(filteredParams["chat_id"]).direct_messages.find(filteredParams["duel_id"]) rescue nil
 
     if !duel || duel.is_duel_request == false
-      res_with_error("Unknow duel request", :bad_request)
+      res_with_error("Unknown duel request", :bad_request)
       return (false)
     end 
 
@@ -67,7 +67,7 @@ class DirectChatsController < ApplicationController
     user2 = User.find(filteredParams["second_user_id"]) rescue nil
 
     if !user1 || !user2
-      res_with_error("Unknow User(s)", :bad_request)
+      res_with_error("Unknown User(s)", :bad_request)
       return (false)
     end
 
@@ -87,7 +87,7 @@ class DirectChatsController < ApplicationController
     first_user = User.find(filteredParams["first_user_id"])
     second_user = User.find(filteredParams["second_user_id"])
     if !first_user || !second_user
-      res_with_error("Unknow User", :bad_request)
+      res_with_error("Unknown User", :bad_request)
       return (false)
     end 
     @direct_chat = DirectChat.new(user1_id: filteredParams["first_user_id"], user2_id: filteredParams["second_user_id"])

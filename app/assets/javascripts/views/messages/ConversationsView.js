@@ -83,7 +83,7 @@ AppClasses.Views.Conversations = class extends AppClasses.Views.AbstractView {
 		if (!e.currentTarget || !e.currentTarget[1] || !e.currentTarget[2] // verification null value
 			|| e.currentTarget[1].value != this.user.id || e.currentTarget[2].value != this.chatID) // Verification value if not null
 		{
-			App.utils.toastError(e);
+			App.toast.alert("Something is wrong with this conversation");
 			return (false);
 		}
 		return (true);
@@ -104,8 +104,7 @@ AppClasses.Views.Conversations = class extends AppClasses.Views.AbstractView {
 			|| !e.currentTarget[4] || !e.currentTarget[5] // verification null value
 			|| e.currentTarget[3].value != otherUser || e.currentTarget[4].value != this.user.id) // Verification users' id
 			{
-
-				App.utils.toastError(e);
+				App.toast.alert("Wrong duel request");
 				return (false);
 			}
 		return (true);

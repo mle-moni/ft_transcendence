@@ -68,7 +68,7 @@ AppClasses.Views.ShowRoom = class extends Backbone.View {
 		if (!e.currentTarget || !e.currentTarget[1] || !e.currentTarget[2] // verification null value
 			|| e.currentTarget[1].value != this.user.id || e.currentTarget[2].value != this.room_id) // Verification value if not null
 		{
-			App.utils.toastError(e);
+			App.toast.alert("Something is wrong with this conversation");
 			return (false);
 		}
 		return (true);
@@ -81,7 +81,7 @@ AppClasses.Views.ShowRoom = class extends Backbone.View {
 			|| e.currentTarget[1].value != this.room_id // Verification room's id
 			|| e.currentTarget[4].value != this.user.id) // Verification user's id
 		{
-			App.utils.toastError(e);
+			App.toast.alert("Wrong duel request");
 			return (false);
 		}
 		return (true);

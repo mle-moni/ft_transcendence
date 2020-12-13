@@ -26,7 +26,7 @@ class RoomsController < ApplicationController
 
     @room = Room.find(params["room"]["room_id"])
     if !@room 
-      res_with_error("Unknow Room", :bad_request)
+      res_with_error("Unknown Room", :bad_request)
       return (false)
     end
 
@@ -47,7 +47,7 @@ class RoomsController < ApplicationController
   def joinPrivate
     @room = Room.find(params["room"]["room_id"])
     if !@room
-      res_with_error("Unknow Room", :bad_request)
+      res_with_error("Unknown Room", :bad_request)
       return (false)
     end
     # https://coderwall.com/p/sjegjq/use-bcrypt-for-passwords
@@ -242,7 +242,7 @@ class RoomsController < ApplicationController
     end
 
     if @room == nil
-      res_with_error("Unknow Room", :bad_request)
+      res_with_error("Unknown Room", :bad_request)
       return (false)
     end
     
@@ -265,7 +265,7 @@ class RoomsController < ApplicationController
     filteredParams = params.require(:room).permit(:room_id)
     @room = Room.find(filteredParams["room_id"])
     if !@room
-      res_with_error("Unknow room", :bad_request)
+      res_with_error("Unknown room", :bad_request)
       return (false)
     end 
     @room.members.destroy_all
@@ -313,7 +313,7 @@ class RoomsController < ApplicationController
     duel = Room.find(filteredParams["room_id"]).room_messages.find(filteredParams["duel_id"]) rescue nil
 
     if !duel || duel.is_duel_request == false
-      res_with_error("Unknow duel request", :bad_request)
+      res_with_error("Unknown duel request", :bad_request)
       return (false)
     end 
 
@@ -321,7 +321,7 @@ class RoomsController < ApplicationController
     user2 = User.find(filteredParams["second_user_id"]) rescue nil
 
     if !user1 || !user2
-      res_with_error("Unknow User(s)", :bad_request)
+      res_with_error("Unknown User(s)", :bad_request)
       return (false)
     end
 

@@ -35,7 +35,7 @@ class ChatMessagesController < ApplicationController
         user = User.find(filteredParams["from_id"])
         dc = DirectChat.find(filteredParams["direct_chat_id"])
         if !user || !dc
-            res_with_error("Unknow DirectChat or User", :bad_request)
+            res_with_error("Unknown DirectChat or User", :bad_request)
             return (false)
         end
         @chat_message = DirectMessage.create(message: filteredParams["message"], from: user, direct_chat: dc)
