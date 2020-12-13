@@ -106,7 +106,7 @@ class ProfileController < ApplicationController
 			ActionCable.server.broadcast "update_channel", action: "update", target: "users"
 			ActionCable.server.broadcast "update_channel", action: "update", target: "guilds"
 		else
-			res_with_error("Could not save profile", :unprocessable_entity)
+			res_with_error("Nickname or email already taken", :unprocessable_entity)
 		end
 	end
 

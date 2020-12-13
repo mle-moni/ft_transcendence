@@ -42,24 +42,20 @@ class GuildsController < ApplicationController
   # POST /guilds
   # POST /guilds.json
   def create
-
     g_params = guild_params()
     if (!g_params)
-      return false
+      return false # http response is in guild_params()
     end
     @guild = current_user.create_guild(g_params)
+    unless @guild.id
+      return res_with_error("Name or anagram already taken!", :unprocessable_entity)
+    end
     current_user.guild_owner = true
     current_user.guild_validated = true
     current_user.save
-
     respond_to do |format|
-      if @guild
-        format.html { redirect_to @guild, notice: 'Guild was successfully created.' }
-        format.json { render :show, status: :created, location: @guild }
-      else
-        format.html { render :new }
-        format.json { render json: @guild.errors, status: :unprocessable_entity }
-      end
+      format.html { redirect_to @guild, notice: 'Guild was successfully created.' }
+      format.json { render :show, status: :created, location: @guild }
     end
   end
 
@@ -72,17 +68,16 @@ class GuildsController < ApplicationController
 
     g_params = guild_params()
     if (!g_params)
-      return false
+      return false # http response is in guild_params()
     end
-
+    
+    unless @guild.update(g_params)
+      return res_with_error("Name or anagram already taken!", :unprocessable_entity)
+    end
+    
     respond_to do |format|
-      if @guild.update(g_params)
-        format.html { redirect_to @guild, notice: 'Guild was successfully updated.' }
-        format.json { render :show, status: :ok, location: @guild }
-      else
-        format.html { render :edit }
-        format.json { render json: @guild.errors, status: :unprocessable_entity }
-      end
+      format.html { redirect_to @guild, notice: 'Guild was successfully updated.' }
+      format.json { render :show, status: :ok, location: @guild }
     end
   end
 
