@@ -15,14 +15,14 @@
             <li class="list-group-item fifties">
                 {{#ifDm ../userID attributes.id ../dmRooms.models}}
                     {{#ifCurrentDmRoom ../userID attributes.id ../dmRooms.models ../chatID  }}
-                        <a class="btn btn-success btn-lg btn-block" href="#messages/{{#findDmRoom ../userID attributes.id ../dmRooms.models}}{{/findDmRoom}}">
+                        <a class="btn btn-success btn-lg btn-block avatar-btn" href="#messages/{{#findDmRoom ../userID attributes.id ../dmRooms.models}}{{/findDmRoom}}">
                             <img src="{{attributes.image}}" alt="Avatar" class="avatar">
-                            <label class="text-maxwidth-sm">{{attributes.nickname}}</label>
+                            <label class="text-maxwidth-sm sized-text-md">{{attributes.nickname}}</label>
                         </a>
                     {{else}}
-                        <a class="btn btn-primary btn-lg btn-block" href="#messages/{{#findDmRoom ../userID attributes.id ../dmRooms.models}}{{/findDmRoom}}">
+                        <a class="btn btn-primary btn-lg btn-block avatar-btn" href="#messages/{{#findDmRoom ../userID attributes.id ../dmRooms.models}}{{/findDmRoom}}">
                             <img src="{{attributes.image}}" alt="Avatar" class="avatar">
-                            <label class="text-maxwidth-sm">{{attributes.nickname}}</label>
+                            <label class="text-maxwidth-sm sized-text-md">{{attributes.nickname}}</label>
                         </a>
                     {{/ifCurrentDmRoom}}
                 {{else}}
@@ -32,9 +32,9 @@
                         <input type="hidden" name="dmRoom[first_user_id]" value="{{../userID}}">
                         <input type="hidden" name="dmRoom[second_user_id]" value="{{attributes.id}}">
 
-                        <button class="btn btn-secondary btn-lg btn-block" style="overflow: hidden; padding-right: .5em;" type="submit">
+                        <button class="btn btn-secondary btn-lg btn-block avatar-btn" type="submit">
                             <img src="{{attributes.image}}" alt="Avatar" class="avatar">
-                            <label class="text-maxwidth-sm">{{attributes.nickname}}</label>
+                            <label class="text-maxwidth-sm sized-text-md">{{attributes.nickname}}</label>
                         </button>
                     </form>
                 {{/ifDm}}
@@ -45,7 +45,7 @@
     {{!-- CHATBOX --}}
     <div class="col-7" style="padding-top: 10px!important;">
         <nav class="navbar navbar-dark bg-dark fifties" id="nav">
-            <a class="navbar-brand" href="#profiles/{{otherUser.id}}">{{otherUser.nickname}}</a>
+            <a class="navbar-brand sized-text-md text-maxwidth-md" href="#profiles/{{otherUser.id}}">{{otherUser.nickname}}</a>
             <div id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item active">
@@ -76,7 +76,7 @@
                         {{#when from_id "noteq" ../currentUser.id}}
                             <li class="list-group-item fifties blk-text" style="margin-right: 20%;">
                                 <div class="otherMessage dont-break-out">
-                                    <img src="{{../otherUser.image}}" alt="Avatar" class="avatar">
+                                    <img src="{{../otherUser.image}}" alt="Avatar" class="avatar" style="margin-bottom: 0px !important;">
 
                                     {{#ifDuelReq is_duel_request}}
                                         <form id="AcceptDuelRequest" action="/api/direct_chats/acceptDuelRequest" accept-charset="UTF-8"
@@ -106,7 +106,7 @@
                                 <li class="list-group-item fifties" style="background: rgb(0, 106, 255); margin-left: 20%; margin-right: 10px;">
                                     <div class="dont-break-out" style="text-align: right;">
                                         <label class="message sized-text-md" data-role="message-text">{{message}}</label>
-                                        <img src="{{../currentUser.image}}" alt="Avatar" class="avatar">
+                                        <img src="{{../currentUser.image}}" alt="Avatar" class="avatar" style="margin-bottom: 0px !important;">
                                     </div>
                                 </li>
                             {{/ifDuelReq}}
@@ -133,6 +133,9 @@
                 </form>
             </div>
         </div>
+        {{#if user.in_game}}
+            <a class="btn btn-secondary btn-block fifties sized-text text-maxwidth-md" href="#game/{{user.roomid}}">Look player Game</a>
+        {{/if}}
     </div>
 </div>
 

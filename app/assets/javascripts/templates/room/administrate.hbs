@@ -24,12 +24,12 @@
             <div class="sectionTitle sized-text fifties blk-text"> <u>Promote</u></div><br>
             
             <div class="row">
-                <select class="sized-text-md col-8 form-control form-control-sm" name="room[member]" id="member-select">
+                <select class="sized-text-sm col-8 form-control form-control-sm" name="room[member]" id="member-select">
                     {{#each roomMembers}}
                         <option value="{{id}}">{{nickname}}</option>
                     {{/each}}
                 </select>
-                <input type="submit" class="sized-text-md btn btn-success btn-sm col-4" value="Confirm promote">
+                <input type="submit" class="sized-text-sm btn btn-success btn-sm col-4" value="Confirm promote">
                 <input type="hidden" name="room[id]" value="{{room.id}}">
             </div>
         </form> <br><hr>
@@ -40,12 +40,12 @@
             <div class="sectionTitle sized-text fifties blk-text"> <u>Demote</u></div><br>
             
             <div class="row">
-                <select class="sized-text-md col-8 form-control form-control-sm" name="room[member]" id="member-select">
+                <select class="sized-text-sm col-8 form-control form-control-sm" name="room[member]" id="member-select">
                     {{#each roomAdmins}}
                         <option value="{{id}}">{{nickname}}</option>
                     {{/each}}
                 </select>
-                <input type="submit" class="sized-text-md btn btn-warning btn-sm col-4" value="Confirm demote">
+                <input type="submit" class="sized-text-sm btn btn-warning btn-sm col-4" value="Confirm demote">
                 <input type="hidden" name="room[id]" value="{{room.id}}">
             </div>
         </form>
@@ -57,7 +57,7 @@
 
             <ul class="list-group">
                 {{#each admins}}
-                <li class="list-group-item fifties blk-text sized-text-md">
+                <li class="list-group-item fifties blk-text sized-text-sm">
                     {{nickname}} &nbsp;
 
                     <form class="roomKickForm" id="roomKickForm-{{id}}" style="display: inline;" action="{{../kickForm.url}}"
@@ -92,7 +92,7 @@
 
             <ul class="list-group">
                 {{#each members}}
-                <li class="list-group-item fifties blk-text sized-text-md">
+                <li class="list-group-item fifties blk-text sized-text-sm">
                     {{nickname}} &nbsp;
 
                     <form class="roomKickForm" id="roomKickForm-{{id}}" style="display: inline;" action="{{../kickForm.url}}"
@@ -115,7 +115,7 @@
         {{!-- Here, membersPlusAdmins contains 'really' members + admins only if currentUser is owner or superAdmin, else it contains only members --}}
         <ul class="list-group">
         {{#each membersPlusAdmins}}
-            <li class="list-group-item fifties blk-text sized-text-md">
+            <li class="list-group-item fifties blk-text sized-text-sm">
                 <div class="memberCard">
                     {{nickname}} &nbsp;
 

@@ -10,7 +10,7 @@
 
 <div class="container">
     <nav class="navbar navbar-dark bg-dark fifties" id="nav" style="margin-top: 20px;">
-        <p class="navbar-brand sized-text-lg">{{currentRoom.name}}</p>
+        <p class="navbar-brand sized-text-lg text-maxwidth-md">{{currentRoom.name}}</p>
         <div id="navbarNav">
             <ul class="navbar-nav">
                 {{#when inspectMode 'eq' false }}
@@ -44,7 +44,7 @@
 
                                 <a href="#profiles/ {{#getUserAttributes ../members user_id "id"}}{{/getUserAttributes}}">
                                     <img src="{{#getUserAttributes ../members user_id "image"}}{{/getUserAttributes}}"
-                                    alt="Avatar" class="avatar">
+                                    alt="Avatar" class="avatar"  style="margin-bottom: 0px !important;">
                                 </a>
 
                                 {{#ifDuelReq is_duel_request}}
@@ -62,7 +62,7 @@
                                         {{/ifRanked}}
                                     </form>
                                 {{else}}
-                                    <label class="message sized-text-md" data-role="message-text">{{message}}</label>
+                                    <label class="message sized-text-sm" data-role="message-text">{{message}}</label>
                                 {{/ifDuelReq}}
                             </div>
                         </li>
@@ -72,8 +72,8 @@
                         {{else}}
                             <li class="list-group-item fifties" style="background: rgb(0, 106, 255); margin-left: 20%; margin-right: 10px;">
                                 <div class="dont-break-out" style="text-align: right;">
-                                    <label class="message sized-text-md" data-role="message-text">{{message}}</label>
-                                    <img src="{{../currentUser.image}}" alt="Avatar" class="avatar">
+                                    <label class="message sized-text-sm" data-role="message-text">{{message}}</label>
+                                    <img src="{{../currentUser.image}}" alt="Avatar" class="avatar"  style="margin-bottom: 0px !important;">
                                 </div>
                             </li>
                         {{/ifDuelReq}}
