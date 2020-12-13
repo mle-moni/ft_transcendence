@@ -308,15 +308,33 @@ class RoomsController < ApplicationController
   # POST /rooms/acceptDuelRequest
   # POST /rooms/acceptDuelRequest.json
   def acceptDuelRequest
-    filteredParams = params.require(:duel_request).permit(:first_user_id, :second_user_id, :is_ranked)
+    filteredParams = params.require(:duel_request).permit(:room_id, :duel_id, :first_user_id, :second_user_id, :is_ranked)
 
-    user1 = User.find(filteredParams["first_user_id"])
-    user2 = User.find(filteredParams["second_user_id"])
+    duel = Room.find(filteredParams["room_id"]).room_messages.find(filteredParams["duel_id"]) rescue nil
+
+    if !duel || duel.is_duel_request == false
+      res_with_error("Unknow duel request", :bad_request)
+      return (false)
+    end 
+
+    user1 = User.find(filteredParams["first_user_id"]) rescue nil
+    user2 = User.find(filteredParams["second_user_id"]) rescue nil
 
     if !user1 || !user2
       res_with_error("Unknow User(s)", :bad_request)
       return (false)
+    end
+
+    if user1.id != duel.user_id
+      res_with_error("Wrong user", :bad_request)
+      return (false)
+    end
+
+    if duel.is_ranked && filteredParams["is_ranked"] == "false" || !duel.is_ranked && filteredParams["is_ranked"] == "true"
+      res_with_error("Wrong game type", :bad_request)
+      return (false)
     end 
+
 
     Game.start(user1.email, user2.email,  if filteredParams["is_ranked"] == "true" then "duel_ranked" else "duel_unranked" end)
   end

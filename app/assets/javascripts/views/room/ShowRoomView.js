@@ -21,6 +21,7 @@ AppClasses.Views.ShowRoom = class extends Backbone.View {
 	AcceptDuelRequest(e)
 	{
 		e.preventDefault();
+		if (!this.verif_accept_request(e)) return (false);
 		App.utils.formAjax("/api/rooms/acceptDuelRequest.json", "#AcceptDuelRequest")
 		.done(res => {
 			App.toast.success("Duel request accepted !", { duration: 1500, style: App.toastStyle });
@@ -75,12 +76,14 @@ AppClasses.Views.ShowRoom = class extends Backbone.View {
 
 	verif_accept_request(e)
 	{
-		if (!e.currentTarget || !e.currentTarget[1] || !e.currentTarget[2] // verification null value
-			|| e.currentTarget[2].value != this.user.id) // Verification users' id
-			{
-				App.utils.toastError(e);
-				return (false);
-			}
+		if (!e.currentTarget || !e.currentTarget[1] || !e.currentTarget[2] || !e.currentTarget[3]
+			|| !e.currentTarget[4] || !e.currentTarget[5] // verification null value
+			|| e.currentTarget[1].value != this.room_id // Verification room's id
+			|| e.currentTarget[4].value != this.user.id) // Verification user's id
+		{
+			App.utils.toastError(e);
+			return (false);
+		}
 		return (true);
 	}
 

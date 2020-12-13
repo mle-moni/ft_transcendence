@@ -99,9 +99,12 @@ AppClasses.Views.Conversations = class extends AppClasses.Views.AbstractView {
 			})[0] || null;
 			otherUser = this.user.id === currentDMRoom.user1_id ? currentDMRoom.user2_id : currentDMRoom.user1_id;
 		}
-		if (!currentDMRoom || !otherUser || !e.currentTarget || !e.currentTarget[1] || !e.currentTarget[2] // verification null value
-			|| e.currentTarget[1].value != otherUser || e.currentTarget[2].value != this.user.id) // Verification users' id
+		console.log(currentDMRoom);
+		if (!currentDMRoom || !otherUser || !e.currentTarget || !e.currentTarget[1] || !e.currentTarget[2] || !e.currentTarget[3] 
+			|| !e.currentTarget[4] || !e.currentTarget[5] // verification null value
+			|| e.currentTarget[3].value != otherUser || e.currentTarget[4].value != this.user.id) // Verification users' id
 			{
+
 				App.utils.toastError(e);
 				return (false);
 			}

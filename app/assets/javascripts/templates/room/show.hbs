@@ -50,6 +50,8 @@
                                         method="POST" style="display: inline;">
                                         <input type="hidden" name="authenticity_token" value="{{../token}}">
                                         {{!-- Room Data --}}
+                                        <input type="hidden" name="duel_request[room_id]" value="{{../roomID}}">
+                                        <input type="hidden" name="duel_request[duel_id]" value="{{id}}">
                                         <input type="hidden" name="duel_request[first_user_id]" value="{{user_id}}">
                                         <input type="hidden" name="duel_request[second_user_id]" value="{{../currentUser.id}}">
                                         <input type="hidden" name="duel_request[is_ranked]" value={{is_ranked}}>
