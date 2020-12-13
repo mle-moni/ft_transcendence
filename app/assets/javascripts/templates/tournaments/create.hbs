@@ -1,13 +1,13 @@
 <div style="text-align: center;">
 
-<h1>Create tournament</h1>
+<p class="fifties blk-text sized-text-lg">Create tournament</p>
 <br><br>
 <form id="createTournament" action="/api/tournaments.json" accept-charset="UTF-8" method="POST">
 <input type="hidden" name="authenticity_token" value="{{token}}">
 
-	<input class="inp2 sized-text-sm" placeholder="dd/mm/(yy)yy (hh:mm)" type="datetime-local" name="dateStart" required>
+<input class="inp3 sized-text" placeholder="dd/mm/(yy)yy (hh:mm)" type="datetime-local" name="dateStart" required>
 
-<input class="btn btn-outline-primary btn-sm" type="submit" value="Create tournament">
+<input class="btn btn-primary fifties sized-text btn-block" type="submit" value="Create tournament">
 
 </form>
 
