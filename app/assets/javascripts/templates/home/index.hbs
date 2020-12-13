@@ -3,3 +3,17 @@
 		<p>Play pong like in the good old days</p>
 	</div>
 </div>
+
+{{#if user.first_time}}
+	<div id="firstTime">
+		<div class="contentBox">
+			<h3 class="headingText">First time?</h3>
+			<button class="btn btn-primary firstTimeBtn editSettings">
+				Update my settings
+			</button>
+			<button class="btn btn-danger firstTimeBtn">
+				Don't show this again
+			</button>
+		</div>
+	</div>
+{{/if}}

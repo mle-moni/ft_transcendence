@@ -52,11 +52,12 @@ App.utils.changeImg = (input, imgID) => {
 }
 
 App.utils.toastError = (e) => {
-	let errorMsg = "Error"
+	let errorMsg = `Error (${e.status})`;
 	if (e && e.hasOwnProperty("responseJSON") && e.responseJSON.hasOwnProperty("alert")) {
 		errorMsg += ` : ${e.responseJSON.alert}`
 	}
 	App.toast.alert(errorMsg, { duration: 2000, style: App.toastStyle });
+	console.error(`Details: ${errorMsg}`);
 }
 
 

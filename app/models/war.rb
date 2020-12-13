@@ -9,7 +9,7 @@ class War < ApplicationRecord
   belongs_to :guild1, class_name: 'Guild'
   belongs_to :guild2, class_name: 'Guild'
 
-  has_many :war_times
+  has_many :war_times, dependent: :destroy
 
   def confirmed?
     return validated == guild1_id + guild2_id

@@ -7,6 +7,7 @@ window.socket = consumer.subscriptions.create({
 	}, {
 	connected() {
 		connected = true;
+		window.socket.send({action_str: "alive"});
 	},
 	disconnected() {
 		connected = false;
@@ -21,7 +22,11 @@ window.socket = consumer.subscriptions.create({
 							g.set("active_war.war_times", []);	
 						}
 					});
-					App.collections.guilds.fetch();
+					let opts = {};
+					if (event.hasOwnProperty("reset")) {
+						opts = {reset: true};
+					}
+					App.collections.guilds.fetch(opts);
 					break;
 				case "users":
 					App.collections.allUsers.myFetch();

@@ -52,7 +52,6 @@ AppClasses.Views.ShowRoom = class extends Backbone.View {
 			return ;
 		App.utils.formAjax("/api/room_messages.json", "#sendRoomMessageForm")
 		.done(res => {
-			App.toast.success("Message sent", { duration: 1000, style: App.toastStyle });
 			this.model.fetch();
 			location.hash = `#rooms/` + this.room_id;
 		})
@@ -67,7 +66,7 @@ AppClasses.Views.ShowRoom = class extends Backbone.View {
 		if (!e.currentTarget || !e.currentTarget[1] || !e.currentTarget[2] // verification null value
 			|| e.currentTarget[1].value != this.user.id || e.currentTarget[2].value != this.room_id) // Verification value if not null
 		{
-			App.utils.toastError(e);
+			App.toast.alert("Something is wrong with this room");
 			return (false);
 		}
 		return (true);
@@ -78,7 +77,7 @@ AppClasses.Views.ShowRoom = class extends Backbone.View {
 		if (!e.currentTarget || !e.currentTarget[1] || !e.currentTarget[2] // verification null value
 			|| e.currentTarget[2].value != this.user.id) // Verification users' id
 			{
-				App.utils.toastError(e);
+				App.toast.alert("Something is wrong with the room");
 				return (false);
 			}
 		return (true);

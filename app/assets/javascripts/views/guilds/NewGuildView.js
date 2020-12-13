@@ -1,4 +1,4 @@
-AppClasses.Views.NewGuild = class extends Backbone.View {
+AppClasses.Views.NewGuild = class extends AppClasses.Views.AbstractView {
 	constructor(opts) {
 		opts.events = {
 			"submit #createGuildForm": "submit"
@@ -33,11 +33,11 @@ AppClasses.Views.NewGuild = class extends Backbone.View {
 			formID: "createGuildForm",
 			token: $('meta[name="csrf-token"]').attr('content')
 		}));
-		this.delegateEvents();
 		return (this);
 	}
 	render() {
 		this.updateRender();
+		this.delegateEvents();
 		return (this);
 	}
 }

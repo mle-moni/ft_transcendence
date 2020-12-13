@@ -32,7 +32,7 @@ AppClasses.Routers.GuildsRouter = class extends AppClasses.Routers.AbstractRoute
 		});
 	}
 	newGuild() {
-		this.basicView("newGuild", "NewGuild", {model: this.collections.guilds});
+		this.specialViewWithRenderParam("newGuild", "NewGuild", null, {model: this.collections.guilds});
 	}
 	edit() {
 		const guild_id = this.models.user.get("guild_id");

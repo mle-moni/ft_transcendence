@@ -69,9 +69,7 @@ AppClasses.Views.Conversations = class extends AppClasses.Views.AbstractView {
 		if (!e.currentTarget.message || (e.currentTarget.message && e.currentTarget.message.value == ""))
 			return ;
 		App.utils.formAjax("/api/chat_messages.json", "#sendRoomMessageForm")
-		.done(res => {
-			App.toast.success("Message sent", { duration: 1000, style: App.toastStyle });
-		})
+		.done(res => {})
 		.fail((e) => {
 			App.utils.toastError(e);
 		});
@@ -83,7 +81,7 @@ AppClasses.Views.Conversations = class extends AppClasses.Views.AbstractView {
 		if (!e.currentTarget || !e.currentTarget[1] || !e.currentTarget[2] // verification null value
 			|| e.currentTarget[1].value != this.user.id || e.currentTarget[2].value != this.chatID) // Verification value if not null
 		{
-			App.utils.toastError(e);
+			App.toast.alert("Something is wrong with this conversation");
 			return (false);
 		}
 		return (true);
@@ -102,7 +100,7 @@ AppClasses.Views.Conversations = class extends AppClasses.Views.AbstractView {
 		if (!currentDMRoom || !otherUser || !e.currentTarget || !e.currentTarget[1] || !e.currentTarget[2] // verification null value
 			|| e.currentTarget[1].value != otherUser || e.currentTarget[2].value != this.user.id) // Verification users' id
 			{
-				App.utils.toastError(e);
+				App.toast.alert("Something is wrong with this conversation");
 				return (false);
 			}
 		return (true);

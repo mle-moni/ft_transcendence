@@ -8,7 +8,10 @@ Rails.application.routes.draw do
     resources :guilds
     post '/guild/join', to: 'guilds#join'
     post '/guild/quit', to: 'guilds#quit'
+    post '/guild/promote', to: 'guilds#promote'
+    post '/guild/demote', to: 'guilds#demote'
     post '/guild/accept', to: 'guilds#accept_request'
+    post '/guild/reject', to: 'guilds#reject_request'
     post '/wars/create', to: 'wars#create'
     post '/wars/delete', to: 'wars#delete'
     post '/wars/validate', to: 'wars#validate'
@@ -24,7 +27,6 @@ Rails.application.routes.draw do
     get '/tournaments/:id', to: 'tournaments#show'
     get '/tournaments/register/:id', to: 'tournaments#register'
     get '/tournaments/unregister/:id', to: 'tournaments#unregister'
-    get '/tournaments/start/:id', to: 'tournaments#start'
 
     # CHAT & DMS ------
     resources :rooms do 
@@ -80,6 +82,7 @@ Rails.application.routes.draw do
   post '/profile/password', to: 'profile#change_password'
   post 'profile/enable_otp'
   post 'profile/disable_otp'
+  post '/profile/first_time'
 
   # sign in route:
   devise_for :users, controllers: { omniauth_callbacks: "users/omniauth_callbacks" }

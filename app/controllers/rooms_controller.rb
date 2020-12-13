@@ -24,10 +24,9 @@ class RoomsController < ApplicationController
 
   def joinPublic
 
-    @room = Room.find(params["room"]["room_id"])
+    @room = Room.find(params["room"]["room_id"]) rescue nil
     if !@room 
-      res_with_error("Unknow Room", :bad_request)
-      return (false)
+      return res_with_error("Unknow Room", :bad_request)
     end
 
     if !current_user.rooms_as_member.include?(@room) && current_user.id != @room.owner_id
@@ -43,10 +42,9 @@ class RoomsController < ApplicationController
   end
 
   def joinPrivate
-    @room = Room.find(params["room"]["room_id"])
+    @room = Room.find(params["room"]["room_id"]) rescue nil
     if !@room
-      res_with_error("Unknow Room", :bad_request)
-      return (false)
+      return res_with_error("Unknow Room", :bad_request)
     end
     # https://coderwall.com/p/sjegjq/use-bcrypt-for-passwords
     roomPass = BCrypt::Password.new(@room.password)
@@ -71,8 +69,8 @@ class RoomsController < ApplicationController
   def promoteAdmin
   
     filteredParams = params.require(:room).permit(:id, :member)
-    @room = Room.find(filteredParams["id"])
-    newAdmin = User.find(filteredParams["member"])
+    @room = Room.find(filteredParams["id"]) rescue nil
+    newAdmin = User.find(filteredParams["member"]) rescue nil
     if @room == nil || newAdmin == nil
       res_with_error("Room or Targeted User invalid", :bad_request)
       return false
@@ -91,8 +89,8 @@ class RoomsController < ApplicationController
 
   def demoteAdmin
     filteredParams = params.require(:room).permit(:id, :member)
-    @room = Room.find(filteredParams["id"])
-    admin = User.find(filteredParams["member"])
+    @room = Room.find(filteredParams["id"]) rescue nil
+    admin = User.find(filteredParams["member"]) rescue nil
     if @room == nil || admin == nil
       res_with_error("Room or Targeted User invalid", :bad_request)
       return false
@@ -114,8 +112,7 @@ class RoomsController < ApplicationController
   def quit
     filteredParams = params.require(:room).permit(:room_id, :owner_id, :userRoomGrade)
     grade = filteredParams["userRoomGrade"]
-    owner = User.find(filteredParams["owner_id"])
-    @room = Room.find(filteredParams["room_id"])
+    @room = Room.find(filteredParams["room_id"]) rescue nil
 
     if @room == nil
       res_with_error("Room nvalid", :bad_request)
@@ -207,7 +204,7 @@ class RoomsController < ApplicationController
   def update
 
     filteredParams = params.require(:room).permit(:name, :privacy, :password, :id)
-    @room = Room.find(filteredParams["id"])
+    @room = Room.find(filteredParams["id"]) rescue nil
 
     if filteredParams["privacy"] && filteredParams["privacy"] == "on"
       filteredParams["privacy"] = "private"
@@ -267,7 +264,7 @@ class RoomsController < ApplicationController
   # DELETE /rooms/1.json
   def destroy
     filteredParams = params.require(:room).permit(:room_id)
-    @room = Room.find(filteredParams["room_id"])
+    @room = Room.find(filteredParams["room_id"]) rescue nil
     if !@room
       res_with_error("Unknow room", :bad_request)
       return (false)
@@ -290,7 +287,8 @@ class RoomsController < ApplicationController
   def createDuelRequest
     filteredParams = params.require(:duel_request).permit(:user_id, :room_id, :is_ranked)
     
-    @room = Room.find(filteredParams["room_id"])
+    @room = Room.find(filteredParams["room_id"]) rescue nil
+    return res_with_error("Room not found", :not_found) unless @room
     if @room && RoomMute.where(room: @room, user: current_user).exists?
       res_with_error("You're currently muted", :bad_request)
       return false
@@ -314,8 +312,8 @@ class RoomsController < ApplicationController
   def acceptDuelRequest
     filteredParams = params.require(:duel_request).permit(:first_user_id, :second_user_id, :is_ranked)
 
-    user1 = User.find(filteredParams["first_user_id"])
-    user2 = User.find(filteredParams["second_user_id"])
+    user1 = User.find(filteredParams["first_user_id"]) rescue nil
+    user2 = User.find(filteredParams["second_user_id"]) rescue nil
 
     if !user1 || !user2
       res_with_error("Unknow User(s)", :bad_request)
@@ -328,29 +326,14 @@ class RoomsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_room
-      @room = Room.find(params[:id])
-    end
-
-    def res_with_error(msg, error)
-      respond_to do |format|
-        format.html { redirect_to "/", alert: "#{msg}" }
-        format.json { render json: {alert: "#{msg}"}, status: error }
-      end
+      @room = Room.find(params[:id]) rescue nil
+      return res_with_error("Room not found", :not_found) unless @room
     end
 
     def res_with_info(msg)
       respond_to do |format|
         format.html { redirect_to "/", notice: "#{msg}" }
         format.json { render json: {msg: "#{msg}"}} #status: :ok
-      end
-    end
-
-    def connect_user
-      unless user_signed_in?
-        respond_to do |format|
-          format.html { redirect_to "/", alert: "You need to be connected for this action" }
-          format.json { render json: {alert: "You need to be connected for this action"}, status: :unprocessable_entity }
-        end
       end
     end
 

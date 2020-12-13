@@ -11,8 +11,8 @@ class Guild < ApplicationRecord
 	has_one :owner, -> { where(guild_owner: true) }, class_name: "User"
 	has_many :officers, -> { where(guild_officer: true) }, class_name: "User"
 
-	has_many :g1_wars, :class_name => 'War', :foreign_key => 'guild1_id'
-	has_many :g2_wars, :class_name => 'War', :foreign_key => 'guild2_id'
+	has_many :g1_wars, :class_name => 'War', :foreign_key => 'guild1_id', dependent: :destroy
+	has_many :g2_wars, :class_name => 'War', :foreign_key => 'guild2_id', dependent: :destroy
 	def wars
 		g1_wars + g2_wars
 	end

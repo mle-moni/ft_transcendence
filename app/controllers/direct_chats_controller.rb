@@ -29,11 +29,11 @@ class DirectChatsController < ApplicationController
   def createDuelRequest
     filteredParams = params.require(:duel_request).permit(:from_id, :direct_chat_id, :is_ranked)
 
-    user = User.find(filteredParams["from_id"]);
-    dc = DirectChat.find(filteredParams["direct_chat_id"])
+    user = User.find(filteredParams["from_id"]) rescue nil
+    dc = DirectChat.find(filteredParams["direct_chat_id"]) rescue nil
 
     if !user || !dc
-      res_with_error("Unknow DirectChat or User", :bad_request)
+      res_with_error("Unknown DirectChat or User", :bad_request)
       return (false)
     end
 
@@ -55,8 +55,8 @@ class DirectChatsController < ApplicationController
   # POST /direct_chats/acceptDuelRequest.json
   def acceptDuelRequest
     filteredParams = params.require(:duel_request).permit(:first_user_id, :second_user_id, :is_ranked)
-    user1 = User.find(filteredParams["first_user_id"])
-    user2 = User.find(filteredParams["second_user_id"])
+    user1 = User.find(filteredParams["first_user_id"]) rescue nil
+    user2 = User.find(filteredParams["second_user_id"]) rescue nil
 
     if !user1 || !user2
       res_with_error("Unknow User(s)", :bad_request)
@@ -71,8 +71,8 @@ class DirectChatsController < ApplicationController
   # POST /direct_chats.json
   def create
     filteredParams = params.require(:dmRoom).permit(:first_user_id, :second_user_id)
-    first_user = User.find(filteredParams["first_user_id"])
-    second_user = User.find(filteredParams["second_user_id"])
+    first_user = User.find(filteredParams["first_user_id"]) rescue nil
+    second_user = User.find(filteredParams["second_user_id"]) rescue nil
     if !first_user || !second_user
       res_with_error("Unknow User", :bad_request)
       return (false)
@@ -117,7 +117,8 @@ class DirectChatsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_direct_chat
-      @direct_chat = DirectChat.find(params[:id])
+      @direct_chat = DirectChat.find(params[:id]) rescue nil
+      return res_with_error("Chat not found", :not_found) unless @direct_chat
     end
 
     # Only allow a list of trusted parameters through.
@@ -135,14 +136,5 @@ class DirectChatsController < ApplicationController
         ActionCable.server.broadcast "chat_channel", type: "rooms", description: "A user has reach the end of its ban period"
       end 
     end
-
-    def res_with_error(msg, error)
-      respond_to do |format|
-        format.html { redirect_to "/", alert: "#{msg}" }
-        format.json { render json: {alert: "#{msg}"}, status: error }
-      end
-    end
   
 end
-
-  

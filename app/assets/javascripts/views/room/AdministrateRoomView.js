@@ -35,17 +35,17 @@ AppClasses.Views.AdministrateRoom = class extends Backbone.View {
 				status = atob(status);
 				status = status.substring(status.lastIndexOf('=') + 1);
 			} catch (error) {
-				App.utils.toastError("Nice try");
+				App.toast.alert("Nice try");
 				location.hash = `#room`;
 				return (this);
 			}
 			if (status != "admin" && status != "owner" && status != "superAdmin") {
-				App.utils.toastError("Nice try");
+				App.toast.alert("Nice try");
 				location.hash = `#room`;
 				return (this);
 			}
 		} else {
-			App.utils.toastError("Nice try");
+			App.toast.alert("Nice try");
 			location.hash = `#room`;
 			return (this);
 		}

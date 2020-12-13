@@ -77,7 +77,7 @@ class WarsController < ApplicationController
 		unless params[:id]
 			return res_with_error("Missing param", :bad_request)
 		end
-		wt = WarTime.find(params[:id])
+		wt = WarTime.find(params[:id]) rescue nil
 		unless wt
 			return res_with_error("War time not found", :not_found)
 		end
@@ -110,11 +110,11 @@ class WarsController < ApplicationController
 			war_id = war.id
 			match_count = war.match_count
 			sleep war.time_to_answer
-			war = War.find(war_id)
-			if match_count == war.match_count
-				guild = Guild.find(war.match_request_guild)
+			war = War.find(war_id) rescue nil
+			if war && match_count == war.match_count
+				guild = Guild.find(war.match_request_guild) rescue nil
 				if guild
-					war.add_points(guild, 5)
+					war.add_points(guild, 2)
 					war.match_request_usr = 0
 					war.match_request_guild = 0
 					war.save
@@ -129,7 +129,7 @@ class WarsController < ApplicationController
 	private
 
 	def accept_match(war, guild)
-		player1 = User.find(war.match_request_usr)
+		player1 = User.find(war.match_request_usr) rescue nil
 		return res_with_error("User not found", :not_found) unless player1
 		player2 = current_user
 		war.match_request_usr = 0
@@ -211,7 +211,8 @@ class WarsController < ApplicationController
 			res_with_error("Some fields are missing from your request", :bad_request)
 			return false
 		end
-		@foe = Guild.find(params[:id])
+		@foe = Guild.find(params[:id]) rescue nil
+		return res_with_error("Guild not found", :not_found) unless @foe
 	end
 
 end
