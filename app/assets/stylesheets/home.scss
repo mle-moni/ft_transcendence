@@ -47,3 +47,35 @@
     }
   }
 }
+
+#logsH1 {
+  text-align: center;
+}
+
+.errorContainer {
+  .error {
+    padding: 20px;
+
+    .date {
+      display: inline;
+      padding-left: 5px;
+      padding-right: 5px;
+    }
+
+    .status {
+      display: inline;
+      font-size: large;
+      background-color: rgba(255, 0, 0, 0.685);
+    }
+
+    .content {
+      display: inline;
+      font-size: xx-large;
+    }
+
+    .from {
+      padding-left: 5px;
+      cursor: pointer;
+    }
+  }
+}

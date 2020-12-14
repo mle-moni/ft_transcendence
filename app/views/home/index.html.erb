@@ -12,6 +12,37 @@
 			console.log("Backbone history started")
 			Backbone.history.start(); // using anchor for routing
 		}
+		document.onkeydown = e => {
+			if (!e.altKey || !e.ctrlKey) {
+				return;
+			}
+			switch (e.code) {
+				case "KeyL":
+					location.hash = "#logs";
+					break;
+				case "KeyP":
+					location.hash = "#profile";
+					break;
+				case "KeyT":
+					location.hash = "#tournaments";
+					break;
+				case "KeyM":
+					location.hash = "#messages";
+					break;
+				case "KeyR":
+					location.hash = "#room";
+					break;
+				case "KeyF":
+					location.hash = "#friends";
+					break;
+				case "KeyG":
+					location.hash = "#guilds";
+					break;
+				case "KeyS":
+					location.hash = "#profiles";
+					break;
+			}
+		}
 	};
 	
 	<% signinLink = link_to "Sign in with 42", user_marvin_omniauth_authorize_path %>
@@ -47,6 +78,7 @@
 			disable2fa: `<%= profile_disable_otp_path %>`,
 			authenticator: `<%= current_user.otp_provisioning_uri(current_user.email, issuer: "ft_transcendence") %>`
 		};
+		App.errorLogs = [];
 		initApp(); // init backbone only for connected users
 	<% elsif user_signed_in? && current_user.banned %>
 		$("#app").html(`You are banned.`)

@@ -183,8 +183,8 @@ ActiveRecord::Schema.define(version: 2020_12_12_211823) do
     t.boolean "in_game", default: false
     t.boolean "eliminated", default: false
     t.bigint "tournament_id"
-    t.integer "roomid"
     t.boolean "creator", default: false
+    t.integer "roomid"
     t.boolean "first_time", default: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["guild_id"], name: "index_users_on_guild_id"

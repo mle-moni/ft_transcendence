@@ -1,0 +1,18 @@
+{{!-- CSS file is home.scss --}}
+
+<h1 id="logsH1">Logs</h1>
+
+<div class="errorContainer">
+{{#each errors}}
+
+	<div class="error">
+		<p class="status chip">{{status}}</p>
+		<p class="date">&lt;{{dateStr date}}&gt;</p>
+		<p class="content">{{content}}</p>
+		<a class="from" href="{{from}}">Triggered from here</a>
+	</div>
+
+	<hr>
+
+{{/each}}
+</div>

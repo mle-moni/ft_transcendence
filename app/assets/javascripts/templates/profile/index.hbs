@@ -1,16 +1,17 @@
 <div class="profile-page container">
 	<div class="profile-align">
-		<img src="{{image}}" style="max-height: 200px;" class="big-profile-picture clear">
+		<img src="{{image}}" style="max-height: 200px;" class="big-profile-picture clear avatar2">
 	</div>
 	<h1 class="user-name fifties blk-text text-maxwidth-lg">{{nickname}}</h1>
 	<div class="profile-description fifties blk-text">
-		<p>{{email}}</p>
+		<p class="font20">{{email}}</p>
 	</div>
 	<br>
 	<div class="btn-group special" role="group" aria-label="Basic example">
-		<a class="btn fifties btn-rel" href="#profile/edit">Edit</a>
-		<a class="btn fifties btn-rel" href="#guilds/mine">My guild</a>
-		<a class="btn fifties btn-rel" href="#">Home</a>
-		<a class="btn btn-danger fifties btn-rel" rel="nofollow" data-method="delete" href="/users/sign_out">Logout</a>
+		<a class="btn fifties2 btn-rel" href="#profile/edit">Edit</a>
+		<a class="btn fifties2 btn-rel" href="#profiles/{{id}}">Public profile</a>
+		<a class="btn fifties2 btn-rel" href="#guilds/mine">My guild</a>
+		<a class="btn fifties2 btn-rel" href="#">Home</a>
+		{{!-- <a class="btn btn-danger fifties btn-rel" rel="nofollow" data-method="delete" href="/users/sign_out">Logout</a> --}}
 	</div>
 </div>
