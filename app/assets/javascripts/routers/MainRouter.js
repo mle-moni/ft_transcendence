@@ -3,6 +3,7 @@ AppClasses.Routers.Main = class extends AppClasses.Routers.AbstractRouter {
 		super(options);
 		// routes
 		this.route("*path", "default"); // default route (404)
+		this.route("logs", "logs");
 		this.route("", "index");
 
 		// profile routes
@@ -44,5 +45,8 @@ AppClasses.Routers.Main = class extends AppClasses.Routers.AbstractRouter {
 	}
 	default() {
 		this.mainDiv.html(`Page not found, <a href="#">return to home page</a>`)
+	}
+	logs() {
+		this.basicView("logs", "Logs", {});
 	}
 }
