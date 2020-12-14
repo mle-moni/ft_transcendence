@@ -42,6 +42,9 @@ class GuildsController < ApplicationController
   # POST /guilds
   # POST /guilds.json
   def create
+    if current_user.guild
+      return res_with_error("You already have a guild!", :bad_request)
+    end
     g_params = guild_params()
     if (!g_params)
       return false # http response is in guild_params()
