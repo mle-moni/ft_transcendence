@@ -9,6 +9,8 @@ AppClasses.Routers.Profile = class extends AppClasses.Routers.AbstractRouter {
 		this.route("profile/auth", "authInfos");
 	}
 	profile() {
+		App.guildPopstate.redirect = true;
+		App.guildPopstate.from = location.hash;
 		this.basicView("profile", "Profile", {model: this.models.user});
 	}
 	allProfiles() {

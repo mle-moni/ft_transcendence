@@ -79,6 +79,10 @@
 			authenticator: `<%= current_user.otp_provisioning_uri(current_user.email, issuer: "ft_transcendence") %>`
 		};
 		App.errorLogs = [];
+		App.guildPopstate = {
+			from: "",
+			redirect: true
+		};
 		initApp(); // init backbone only for connected users
 	<% elsif user_signed_in? && current_user.banned %>
 		$("#app").html(`You are banned.`)

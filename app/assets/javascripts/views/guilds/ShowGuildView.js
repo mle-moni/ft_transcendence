@@ -67,7 +67,6 @@ AppClasses.Views.ShowGuild = class extends Backbone.View {
 			App.models.user.set("guild_owner", false);
 			App.models.user.set("guild_officer", false);
 			App.models.user.set("guild_validated", false);
-			location.hash = `#guilds`;
 		})
 		.fail((e) => {
 			App.utils.toastError(e);

@@ -11,12 +11,20 @@ AppClasses.Routers.GuildsRouter = class extends AppClasses.Routers.AbstractRoute
 		this.collections.guilds = new AppClasses.Collections.Guild();
 	}
 	index() {
+		App.guildPopstate.redirect = true;
+		App.guildPopstate.from = location.hash;
 		this.basicView("guilds", "Guilds", {model: this.collections.guilds});
 	}
 	mine() {
 		const guild_id = this.models.user.get("guild_id");
 		if (guild_id === null) {
-			location.hash = "#guilds/new";
+			if (App.guildPopstate.redirect) {	
+				App.guildPopstate.redirect = false;
+				location.hash = "#guilds/new";
+			} else {
+				App.guildPopstate.redirect = true;
+				location.hash = App.guildPopstate.from;
+			}
 			return ;
 		}
 		this.viewWithRenderParam("showGuild", "ShowGuild", guild_id, {
