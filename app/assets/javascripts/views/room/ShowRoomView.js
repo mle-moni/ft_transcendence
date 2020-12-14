@@ -10,8 +10,11 @@ AppClasses.Views.ShowRoom = class extends Backbone.View {
 		this.user = opts.user;
 		this.tagName = "div";
 		this.template = App.templates["room/show"];
+		this.guilds = App.collections.guilds;
+		this.listenTo(this.guilds, "change reset add remove", this.updateRender);
 		this.listenTo(this.model, "change add", this.updateRender);
 		this.model.fetch();
+		this.guilds.fetch();
 		this.rooms = null;
 		// For fetching blocked tables linked to user model
 		App.models.user.update(App.models.user);
@@ -88,7 +91,8 @@ AppClasses.Views.ShowRoom = class extends Backbone.View {
 
 	updateRender() {
 
-		var inspectMode = false
+		var inspectMode = false;
+		var guilds = null;
 		const { attributes } = App.models.user;
 		this.rooms = this.model;
 		var currentRoom = this.rooms ? this.rooms.toJSON() : null;
@@ -112,6 +116,7 @@ AppClasses.Views.ShowRoom = class extends Backbone.View {
 
 		if (currentRoom) {
 			var roomMessages = currentRoom.room_messages;
+			if (this.guilds) guilds = this.guilds.toJSON();
 
 			// Filter bans
 			var members = [...currentRoom.members, ...currentRoom.admins];	
@@ -148,6 +153,7 @@ AppClasses.Views.ShowRoom = class extends Backbone.View {
 			roomMessages: roomMessages || null,
 			currentUser: attributes,
 			members: members || null,
+			guilds: guilds,
 			roomID: this.room_id,
 			token: $('meta[name="csrf-token"]').attr('content'),
 			// Form data for message creation

@@ -41,12 +41,18 @@
                         <li class="list-group-item fifties blk-text" style="margin-right: 20%;">
                             <div class="otherMessage dont-break-out">
                                 
-
-                                <a href="#profiles/ {{#getUserAttributes ../members user_id "id"}}{{/getUserAttributes}}">
+                                <a href="#profiles/{{#getUserAttributes ../members user_id "id"}}{{/getUserAttributes}}">
                                     <img src="{{#getUserAttributes ../members user_id "image"}}{{/getUserAttributes}}"
-                                    alt="Avatar" class="avatar"  style="margin-bottom: 0px !important;">
-                                </a>
+                                    alt="Avatar" class="avatar"  style="margin-bottom: 0px !important;"></a>
+                                <div style="margin-right:2%; display:inline;">
+                                    <a class="sized-text-sm" href="#profiles/{{#getUserAttributes ../members user_id "id"}}{{/getUserAttributes}}">
+                                    {{#getUserAttributes ../members user_id "nickname"}}{{/getUserAttributes}}</a>
 
+                                    {{#ifUserHasGuild ../members  user_id}}
+                                        <a class="sized-text-sm" href="#guilds/{{#getUserAttributes ../members user_id "guild_id"}}{{/getUserAttributes}}">
+                                        &lt;{{#findGuildWithUserCollection ../members  ../guilds user_id}}{{/findGuildWithUserCollection}}&gt;</a>
+                                    {{/ifUserHasGuild}}
+                                </div>
                                 {{#ifDuelReq is_duel_request}}
                                     <form id="AcceptDuelRequest" action="/api/direct_chats/acceptDuelRequest" accept-charset="UTF-8"
                                         method="POST" style="display: inline;">
