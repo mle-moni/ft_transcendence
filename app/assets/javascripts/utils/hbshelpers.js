@@ -151,3 +151,52 @@ Handlebars.registerHelper('ifTournamentCanStart', function(TournamentDate, optio
     }
     return options.fn(this);
 });
+
+Handlebars.registerHelper('findGuild', function(guilds, userGuildID) {
+
+    if (guilds && userGuildID)
+    {
+        for (var count = 0; count < guilds.length; count++)
+        {
+            if (guilds[count].id == userGuildID)
+                return (guilds[count].name);
+        }
+    }
+    return (null);
+});
+
+Handlebars.registerHelper('findGuildWithUserCollection', function(memberList, guildList, userID) {
+
+    if (memberList && guildList && userID)
+    {
+        var userGuildID = null;
+        for (var count = 0; count < memberList.length; count++)
+        {
+            if (memberList[count].id == userID)
+                userGuildID = memberList[count].guild_id;
+        }
+        if (!userGuildID) return (null);
+        for (var count = 0; count < guildList.length; count++)
+        {
+            if (guildList[count].id == userGuildID)
+                return (guildList[count].name);
+        }
+    }
+    return (null);
+});
+
+Handlebars.registerHelper('ifUserHasGuild', function(memberList, userID, options) {
+
+    if (memberList && userID)
+    {
+        for (var count = 0; count < memberList.length; count++)
+        {
+            if (memberList[count].id === userID)
+            {
+                if (memberList[count].guild_id)
+                    return options.fn(this);
+            }
+        }
+    }
+    return options.inverse(this);
+});

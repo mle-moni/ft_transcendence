@@ -61,6 +61,9 @@
         <li class="list-group-item"><label class="sized-text-sm"> {{name}} &nbsp; [{{privacy}}] &nbsp;</label>
             <div class="btn-group">
                 <a class="btn btn-success btn-sm" href="#rooms/{{id}}">Open</a>
+                {{#if ../superAdmin}}
+                    <a class="btn btn-info btn-sm" href="#room/administrate/{{id}}?{{../administrateStatusAdmin}}">Administrate</a>
+                {{/if}}
                 <form class="roomQuitForm" id="roomQuitForm-{{id}}" style="display: inline;" action="{{../quitForm.url}}"
                     accept-charset="UTF-8" method="{{../quitForm.method}}">
                     <input type="hidden" name="authenticity_token" value="{{../quitForm.token}}">

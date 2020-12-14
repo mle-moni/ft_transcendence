@@ -7,16 +7,19 @@ AppClasses.Views.Conversations = class extends AppClasses.Views.AbstractView {
 			"submit #AcceptDuelRequest": "AcceptDuelRequest",
 		}
 		super(opts);
+		this.tagName = "div";
+        this.template = App.templates["messages/show"];
 		this.user = App.models.user;
 		this.chatID = opts.chatID;
 		this.model = opts.model;
-        this.allUsers = App.collections.allUsers;
+		this.allUsers = App.collections.allUsers;
+		this.guilds = App.collections.guilds;
 		this.listenTo(this.model, "change reset add remove", this.updateRender);
 		this.listenTo(App.collections.allUsers, "change reset add remove", this.updateRender);
-		this.allUsers.myFetch();
+		this.listenTo(this.guilds, "change reset add remove", this.updateRender);
 		this.model.fetch();
-		this.tagName = "div";
-        this.template = App.templates["messages/show"];
+		this.allUsers.myFetch();
+		this.guilds.fetch();
 		this.updateRender();
 	}
 
@@ -97,7 +100,6 @@ AppClasses.Views.Conversations = class extends AppClasses.Views.AbstractView {
 			})[0] || null;
 			otherUser = this.user.id === currentDMRoom.user1_id ? currentDMRoom.user2_id : currentDMRoom.user1_id;
 		}
-		console.log(currentDMRoom);
 		if (!currentDMRoom || !otherUser || !e.currentTarget || !e.currentTarget[1] || !e.currentTarget[2] || !e.currentTarget[3] 
 			|| !e.currentTarget[4] || !e.currentTarget[5] // verification null value
 			|| e.currentTarget[3].value != otherUser || e.currentTarget[4].value != this.user.id) // Verification users' id
@@ -122,6 +124,7 @@ AppClasses.Views.Conversations = class extends AppClasses.Views.AbstractView {
 	
 		var otherUser = null;
 		var usersNonBlocked = null;
+		var guilds = null;
 		if (currentDMRoom)
 		{
 			var directMessages = currentDMRoom.direct_messages;
@@ -134,8 +137,9 @@ AppClasses.Views.Conversations = class extends AppClasses.Views.AbstractView {
 				else if (allUsers[count].attributes.id == currentUser.id)
 					currentUser = allUsers[count].attributes;
 			}
-			// Check if 
 			if (currentUser) {
+
+				if (this.guilds) guilds = this.guilds.toJSON();
 				// Assert that currentUser is one of the 2 user in the current DM room
 				if (currentDMRoom.user1_id != currentUser.id && currentDMRoom.user2_id != currentUser.id) {
 					location.hash = '#messages';
@@ -167,6 +171,7 @@ AppClasses.Views.Conversations = class extends AppClasses.Views.AbstractView {
 			allUsers: usersNonBlocked ? usersNonBlocked : this.allUsers.models,
 			userID: this.user.id,
 			chatID: this.chatID,
+			guilds: guilds,
 			currentUser: currentUser,
 			otherUser: otherUser,
 			currentDMRoom: currentDMRoom,

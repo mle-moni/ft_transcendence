@@ -45,7 +45,12 @@
     {{!-- CHATBOX --}}
     <div class="col-7" style="padding-top: 10px!important;">
         <nav class="navbar navbar-dark bg-dark fifties" id="nav">
-            <a class="navbar-brand sized-text-md text-maxwidth-md" href="#profiles/{{otherUser.id}}">{{otherUser.nickname}}</a>
+            <div>
+                <a class="navbar-brand sized-text-md text-maxwidth-md" href="#profiles/{{otherUser.id}}">{{otherUser.nickname}}</a>
+                {{#if otherUser.guild_id}}
+                    <a class="navbar-brand sized-text-md text-maxwidth-md" href="#guilds/{{otherUser.guild_id}}">&lt;{{#findGuild guilds  otherUser.guild_id}}{{/findGuild}}&gt;</a>
+                {{/if}}
+            </div>
             <div id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item active">
