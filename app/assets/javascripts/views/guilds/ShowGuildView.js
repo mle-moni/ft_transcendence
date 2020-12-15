@@ -5,7 +5,8 @@ AppClasses.Views.ShowGuild = class extends Backbone.View {
 			"submit #joinGuildForm": "join",
 			"click .resToRequestGuild": "resToRequest",
 			"click #warTimeFightRequest": "warTimeFightRequest",
-			"click .officerToggle": "officerToggle"
+			"click .officerToggle": "officerToggle",
+			"click .kickUser": "kickUser"
 		}
 		super(opts);
 		this.guild_id = opts.guild_id;
@@ -15,6 +16,17 @@ AppClasses.Views.ShowGuild = class extends Backbone.View {
 		this.model.fetch();
 		this.guild = null;
 		this.updateRender();
+	}
+	kickUser(e) {
+		const usrID = e.target.getElementsByClassName("nodisplay")[0].innerText;
+		$("#officerIdField").attr("value", usrID);
+		App.utils.formAjax(`/api/guild/kick.json`, "#officerToggleForm")
+		.done(res => {
+			App.toast.success(res.msg, { duration: 2000, style: App.toastStyle });
+		})
+		.fail((e) => {
+			App.utils.toastError(e);
+		});
 	}
 	officerToggle(e) {
 		const usrID = e.target.getElementsByClassName("nodisplay")[0].innerText;

@@ -3,7 +3,8 @@ AppClasses.Views.ShowUser = class extends Backbone.View {
 		opts.events = {
 			"click .sendGuildInvite": "sendInvite",
 			"click .acceptGuildInvite": "acceptInvite",
-			"click .rejectGuildInvite": "rejectInvite"
+			"click .rejectGuildInvite": "rejectInvite",
+			"click .addFriend": "addFriend",
 		}
 		super(opts);
 		this.user_id = opts.user_id;
@@ -26,6 +27,11 @@ AppClasses.Views.ShowUser = class extends Backbone.View {
 	}
 	rejectInvite() {
 		this.formAction("#acceptRejectInviteForm", "/api/guild/refuse_invite.json")
+	}
+	addFriend(e) {
+		const usrID = e.target.getElementsByClassName("nodisplay")[0].innerText;
+		$("#addFriendIDField")[0].value = usrID;
+		this.formAction("#addFriendsForm", "/api/friends/add.json")
 	}
 	formAction(formQueryStr, url) {
 		App.utils.formAjax(url, formQueryStr)

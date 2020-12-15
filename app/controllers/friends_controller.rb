@@ -33,6 +33,8 @@ class FriendsController < ApplicationController
 			user_friendship.destroy
 			destroy_success = true
 		end
+		ActionCable.server.broadcast "update_channel", action: "update", target: "users"
+		ActionCable.server.broadcast "update_channel", action: "update", target: "last_seen"
 		if destroy_success
 			success("Friendship successfully destroyed")
 		else
@@ -49,6 +51,8 @@ class FriendsController < ApplicationController
 		else
 			current_user.friendships.create({friend_id: @friend_id})
 		end
+		ActionCable.server.broadcast "update_channel", action: "update", target: "last_seen"
+		ActionCable.server.broadcast "update_channel", action: "update", target: "users"
 		success("Friend request sent")
 	end
 
@@ -62,6 +66,8 @@ class FriendsController < ApplicationController
 		user_friendship.confirmed = true
 		user_friendship.save
 		current_user.friendships.create({friend_id: @friend_id, confirmed: true})
+		ActionCable.server.broadcast "update_channel", action: "update", target: "users"
+		ActionCable.server.broadcast "update_channel", action: "update", target: "last_seen"
 		success("Friend request accepted")
 	end
 
@@ -72,6 +78,7 @@ class FriendsController < ApplicationController
 			return false
 		end
 		other_friendship.destroy
+		ActionCable.server.broadcast "update_channel", action: "update", target: "users"
 		success("Friend request rejected")
 	end
 

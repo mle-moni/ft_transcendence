@@ -24,27 +24,38 @@
 				<p class="text-maxwidth-sm">{{ nickname }}</p>
 			</a>
 
-			{{#if guild_owner}}
-				<b class="font14">Owner </b>
-			{{else if guild_officer}}
-				<b class="font14">Officer </b>
-				{{#if ../officerRights}}
-					<button class="officerToggle btn btn-danger">
-						Demote
+			<div class="btn-group">
+				{{#if guild_owner}}
+					<b class="g_status font14">Owner </b>
+				{{else if guild_officer}}
+					<b class="g_status font14">Officer </b>
+					{{#if ../officerRights}}
+					{{!-- classes were: fifties sized-text-sm but it felt a bit too much --}}
+						<button class="officerToggle btn btn-danger">
+							Demote
+							<span class="nodisplay">{{id}}</span>
+							<span class="nodisplay">demote</span>
+						</button>
+					{{/if}}
+				{{else if ../officerRights}}
+					<button class="officerToggle btn btn-success">
+						Promote
 						<span class="nodisplay">{{id}}</span>
-						<span class="nodisplay">demote</span>
+						<span class="nodisplay">promote</span>
 					</button>
 				{{/if}}
-			{{else if ../officerRights}}
-				<button class="officerToggle btn btn-success">
-					Promote
-					<span class="nodisplay">{{id}}</span>
-					<span class="nodisplay">promote</span>
-				</button>
-			{{/if}}
-			{{#if in_game}}
-				<a class="btn btn-secondary btn-block fifties sized-text text-maxwidth-md" href="#game/{{roomid}}">Look player Game</a>
-			{{/if}}
+				{{#if ../officerRights}}
+				{{#unless guild_owner}}
+					<button class="kickUser btn btn-danger">
+						Kick
+						<span class="nodisplay">{{id}}</span>
+					</button>
+				{{/unless}}
+				{{/if}}
+       			{{#if in_game}}
+					<a class="btn btn-secondary fifties sized-text-sm text-maxwidth-md" href="#game/{{roomid}}">current game</a>
+				{{/if}}
+			</div>
 		</li>
 		<br>
 		{{/each}}
