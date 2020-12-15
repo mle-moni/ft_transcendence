@@ -50,27 +50,7 @@
 
 	<% if user_signed_in? && !current_user.banned %>
 		// providing data to instantiate our user model
-		App.data.user = {
-			nickname: <%= current_user.nickname.to_json.html_safe %>,
-			email: <%= current_user.email.to_json.html_safe %>,
-			first_time: <%= current_user.first_time.to_json.html_safe %>,
-			image: <%= current_user.image.to_json.html_safe %>,
-			id: <%= current_user.id.to_json.html_safe %>,
-			two_factor: <%= current_user.otp_required_for_login.to_json.html_safe %>,
-			elo: <%= current_user.elo.to_json.html_safe%>,
-			guild_id: <%= current_user.guild_id.to_json.html_safe %>,
-			guild_owner: <%= current_user.guild_owner.to_json.html_safe %>,
-			guild_officer: <%= current_user.guild_officer.to_json.html_safe %>,
-			guild_validated: <%= current_user.guild_validated.to_json.html_safe %>,
-			friends: <%= current_user.friends.to_json.html_safe %>,
-			invites: <%= current_user.invites.to_json.html_safe %>,
-			matches: <%= current_user.matches.to_json.html_safe %>,
-			blocked: <%= current_user.blocked.to_json.html_safe %>,
-			banned: <%= current_user.banned.to_json.html_safe %>,
-			in_game: <%= current_user.in_game.to_json.html_safe %>,
-			admin: <%= current_user.admin.to_json.html_safe %>,
-			tournament_id: <%= current_user.tournament_id.to_json.html_safe %>
-		};
+		App.data.user = <%= User.clean(current_user).to_json.html_safe %>
 		App.data.links = {
 			signin: `<%= signinLink %>`,
 			signout: `<%= signoutLink %>`,

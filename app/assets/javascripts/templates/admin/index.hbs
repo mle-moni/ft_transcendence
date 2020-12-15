@@ -6,6 +6,10 @@
 			<div style="min-width: 100px; display:inline-block">
 				<p>{{nickname}}</p>
 			</div>
+			{{#if creator}}
+				(website creator)
+			{{else}}
+			{{#unless you}}
 			{{!-- BAN / UNBAN --}}
 			{{#if banned}}
 			&nbsp;
@@ -34,6 +38,8 @@
 				PROMOTE
 				<span class="nodisplay">{{id}}</span>
 			</span>
+			{{/if}}
+			{{/unless}}
 			{{/if}}
 		</li>
 		{{/each}}

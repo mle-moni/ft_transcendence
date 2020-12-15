@@ -134,10 +134,11 @@ AppClasses.Views.ShowGuild = class extends Backbone.View {
 		wars = wars.sort((a, b) => {
 			return (b.rawDate - a.rawDate);
 		});
+		const officerRights = user.isOwner(this.guild) || user.isOfficer(this.guild) || user.toJSON().admin;
 		this.$el.html(this.template({
 			guild: guildJSON,
 			owner: user.isOwner(this.guild),
-			officerRights: user.isOwner(this.guild) || user.isOfficer(this.guild),
+			officerRights,
 			isInGuild: user.isInGuild(this.guild),
 			wars,
 			token: $('meta[name="csrf-token"]').attr('content')

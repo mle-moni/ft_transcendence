@@ -29,7 +29,7 @@
 			{{else if guild_officer}}
 				<b class="font14">Officer </b>
 				{{#if ../officerRights}}
-					<button class="officerToggle btn btn-success">
+					<button class="officerToggle btn btn-danger">
 						Demote
 						<span class="nodisplay">{{id}}</span>
 						<span class="nodisplay">demote</span>
@@ -52,6 +52,7 @@
 	<p class="fifties blk-text text-center big-title"> <strong>Users requests </strong></p>
 	<ul class="list-group">
 		{{#each guild.requests}}
+		{{#unless g_invitation}}
 		<li class="list-group-item">
 			<a class="btn btn-sm font20" href="#profiles/{{ id }}">
 				<img src="{{image}}" style="max-height: 50px;" class="clear avatar2">
@@ -68,6 +69,7 @@
 				<span class="nodisplay">reject</span>
 			</button>
 		</li>
+		{{/unless}}
 		{{/each}}
 	</ul>
 	{{/if}}

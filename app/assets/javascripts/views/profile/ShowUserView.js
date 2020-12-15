@@ -1,5 +1,10 @@
 AppClasses.Views.ShowUser = class extends Backbone.View {
 	constructor(opts) {
+		opts.events = {
+			"click .sendGuildInvite": "sendInvite",
+			"click .acceptGuildInvite": "acceptInvite",
+			"click .rejectGuildInvite": "rejectInvite"
+		}
 		super(opts);
 		this.user_id = opts.user_id;
 		this.tagName = "div";
@@ -11,6 +16,26 @@ AppClasses.Views.ShowUser = class extends Backbone.View {
 		this.guilds.fetch();
 		this.updateRender();
 	}
+	sendInvite(e) {
+		const usrID = e.target.getElementsByClassName("nodisplay")[0].innerText;
+		$("#userIDField")[0].value = usrID;
+		this.formAction("#sendInviteForm", "/api/guild/invite_user.json")
+	}
+	acceptInvite() {
+		this.formAction("#acceptRejectInviteForm", "/api/guild/accept_invite.json")
+	}
+	rejectInvite() {
+		this.formAction("#acceptRejectInviteForm", "/api/guild/refuse_invite.json")
+	}
+	formAction(formQueryStr, url) {
+		App.utils.formAjax(url, formQueryStr)
+		.done(res => {
+			App.toast.success(res.msg, { duration: 2000, style: App.toastStyle });
+		})
+		.fail((e) => {
+			App.utils.toastError(e);
+		});
+	}
 	updateRender() {
 		const user = this.model.findWhere({id: this.user_id});
 		const userJSON = user ? user.toJSON() : null;
@@ -18,6 +43,10 @@ AppClasses.Views.ShowUser = class extends Backbone.View {
 		let guildJSON = null;
 		let matches = [];
 		if (userJSON) {
+			userJSON.you = false;
+			if (App.models.user.toJSON().id == userJSON.id) {
+				userJSON.you = true;
+			}
 			if (userJSON.guild_validated) {
 				guild = this.guilds.findWhere({id: userJSON.guild_id});
 			}
@@ -40,15 +69,29 @@ AppClasses.Views.ShowUser = class extends Backbone.View {
 				return (b.rawDate - a.rawDate);
 			});
 		}
+		if (userJSON && userJSON.g_invitation) {
+			const rawInvUser = App.collections.allUsers.findWhere({id: userJSON.g_invitation});
+			userJSON.invUser = rawInvUser ? rawInvUser.toJSON() : null;
+			if (userJSON.invUser) {
+				const warG = App.collections.guilds.findWhere({id: userJSON.invUser.guild_id});
+				userJSON.invUserGuild = warG ? warG.toJSON() : null;
+			}
+		}
+		const youraw = App.models.user;
+		const you = youraw.toJSON();
+		const yourGuild = App.collections.guilds.findWhere({id: you.guild_id});
+		you.canInvite = you.guild_validated && (youraw.isOwner(yourGuild) || youraw.isOfficer(yourGuild));
 		this.$el.html(this.template({
 			user: userJSON,
 			guild: guildJSON,
 			matches,
+			you,
 			token: $('meta[name="csrf-token"]').attr('content')
 		}));
 		return (this);
 	}
 	render(user_id) {
+		this.delegateEvents();
 		if (this.user_id != user_id) {
 			this.user_id = user_id;
 			this.updateRender();

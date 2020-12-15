@@ -27,8 +27,39 @@
 	{{#if guild}}
 	<br>
 	<a class="btn btn-success btn-lg btn-block fifties sized-text" href="#guilds/{{guild.id}}">{{guild.name}}</a>
+	{{else if user.guild_id}}
+		{{#if user.g_invitation}}
+				{{#if user.you}}
+					<p class="fifties blk-text sized-text">
+						{{user.invUser.nickname}} invited you to the guild 
+						[{{user.invUserGuild.anagram}}] {{user.invUserGuild.name}}
+					</p>
+					<button class="acceptGuildInvite btn btn-primary">
+						Accept
+					</button>
+					<button class="rejectGuildInvite btn btn-danger">
+						Reject
+					</button>
+				{{else}}
+					<p class="fifties blk-text sized-text">
+						This user received a guild invitation but did not respond yet
+					</p>
+				{{/if}}
+		{{else}}
+			<p class="fifties blk-text sized-text">
+				This user is waiting a response to his guild recruitement request
+			</p>
+		{{/if}}
 	{{else}}
-	<p class="fifties blk-text sized-text">This user has no guild</p>
+		<p class="fifties blk-text sized-text">This user has no guild</p>
+		{{#unless user.you}}
+		{{#if you.canInvite}}
+			<button class="sendGuildInvite btn btn-primary">
+				Invite {{user.nickname}} in my guild
+				<span class="nodisplay">{{user.id}}</span>
+			</button>
+		{{/if}}
+		{{/unless}}
 	{{/if}}
 	<br>
 
@@ -75,3 +106,11 @@
 	</div>
 </div>
 <a class="btn btn-info btn-lg btn-block" href="javascript:history.back()">Back</a>
+
+<form style="display: none;" id="sendInviteForm" method="POST">
+	<input type="hidden" name="authenticity_token" value="{{token}}">
+	<input type="text" name="id" id="userIDField">
+</form>
+<form style="display: none;" id="acceptRejectInviteForm" method="POST">
+	<input type="hidden" name="authenticity_token" value="{{token}}">
+</form>
