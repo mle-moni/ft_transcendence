@@ -38,10 +38,17 @@ AppClasses.Views.Admin = class extends Backbone.View {
 		this.adminAction(e, "/api/admin/demote.json", "User demoted");
 	}
 	updateRender() {
+		let allUsers = App.collections.allUsers.toJSON().map(el => {
+			el.you = false;
+			if (el.id == this.model.toJSON().id) {
+				el.you = true;
+			}
+			return el;
+		});
 		this.$el.html(this.template({
 			user: this.model.toJSON(),
 			token: $('meta[name="csrf-token"]').attr('content'),
-			allUsers: App.collections.allUsers.toJSON()
+			allUsers
 		}));
 		return (this);
 	}

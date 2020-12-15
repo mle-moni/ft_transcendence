@@ -1,9 +1,53 @@
 class GuildsController < ApplicationController
   before_action :connect_user
   before_action :set_guild, only: [:show, :edit, :update, :destroy, :join]
-  before_action :set_user, only: [:promote, :demote]
+  before_action :set_user, only: [:promote, :demote, :invite_user]
   before_action :officer_checks, only: [:promote, :demote]
   before_action :has_guild, only: [:new, :join]
+
+  def invite_user
+    unless current_user.has_officer_rights
+      return res_with_error("You need to have officer rights", :bad_request)
+    end
+    if @user.guild
+      return res_with_error("This user already has a guild", :bad_request)
+    end
+    User.reset_guild(@user)
+    @user.g_invitation = current_user.id
+    @user.guild = current_user.guild
+    @user.save
+    ActionCable.server.broadcast "update_channel", action: "update", target: "guilds"
+    ActionCable.server.broadcast "update_channel", action: "update", target: "users"
+    success("Invitation sent")
+  end
+
+  def refuse_invite
+    if current_user.g_invitation == 0
+      return res_with_error("No invitations pending", :bad_request)
+    end
+    current_user.g_invitation = 0
+    current_user.guild = nil
+    current_user.save
+    ActionCable.server.broadcast "update_channel", action: "update", target: "guilds"
+    ActionCable.server.broadcast "update_channel", action: "update", target: "users"
+    success("Invitation rejected")
+  end
+
+  def accept_invite
+    if current_user.g_invitation == 0
+      return res_with_error("No invitations pending", :bad_request)
+    end
+    inv_user = User.find(current_user.g_invitation) rescue nil
+    unless inv_user && inv_user.guild
+      return res_with_error("Invitation is bad or outdatted", :bad_request)
+    end
+    current_user.guild_validated = true
+    current_user.g_invitation = 0
+    current_user.save
+    ActionCable.server.broadcast "update_channel", action: "update", target: "guilds"
+    ActionCable.server.broadcast "update_channel", action: "update", target: "users"
+    success("Guild joined")
+  end
 
   # GET /guilds
   # GET /guilds.json
@@ -110,6 +154,7 @@ class GuildsController < ApplicationController
       return true
     end
     User.reset_guild(current_user)
+    ActionCable.server.broadcast "update_channel", action: "update", target: "users"
     ActionCable.server.broadcast "update_channel", action: "update", target: "guilds", reset: true
     respond_to do |format|
       format.html { redirect_to guilds_url, notice: 'You quitted your guild' }
@@ -124,6 +169,7 @@ class GuildsController < ApplicationController
     current_user.guild_validated = false
     current_user.save
     ActionCable.server.broadcast "update_channel", action: "update", target: "guilds"
+    ActionCable.server.broadcast "update_channel", action: "update", target: "users"
     respond_to do |format|
       format.html { redirect_to guilds_url, notice: 'Joining request sent.' }
       format.json { render json: User.clean(current_user), status: :ok }
@@ -131,27 +177,32 @@ class GuildsController < ApplicationController
   end
 
   def accept_request
+    is_admin = current_user.admin || current_user.creator
     new_usr = User.find(params[:id]) rescue nil
     return res_with_error("User not found", :not_found) unless new_usr
-    unless new_usr.guild_id == current_user.guild_id
+    return res_with_error("Bad request!!!", :bad_request) if new_usr.g_invitation
+    unless is_admin || new_usr.guild_id == current_user.guild_id
       return res_with_error("Bad request", :bad_request)
     end
-    unless current_user.has_officer_rights
+    unless is_admin || current_user.has_officer_rights
       return res_with_error("Action unauthorized", :unauthorized)
     end
     new_usr.guild_validated = true
     new_usr.save
     ActionCable.server.broadcast "update_channel", action: "update", target: "guilds"
+    ActionCable.server.broadcast "update_channel", action: "update", target: "users"
     success("Joining request accepted")
   end
 
   def reject_request
+    is_admin = current_user.admin || current_user.creator
     new_usr = User.find(params[:id]) rescue nil
     return res_with_error("User not found", :not_found) unless new_usr
-    unless new_usr.guild_id == current_user.guild_id
+    return res_with_error("Bad request!!!", :bad_request) if new_usr.g_invitation != 0
+    unless is_admin || new_usr.guild_id == current_user.guild_id
       return res_with_error("Bad request", :bad_request)
     end
-    unless current_user.has_officer_rights
+    unless is_admin || current_user.has_officer_rights
       return res_with_error("Action unauthorized", :unauthorized)
     end
     new_usr.guild = nil
@@ -165,6 +216,7 @@ class GuildsController < ApplicationController
     @user.guild_officer = true
     @user.save
     ActionCable.server.broadcast "update_channel", action: "update", target: "guilds"
+    ActionCable.server.broadcast "update_channel", action: "update", target: "users"
     success("User promoted")
   end
 
@@ -172,16 +224,18 @@ class GuildsController < ApplicationController
     @user.guild_officer = false
     @user.save
     ActionCable.server.broadcast "update_channel", action: "update", target: "guilds"
+    ActionCable.server.broadcast "update_channel", action: "update", target: "users"
     success("User demoted")
   end
 
   private
 
     def officer_checks
-      unless current_user.has_officer_rights
+      is_admin = current_user.admin || current_user.creator
+      unless is_admin || current_user.has_officer_rights
         return res_with_error("You need to have officer rights", :bad_request)
       end
-      unless current_user.same_guild?(@user)
+      unless is_admin || current_user.same_guild?(@user)
         return res_with_error("Guild IDs do not match", :bad_request)
       end
       if @user.guild_owner

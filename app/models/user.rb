@@ -86,7 +86,9 @@ class User < ApplicationRecord
       guild_officer: usr.guild_officer,
       matches: usr.matches,
       blocked: usr.blocked,
-      admin: usr.admin,
+      admin: usr.admin || usr.creator,
+      creator: usr.creator,
+      g_invitation: usr.g_invitation,
       banned: usr.banned,
       in_game: usr.in_game,
       roomid: usr.roomid
