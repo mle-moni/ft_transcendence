@@ -59,7 +59,7 @@
 _.each(document.getElementById("mainNavbar").getElementsByClassName("dropdown-item"), el => {
     el.onclick = () => {
       if (innerHeight < 600) {
-        if (innerWidth < 520) {
+        if (innerWidth < 520 || innerWidth < innerHeight) {
           document.getElementById("navbarToggler").click();
         }
       } else {
