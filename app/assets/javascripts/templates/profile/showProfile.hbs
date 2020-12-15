@@ -10,6 +10,11 @@
 	<img src="{{user.image}}" style="max-height: 200px;">
 	<hr>
 	
+	<button class="addFriend btn btn-primary">
+		Add friend
+		<span class="nodisplay">{{user.id}}</span>
+	</button>
+
 	<p class="fifties blk-text sized-text">
 		<u>
 			ELO
@@ -113,4 +118,9 @@
 </form>
 <form style="display: none;" id="acceptRejectInviteForm" method="POST">
 	<input type="hidden" name="authenticity_token" value="{{token}}">
+</form>
+
+<form style="display: none;" id="addFriendsForm" method="POST">
+	<input type="hidden" name="authenticity_token" value="{{token}}">
+	<input type="text" name="id" id="addFriendIDField">
 </form>
