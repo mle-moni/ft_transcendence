@@ -700,7 +700,6 @@ function subscription_loop() {
       }
     })
 
-    console.log("the consummer is a player ? " + is_a_player)
     if (!is_a_player) {
       let match_id = ingameelement.dataset.id;
       consumer.subscriptions.create({channel: "PlayChannel", game_room_id: match_id, role: 'v'}, {
@@ -709,8 +708,6 @@ function subscription_loop() {
           // Called when the subscription is ready for use on the server
           this.role = 'v';
           this.room = `play_channel_${match_id}`;
-          console.log("your role is : " + this.role);
-          console.log(this.room);
           inter = setInterval(() => {
             canvas = document.getElementById("myCanvas");
             if (canvas != null) {
@@ -724,7 +721,6 @@ function subscription_loop() {
 
         disconnected() {
           // Called when the subscription has been terminated by the server
-          console.log("I am disconnected of the room");
           ball.x = 0.0;
           ball.y = 0.0;
           ctx = null;
@@ -748,7 +744,6 @@ function subscription_loop() {
   const element = document.getElementById("game_page_id")
   consumer.subscriptions.create({channel: "GameChannel", is_ranked: ranked, is_matchmaking: element !== null}, {
     connected() {
-      console.log("You are register on the game channel");
     },
 
     disconnected() {
@@ -759,7 +754,6 @@ function subscription_loop() {
 
 
     received(data) {
-      console.log(data);
       if (data.action === 'game_start') {
         setTimeout(function() {
           $.ajax({
@@ -768,7 +762,6 @@ function subscription_loop() {
               type: 'GET'
           })
           .done(res => {
-            console.log(res)
             if (res == null) {
               location.hash = "#game/" + data.match_room_id;
 
@@ -776,11 +769,8 @@ function subscription_loop() {
                 room: undefined,
                 connected() {
                   // Called when the subscription is ready for use on the server
-                  console.log("Now Playing, with paddle :" + data.msg);
                   this.role = data.msg;
                   this.room = `play_channel_${data.match_room_id}`;
-                  console.log("your role is : " + this.role);
-                  console.log(this.room);
                   inter = setInterval(() => {
                     canvas = document.getElementById("myCanvas");
                     if (canvas != null) {
@@ -809,12 +799,9 @@ function subscription_loop() {
 
                 disconnected() {
                   // Called when the subscription has been terminated by the server
-                  console.log("I am disconnected of the room");
                   ball.x = 0.0;
                   ball.y = 0.0;
                   this.perform("quit", {room_name: game.room_name, player: this.role}); // default action
-                  console.log("perform ok");
-                  ctx = null;
                   canvas = null;
                 },
 
