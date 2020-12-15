@@ -42,6 +42,9 @@
 					<span class="nodisplay">promote</span>
 				</button>
 			{{/if}}
+			{{#if user.in_game}}
+				<a class="btn btn-secondary btn-block fifties sized-text text-maxwidth-md" href="#game/{{user.roomid}}">Look player Game</a>
+			{{/if}}
 		</li>
 		<br>
 		{{/each}}
