@@ -1,8 +1,8 @@
 <ul class="list-group">
 	{{#each user.friends}}
 	<li class="list-group-item fifties blk-text">
-		<label class="sized-text-md"><strong> {{nickname}} </strong>
-		({{print_status}})</label>
+		<a href="#profiles/{{id}}" class="sized-text-md"><strong> {{nickname}} </strong>
+		({{print_status}})</a>
 		&nbsp;
 		<div class="btn-group">
 			<span class="clickToDeleteFriend pointer btn btn-danger sized-text-md">
