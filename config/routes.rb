@@ -15,6 +15,7 @@ Rails.application.routes.draw do
     post '/guild/invite_user', to: 'guilds#invite_user'
     post '/guild/refuse_invite', to: 'guilds#refuse_invite'
     post '/guild/accept_invite', to: 'guilds#accept_invite'
+    post '/guild/kick', to: 'guilds#kick'
     post '/wars/create', to: 'wars#create'
     post '/wars/delete', to: 'wars#delete'
     post '/wars/validate', to: 'wars#validate'

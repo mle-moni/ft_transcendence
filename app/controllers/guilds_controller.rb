@@ -1,8 +1,8 @@
 class GuildsController < ApplicationController
   before_action :connect_user
   before_action :set_guild, only: [:show, :edit, :update, :destroy, :join]
-  before_action :set_user, only: [:promote, :demote, :invite_user]
-  before_action :officer_checks, only: [:promote, :demote]
+  before_action :set_user, only: [:promote, :demote, :invite_user, :kick]
+  before_action :officer_checks, only: [:promote, :demote, :kick]
   before_action :has_guild, only: [:new, :join]
 
   def invite_user
@@ -228,6 +228,13 @@ class GuildsController < ApplicationController
     success("User demoted")
   end
 
+  def kick
+    User.reset_guild(@user)
+    ActionCable.server.broadcast "update_channel", action: "update", target: "guilds", reset: true
+    ActionCable.server.broadcast "update_channel", action: "update", target: "users"
+    success("User kicked")
+  end
+
   private
 
     def officer_checks
@@ -239,7 +246,7 @@ class GuildsController < ApplicationController
         return res_with_error("Guild IDs do not match", :bad_request)
       end
       if @user.guild_owner
-        return res_with_error("You cannot promote/demote the guild owner")
+        return res_with_error("You cannot promote/demote/kick the guild owner", :bad_request)
       end
     end
   

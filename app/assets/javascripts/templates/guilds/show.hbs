@@ -42,6 +42,14 @@
 					<span class="nodisplay">promote</span>
 				</button>
 			{{/if}}
+			{{#if ../officerRights}}
+			{{#unless guild_owner}}
+				<button class="kickUser btn btn-danger">
+					Kick
+					<span class="nodisplay">{{id}}</span>
+				</button>
+			{{/unless}}
+			{{/if}}
 		</li>
 		<br>
 		{{/each}}
