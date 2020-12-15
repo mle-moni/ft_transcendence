@@ -84,7 +84,7 @@ class ProfileController < ApplicationController
 			return false
 		end
 		respond_to do |format|
-			ActionCable.server.broadcast "update_channel", action: "update", target: "block"
+			ActionCable.server.broadcast "update_channel", action: "update", target: "users"
 			format.html { redirect_to "/#profiles", notice: 'Done' }
 			format.json { head :no_content }
 		end

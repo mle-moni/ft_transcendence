@@ -146,7 +146,7 @@ AppClasses.Views.Conversations = class extends AppClasses.Views.AbstractView {
 					return (false);
 				}
 				// Assert currentUser have not been blocked by the other user
-				if (otherUser && otherUser.blocked) {
+				if (otherUser && otherUser.blocked && location.hash == ('#messages/' + currentDMRoom.id)) {
 					otherUser.blocked.forEach(block => {
 						if (block.toward_id == currentUser.id) {
 							location.hash = '#messages';
