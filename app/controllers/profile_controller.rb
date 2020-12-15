@@ -52,6 +52,9 @@ class ProfileController < ApplicationController
 			res_with_error("Some fields are missing from your request", :bad_request)
 			return
 		end
+		if bad_params
+			return res_with_error("nickname and email length must be >= 3 characters", :bad_request)
+		end
 		@user = User.find(params[:id]) rescue nil # get user by his unique ID
 		
 		# if the user connected is not the same as @user, the request is a forgery
@@ -135,6 +138,10 @@ class ProfileController < ApplicationController
 		current_user.encrypted_password = new_hashed_password
 		current_user.has_set_pwd = true
 		current_user.save
+	end
+
+	def bad_params
+		return params[:email].length < 3 || params[:nickname].length < 3
 	end
 
 end
