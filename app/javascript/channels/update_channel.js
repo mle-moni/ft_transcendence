@@ -38,6 +38,9 @@ window.socket = consumer.subscriptions.create({
 				case "tournaments":
 					App.collections.tournaments.fetch()
 					break;
+				case "block":
+					App.collections.allUsers.myFetch();
+					break;
 			}
 		} else if (event.action == "notice") {
 			window.App.toast.success(event.notice, { duration: 3000, style: window.App.toastStyle });

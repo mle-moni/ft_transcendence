@@ -140,8 +140,8 @@
                 </form>
             </div>
         </div>
-        {{#if user.in_game}}
-            <a class="btn btn-secondary btn-block fifties sized-text text-maxwidth-md" href="#game/{{user.roomid}}">Look player Game</a>
+        {{#if otherUser.in_game}}
+            <a class="btn btn-secondary btn-block fifties sized-text-sm text" style="width: 100%!important; margin-left: 0%!important" href="#game/{{otherUser.roomid}}">Look player Game</a>
         {{/if}}
     </div>
 </div>
