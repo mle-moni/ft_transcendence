@@ -65,6 +65,7 @@ AppClasses.Views.AllProfiles = class extends Backbone.View {
 		return (this);
 	}
 	render() {
+		this.delegateEvents();
 		this.model.myFetch();
 		return (this);
 	}

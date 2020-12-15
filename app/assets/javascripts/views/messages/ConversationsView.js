@@ -150,6 +150,7 @@ AppClasses.Views.Conversations = class extends AppClasses.Views.AbstractView {
 					otherUser.blocked.forEach(block => {
 						if (block.toward_id == currentUser.id) {
 							location.hash = '#messages';
+							App.toast.alert("You've been blocked", { duration: 2000, style: App.toastStyle })
 							return (false);
 						}
 					});
