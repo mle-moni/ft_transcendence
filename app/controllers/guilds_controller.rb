@@ -180,7 +180,7 @@ class GuildsController < ApplicationController
     is_admin = current_user.admin || current_user.creator
     new_usr = User.find(params[:id]) rescue nil
     return res_with_error("User not found", :not_found) unless new_usr
-    return res_with_error("Bad request!!!", :bad_request) if new_usr.g_invitation
+    return res_with_error("Bad request!!!", :bad_request) if new_usr.g_invitation != 0
     unless is_admin || new_usr.guild_id == current_user.guild_id
       return res_with_error("Bad request", :bad_request)
     end
