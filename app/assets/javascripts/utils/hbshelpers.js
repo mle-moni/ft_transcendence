@@ -159,7 +159,7 @@ Handlebars.registerHelper('findGuild', function(guilds, userGuildID) {
         for (var count = 0; count < guilds.length; count++)
         {
             if (guilds[count].id == userGuildID)
-                return (guilds[count].name);
+                return (guilds[count].anagram);
         }
     }
     return (null);
@@ -179,7 +179,7 @@ Handlebars.registerHelper('findGuildWithUserCollection', function(memberList, gu
         for (var count = 0; count < guildList.length; count++)
         {
             if (guildList[count].id == userGuildID)
-                return (guildList[count].name);
+                return (guildList[count].anagram);
         }
     }
     return (null);
