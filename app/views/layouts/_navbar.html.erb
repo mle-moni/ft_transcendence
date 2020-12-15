@@ -58,7 +58,7 @@
 
 _.each(document.getElementById("mainNavbar").getElementsByClassName("dropdown-item"), el => {
     el.onclick = () => {
-      if (innerHeight < 600) {
+      if (innerHeight < 600 || innerWidth < innerHeight) {
         if (innerWidth < 520) {
           document.getElementById("navbarToggler").click();
         }
