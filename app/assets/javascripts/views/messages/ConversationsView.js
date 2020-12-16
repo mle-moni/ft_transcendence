@@ -27,7 +27,9 @@ AppClasses.Views.Conversations = class extends AppClasses.Views.AbstractView {
 	{
 		e.preventDefault();
 		if (!this.verif_accept_request(e)) return (false);
-		App.utils.formAjax("/api/direct_chats/acceptDuelRequest.json", "#AcceptDuelRequest")
+		var selectorFormID = "";
+		if (e.currentTarget) selectorFormID = "#" + e.currentTarget.id;
+		App.utils.formAjax("/api/direct_chats/acceptDuelRequest.json", selectorFormID)
 		.done(res => {
 			App.toast.success("Duel request accepted !", { duration: 1500, style: App.toastStyle });
 		})

@@ -84,7 +84,7 @@
                                     <img src="{{../otherUser.image}}" alt="Avatar" class="avatar" style="margin-bottom: 0px !important;">
 
                                     {{#ifDuelReq is_duel_request}}
-                                        <form id="AcceptDuelRequest" action="/api/direct_chats/acceptDuelRequest" accept-charset="UTF-8"
+                                        <form class="AcceptDuelRequest" id="AcceptDuelRequest-{{id}}" action="/api/direct_chats/acceptDuelRequest" accept-charset="UTF-8"
                                             method="POST" style="display: inline;">
                                             <input type="hidden" name="authenticity_token" value="{{../token}}">
                                             {{!-- Room Data --}}

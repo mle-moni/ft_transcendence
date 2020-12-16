@@ -54,7 +54,7 @@
                                     {{/ifUserHasGuild}}
                                 </div>
                                 {{#ifDuelReq is_duel_request}}
-                                    <form id="AcceptDuelRequest" action="/api/direct_chats/acceptDuelRequest" accept-charset="UTF-8"
+                                    <form class="AcceptDuelRequest" id="AcceptDuelRequest-{{id}}" action="/api/rooms/acceptDuelRequest" accept-charset="UTF-8"
                                         method="POST" style="display: inline;">
                                         <input type="hidden" name="authenticity_token" value="{{../token}}">
                                         {{!-- Room Data --}}

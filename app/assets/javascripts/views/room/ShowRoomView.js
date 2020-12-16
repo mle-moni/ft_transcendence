@@ -25,7 +25,9 @@ AppClasses.Views.ShowRoom = class extends Backbone.View {
 	{
 		e.preventDefault();
 		if (!this.verif_accept_request(e)) return (false);
-		App.utils.formAjax("/api/rooms/acceptDuelRequest.json", "#AcceptDuelRequest")
+		var selectorFormID = "";
+		if (e.currentTarget) selectorFormID = "#" + e.currentTarget.id;
+		App.utils.formAjax("/api/rooms/acceptDuelRequest.json", selectorFormID)
 		.done(res => {
 			App.toast.success("Duel request accepted !", { duration: 1500, style: App.toastStyle });
 		})
