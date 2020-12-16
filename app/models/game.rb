@@ -75,6 +75,11 @@ class Game < ApplicationRecord
 
 			War.update_if_needed($games[room_name][:game_type], winner_user, loser_user)
 
+			if winner_user.guild
+				winner_user.guild.points += 1
+				winner_user.guild.save
+			end
+
 			if ($games[room_name][:game_type] == "ranked" || $games[room_name][:game_type] == "duel_ranked")
 				match = EloRating::Match.new
 				match.add_player(rating: loser_user.elo)
@@ -82,10 +87,6 @@ class Game < ApplicationRecord
 				tmp = match.updated_ratings
 				loser_user.elo = tmp[0]
 				winner_user.elo = tmp[1]
-				if winner_user.guild
-					winner_user.guild.points += 1
-					winner_user.guild.save
-				end
 				loser_user.save
 				winner_user.save
 			end
@@ -93,7 +94,7 @@ class Game < ApplicationRecord
 			if ($games[room_name][:game_type] == "tournament")
 				if winner_user.tournament
 					Thread.new do
-						sleep 5
+						sleep 3
 						winner_user.tournament.end_match(winner_user, loser_user)
 					end
 				end

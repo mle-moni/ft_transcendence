@@ -65,6 +65,11 @@ class Tournament < ApplicationRecord
 		if players_alive.length == 1
 			self.winner_id = players_alive.first.id
 			save
+			guild = players_alive.first.guild
+			if guild
+				guild.points += 10
+				guild.save
+			end
 			notice_txt = "#{players_alive.first.nickname} just won a tournament!"
 			ActionCable.server.broadcast "update_channel", action: "notice", notice: notice_txt
 			free_users
