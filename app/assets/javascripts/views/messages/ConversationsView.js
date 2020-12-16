@@ -4,7 +4,7 @@ AppClasses.Views.Conversations = class extends AppClasses.Views.AbstractView {
 			"submit #sendRoomMessageForm": "submit",
 			"submit .createDM": "createDM",
 			"submit #sendDuelRequest": "sendDuelRequest",
-			"submit #AcceptDuelRequest": "AcceptDuelRequest",
+			"submit .AcceptDuelRequest": "AcceptDuelRequest",
 		}
 		super(opts);
 		this.tagName = "div";

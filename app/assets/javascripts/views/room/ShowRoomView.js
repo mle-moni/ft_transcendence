@@ -3,7 +3,7 @@ AppClasses.Views.ShowRoom = class extends Backbone.View {
 		opts.events = {
 			"submit #sendRoomMessageForm": "submit",
 			"submit #sendDuelRequest": "sendDuelRequest",
-			"submit #AcceptDuelRequest": "AcceptDuelRequest",
+			"submit .AcceptDuelRequest": "AcceptDuelRequest",
 		}
         super(opts);
 		this.room_id = opts.room_id;
