@@ -1,4 +1,5 @@
 class RoomMessagesController < ApplicationController
+	before_action :connect_user
   before_action :set_room_message, only: [:show, :edit, :update, :destroy]
   before_action :reset_temporary_restrictions
 

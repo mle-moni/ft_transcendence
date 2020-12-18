@@ -29,11 +29,11 @@ window.socket = consumer.subscriptions.create({
 					App.collections.guilds.fetch(opts);
 					break;
 				case "users":
-					App.collections.allUsers.myFetch();
-					App.models.user.update(App.models.user);
+					if (App.collections.allUsers) App.collections.allUsers.myFetch();
+					if (App.models.user) App.models.user.update(App.models.user);
 					break;
 				case "last_seen":
-					App.models.last_seen.updateLastSeen(App.models.last_seen);
+					if (App.models.last_seen) App.models.last_seen.updateLastSeen(App.models.last_seen);
 					break;
 				case "tournaments":
 					App.collections.tournaments.fetch()

@@ -1,5 +1,6 @@
 class ChatMessagesController < ApplicationController
 
+	before_action :connect_user
     before_action :reset_temporary_restrictions
 
     # GET /chat_messages

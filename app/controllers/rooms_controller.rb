@@ -1,6 +1,5 @@
 class RoomsController < ApplicationController
-  # before_action :set_room, only: [:show, :edit, :update, :destroy]
-  before_action :connect_user, only: [:new, :edit, :update, :destroy, :joinPublic, :joinPrivate, :quit, :accept_request]
+  before_action :connect_user
   before_action :reset_temporary_restrictions
 
   # GET /rooms

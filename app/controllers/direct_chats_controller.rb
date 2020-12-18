@@ -1,4 +1,5 @@
 class DirectChatsController < ApplicationController
+	before_action :connect_user
   before_action :set_direct_chat, only: [:show, :edit, :update, :destroy]
   before_action :reset_temporary_restrictions
 

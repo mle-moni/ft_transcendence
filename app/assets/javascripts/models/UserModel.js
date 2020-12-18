@@ -46,7 +46,7 @@ AppClasses.Models.User = Backbone.Model.extend({
 			model.set(userData);
 		})
 		.fail(e => {
-			console.error(e);
+			// console.error(e);
 		})
 	},
 	updateLastSeen: (model) => {
@@ -60,7 +60,7 @@ AppClasses.Models.User = Backbone.Model.extend({
 			model.set(userData);
 		})
 		.fail(e => {
-			console.error(e);
+			// console.error(e);
 		})
 	}
 });
@@ -78,7 +78,7 @@ AppClasses.Collections.AllUsers = class extends Backbone.Collection {
 			this.set(usersData);
 		})
 		.fail(e => {
-			console.error(e);
+			// console.error(e);
 		})
 	}
 }
