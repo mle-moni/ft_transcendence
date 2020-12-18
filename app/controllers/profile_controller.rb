@@ -63,8 +63,7 @@ class ProfileController < ApplicationController
 			return
 		end
 
-		if save_image # error
-			res_with_error("Could not update image (only .jpg and .png accepted)", :bad_request)
+		if save_image == false # error
 			return
 		end
 		
@@ -117,9 +116,12 @@ class ProfileController < ApplicationController
 	def save_image
 		if (params[:image])
 			file = params[:image]
+			if file.size > 2200000 # ~2 MB max
+				return res_with_error("Image must be < 2 MB", :bad_request)
+			end
 			extname = File.extname(file.path)
 			unless extname == ".jpg" || extname == ".png"
-				return true
+				return res_with_error("Could not update image (only .jpg and .png accepted)", :bad_request)
 			end
 
 			fileName = "image#{extname}"			
@@ -131,7 +133,7 @@ class ProfileController < ApplicationController
 			end
 			@user.image = finalURL
 		end
-		return false
+		return true
 	end
 
 	def _change_pwd(pwd)
