@@ -30,12 +30,17 @@ class TournamentsController < ApplicationController
 	# DELETE /tournaments/1
 	# DELETE /tournaments/1.json
 	def destroy
+		@tournament.users.each do |usr|
+			usr.tournament = nil
+			usr.save
+		end
 		respond_to do |format|
-			if @tournament.destroy
+			test = @tournament.destroy rescue nil
+			if test
 				ActionCable.server.broadcast "update_channel", action: "delete", target: "tournaments"
 				format.json { render json: @tournament, status: :ok }
 			else
-				format.json { render json: @tournament.errors, status: :unprocessable_entity }
+				return res_with_error("Error while destroying tournament", :unprocessable_entity)
 			end
 		end
 	end
