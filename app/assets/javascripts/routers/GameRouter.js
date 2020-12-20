@@ -19,6 +19,5 @@ AppClasses.Routers.GameRouter = class extends AppClasses.Routers.AbstractRouter 
 	}
 	show_r(room_id) {
 		this.viewWithRenderParam("gamePlayRanked", "GamePlayRanked", room_id, { room_id })
-		console.log(room_id);
 	}
 }

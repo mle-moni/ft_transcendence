@@ -9,11 +9,12 @@
 	<br>
 	<img src="{{user.image}}" style="max-height: 200px;">
 	<hr>
-	
-	<button class="addFriend btn btn-primary">
-		Add friend
-		<span class="nodisplay">{{user.id}}</span>
-	</button>
+	{{#unless user.isInContactList}}
+		<button class="addFriend btn btn-primary">
+			Add friend
+			<span class="nodisplay">{{user.id}}</span>
+		</button>
+	{{/unless}}
 
 	<p class="fifties blk-text sized-text">
 		<u>

@@ -9,7 +9,6 @@
 		App.templates = HandlebarsTemplates;
 		App.routers.main = new AppClasses.Routers.Main();
 		if(!Backbone.History.started)  {
-			console.log("Backbone history started")
 			Backbone.history.start(); // using anchor for routing
 		}
 		document.onkeydown = e => {

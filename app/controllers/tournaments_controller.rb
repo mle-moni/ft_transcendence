@@ -35,12 +35,12 @@ class TournamentsController < ApplicationController
 			usr.save
 		end
 		respond_to do |format|
-			test = @tournament.destroy rescue nil
-			if test
+			destroy_success = @tournament.destroy rescue nil
+			if destroy_success
 				ActionCable.server.broadcast "update_channel", action: "delete", target: "tournaments"
 				format.json { render json: @tournament, status: :ok }
 			else
-				return res_with_error("Error while destroying tournament", :unprocessable_entity)
+				format.json { render json: {alert: "Can't destroy tournament"}, status: :unprocessable_entity }
 			end
 		end
 	end

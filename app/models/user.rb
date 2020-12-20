@@ -16,6 +16,7 @@ class User < ApplicationRecord
   # friends relation setup
   has_many :friendships
   has_many :confirmed_friendships, -> { where confirmed: true }, class_name: 'Friendship'
+  has_many :contacts, :through => :friendships, class_name: 'User', :source => :friend
   has_many :friends, :through => :confirmed_friendships, class_name: 'User', :source => :friend
   has_many :invitations, -> { where confirmed: false }, class_name: 'Friendship', foreign_key: "friend_id"
   # get the users that sent me a friend request
@@ -67,6 +68,9 @@ class User < ApplicationRecord
     new_user[:tournament_id] = usr.tournament_id
     new_user[:friends] = usr.friends.map do |friend|
       User.strict_clean(friend, include_last_seen)
+    end
+    new_user[:contacts] = usr.contacts.map do |contact|
+      User.strict_clean(contact, include_last_seen)
     end
     new_user[:invites] = usr.invites.map do |invite|
       User.strict_clean(invite, include_last_seen)

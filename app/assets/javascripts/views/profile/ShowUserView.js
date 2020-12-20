@@ -83,6 +83,15 @@ AppClasses.Views.ShowUser = class extends Backbone.View {
 				userJSON.invUserGuild = warG ? warG.toJSON() : null;
 			}
 		}
+		if (userJSON) {
+			userJSON.isInContactList = false;
+			const contacts = App.models.user.toJSON().contacts;
+			for (let usr in contacts) {
+				if (contacts[usr].nickname == userJSON.nickname) {
+					userJSON.isInContactList = true;
+				}
+			}
+		}
 		const youraw = App.models.user;
 		const you = youraw.toJSON();
 		const yourGuild = App.collections.guilds.findWhere({id: you.guild_id});
