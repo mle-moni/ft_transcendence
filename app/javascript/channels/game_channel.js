@@ -397,10 +397,13 @@ function getRandomBetween(min, max) {
 
 document.addEventListener("keydown",  event => {
   switch (event.key) {
-    case "z" || "ArrowUp":
+    case "z":
+    case "w":
+    case "ArrowUp":
       keyboard["up"] = true;
       break;
-    case "s" || "ArrowDown":
+    case "s":
+    case "ArrowDown":
       keyboard["down"] = true;
       break;
   }
@@ -409,10 +412,13 @@ document.addEventListener("keydown",  event => {
 
 document.addEventListener("keyup", event => {
   switch (event.key) {
-    case "z" || "ArrowUp":
+    case "z":
+    case "w":
+    case "ArrowUp":
       keyboard["up"] = false;
       break;
-    case "s" || "ArrowDown":
+    case "s":
+    case "ArrowDown":
       keyboard["down"] = false;
       break;
   }
