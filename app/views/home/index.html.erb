@@ -1,4 +1,7 @@
 <div id="app"></div>
+<div id="notifs">
+	<a href="#notifs" id="notifsCount">0</a>
+</div>
 <script type="text/javascript">
 	App.toast = siiimpleToast;
 	App.toastStyle = {
@@ -61,6 +64,10 @@
 		App.guildPopstate = {
 			from: "",
 			redirect: true
+		};
+		App.notifs = {
+			count: 0,
+			arr: []
 		};
 		initApp(); // init backbone only for connected users
 	<% elsif user_signed_in? && current_user.banned %>

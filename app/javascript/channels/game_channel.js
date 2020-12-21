@@ -831,6 +831,14 @@ function subscription_loop() {
           .fail((e) => {
           });
         }, Math.random() * 1000);
+      } else if (data.action == "notif") {
+        window.App.utils.wobble();
+        window.App.notifs.count += 1;
+        $("#notifsCount").text(window.App.notifs.count);
+        window.App.notifs.arr.push({
+          content: data.content,
+          link: data.link
+        });
       }
     }
   });

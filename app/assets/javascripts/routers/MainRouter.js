@@ -4,6 +4,7 @@ AppClasses.Routers.Main = class extends AppClasses.Routers.AbstractRouter {
 		// routes
 		this.route("*path", "default"); // default route (404)
 		this.route("logs", "logs");
+		this.route("notifs", "notifs");
 		this.route("", "index");
 
 		// profile routes
@@ -48,5 +49,8 @@ AppClasses.Routers.Main = class extends AppClasses.Routers.AbstractRouter {
 	}
 	logs() {
 		this.basicView("logs", "Logs", {});
+	}
+	notifs() {
+		this.basicView("notifs", "Notifs", {});
 	}
 }

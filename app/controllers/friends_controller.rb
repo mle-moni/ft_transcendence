@@ -50,6 +50,11 @@ class FriendsController < ApplicationController
 			other_friendship.save
 		else
 			current_user.friendships.create({friend_id: @friend_id})
+			usr = User.find(@friend_id) rescue nil
+			if usr
+				ActionCable.server.broadcast "player_#{usr.email}", action: "notif",
+				content: "#{current_user.nickname} sent a friend request", link: "#friends"
+			end
 		end
 		ActionCable.server.broadcast "update_channel", action: "update", target: "last_seen"
 		ActionCable.server.broadcast "update_channel", action: "update", target: "users"

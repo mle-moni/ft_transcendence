@@ -2,6 +2,7 @@
 @import "bootstrap/scss/bootstrap";
 @import "./rooms";
 @import "./home";
+@import "./animations";
 
 
 .horitontal-warning {
@@ -662,4 +663,24 @@ select.form-control:focus {
 
 #userImageEdit {
 	margin: auto;
+}
+
+#notifs {
+	display: flex;
+	background-color: rgba(134, 134, 134, 0.945);
+	width: 50px;
+	height: 50px;
+	z-index: 1;
+	position: fixed;
+	bottom: 10px;
+	right: 10px;
+	-webkit-border-radius: 30px;
+	-moz-border-radius: 30px;
+	border-radius: 30px;
+
+	a {
+		margin: auto;
+		color: black;
+		font-weight: bold;
+	}
 }
