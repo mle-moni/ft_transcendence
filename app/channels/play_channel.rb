@@ -32,62 +32,62 @@ class PlayChannel < ApplicationCable::Channel
   end
 
   def take_turn(data)
-    game = $games[data['room_name']];
+    game = $games[data['rmn']];
     if (data['player'] == 'l')
-      return if game[:right_action] == 'quit'; # ingore input after leaving (can occure when a user spam an input while is leaving)
-      game[:left_action] = data['input'];
+      return if game[:ra] == 'quit'; # ingore input after leaving (can occure when a user spam an input while is leaving)
+      game[:la] = data['input'];
     elsif (data['player'] == 'r')
-      return if game[:right_action] == 'quit';
-      game[:right_action] = data['input']; 
+      return if game[:ra] == 'quit';
+      game[:ra] = data['input']; 
     end
   end
 
   def new_state(data)
-    game = $games[data['room_name']]
+    game = $games[data['rmn']]
 
-    game[:ball_pos_x] = data['ball_x']
-    game[:ball_pos_y] = data['ball_y']
-    game[:right_pos] = data['right_pos']
-    game[:right_score] = data['right_score']
-    game[:left_score] = data['left_score']
-    game[:ball_dir_x] = data['ball_dir_x']
-    game[:ball_dir_y] = data['ball_dir_y']
-    game[:left_pos] = data['left_pos']
-    game[:ball_speed] = data['ball_speed']
+    game[:bpx] = data['ball_x']
+    game[:bpy] = data['ball_y']
+    game[:rp] = data['rp']
+    game[:rsc] = data['rsc']
+    game[:lsc] = data['lsc']
+    game[:bdx] = data['bdx']
+    game[:bdy] = data['bdy']
+    game[:lp] = data['lp']
+    game[:bs] = data['bs']
   end
 
   def connect_to_game(data)
-    game = $games[data['room_name']]
+    game = $games[data['rmn']]
     if (data['player'] == 'l')
-      game[:player_left_connected] = true;
+      game[:plc] = true;
     elsif (data['player'] == 'r')
-      game[:player_right_connected] = true; 
+      game[:prc] = true; 
     end
   end
 
   def check_users_connection(data)
-    game = $games[data['room_name']]
+    game = $games[data['rmn']]
 
-    if (game[:player_left_connected] == false)
-      Game.end_the_game(data['room_name'], 'l')
-    elsif (game[:player_right_connected] == false)
-      Game.end_the_game(data['room_name'], 'r')
+    if (game[:plc] == false)
+      Game.end_the_game(data['rmn'], 'l')
+    elsif (game[:prc] == false)
+      Game.end_the_game(data['rmn'], 'r')
     end
   end
 
   def get_user_infos(data)
-    ActionCable.server.broadcast data['room_name'], {action: "users_infos", left_user: $games[data['room_name']][:left_user], right_user: $games[data['room_name']][:right_user]}
+    ActionCable.server.broadcast data['rmn'], {action: "users_infos", lu: $games[data['rmn']][:lu], ru: $games[data['rmn']][:ru]}
   end
 
   def get_datas(data)
-    ActionCable.server.broadcast data['room_name'], $games[data['room_name']];
+    ActionCable.server.broadcast data['rmn'], $games[data['rmn']];
   end
 
   def quit(data)
-    ActionCable.server.broadcast data['room_name'], {action: 'quit'}
+    ActionCable.server.broadcast data['rmn'], {action: 'quit'}
   end
 
   def end_the_game(data)
-    Game.end_the_game(data["room_name"], 'n')
+    Game.end_the_game(data["rmn"], 'n')
   end
 end

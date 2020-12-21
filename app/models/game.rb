@@ -1,5 +1,5 @@
 class Game < ApplicationRecord
-	def self.start(player1, player2, game_type)
+	def self.start(player1, player2, gmt)
 		left, right = [player1, player2].shuffle
 		if (left != right)
 			current_match_id = 0
@@ -15,74 +15,74 @@ class Game < ApplicationRecord
 	
 			clean_players_duel_requests(player1, player2)
 
-			room_name = "play_channel_#{current_match_id}"
+			rmn = "play_channel_#{current_match_id}"
 
 			game = {
-				room_name: room_name,
-				game_type: game_type,
-				ball_pos_x: 0.0,
-				ball_pos_y: 0.0,
-				left_pos: 0.0,
-				right_pos: 0.0,
-				right_score: 0,
-				left_score: 0,
-				ball_speed: 0.0,
-				ball_dir_x: 0.0,
-				ball_dir_y: 0.0,
-				left_action: "w",
-				right_action: "w",
-				player_left_connected: false,
-				player_right_connected: false,
-				left_user: left,
-				right_user: right
+				rmn: rmn,
+				gmt: gmt,
+				bpx: 0.0,
+				bpy: 0.0,
+				lp: 0.0,
+				rp: 0.0,
+				rsc: 0,
+				lsc: 0,
+				bs: 0.0,
+				bdx: 0.0,
+				bdy: 0.0,
+				la: "w",
+				ra: "w",
+				plc: false,
+				prc: false,
+				lu: left,
+				ru: right
 			}
-			$games[room_name] = game
+			$games[rmn] = game
 	
-			Redis.current.set("game_#{room_name}_end?", "no");
+			Redis.current.set("game_#{rmn}_end?", "no");
 
 			ActionCable.server.broadcast "player_#{right}", { action: 'game_start', msg: 'r', match_room_id: current_match_id, adv: left }
 			ActionCable.server.broadcast "player_#{left}", { action: 'game_start', msg: 'l', match_room_id: current_match_id, adv: right }
 		end
 	end
 
-	def self.end_the_game(room_name, role_quit) # role_quit is 'r' or 'l' when someone gave up else 'n'
-		if (Redis.current.get("game_#{room_name}_end?") == "no" && $games[room_name] != nil) # if not already ended, end the game with actual player has loser (he left the game)
-			Redis.current.set("game_#{room_name}_end?", "yes");
+	def self.end_the_game(rmn, role_quit) # role_quit is 'r' or 'l' when someone gave up else 'n'
+		if (Redis.current.get("game_#{rmn}_end?") == "no" && $games[rmn] != nil) # if not already ended, end the game with actual player has loser (he left the game)
+			Redis.current.set("game_#{rmn}_end?", "yes");
 
 			if (role_quit != 'n')
 				if (role_quit == 'r')
-					loser_user = User.find_by(email: Redis.current.get("#{room_name}_r"))
-					winner_user = User.find_by(email: Redis.current.get("#{room_name}_l"))
-					loser_score = $games[room_name][:right_score]
-					winner_score = $games[room_name][:left_score]
+					loser_user = User.find_by(email: Redis.current.get("#{rmn}_r"))
+					winner_user = User.find_by(email: Redis.current.get("#{rmn}_l"))
+					loser_score = $games[rmn][:rsc]
+					winner_score = $games[rmn][:lsc]
 				else
-					loser_user = User.find_by(email: Redis.current.get("#{room_name}_l"))
-					winner_user = User.find_by(email: Redis.current.get("#{room_name}_r"))
-					loser_score = $games[room_name][:left_score]
-					winner_score = $games[room_name][:right_score]
+					loser_user = User.find_by(email: Redis.current.get("#{rmn}_l"))
+					winner_user = User.find_by(email: Redis.current.get("#{rmn}_r"))
+					loser_score = $games[rmn][:lsc]
+					winner_score = $games[rmn][:rsc]
 				end
 			else
-				if ($games[room_name][:right_score] == 11)
-					winner_user = User.find_by(email: Redis.current.get("#{room_name}_r"))
-					loser_user = User.find_by(email: Redis.current.get("#{room_name}_l"))
-					winner_score = $games[room_name][:right_score]
-					loser_score = $games[room_name][:left_score]
+				if ($games[rmn][:rsc] == 11)
+					winner_user = User.find_by(email: Redis.current.get("#{rmn}_r"))
+					loser_user = User.find_by(email: Redis.current.get("#{rmn}_l"))
+					winner_score = $games[rmn][:rsc]
+					loser_score = $games[rmn][:lsc]
 				else
-					winner_user = User.find_by(email: Redis.current.get("#{room_name}_l"))
-					loser_user = User.find_by(email: Redis.current.get("#{room_name}_r"))
-					winner_score = $games[room_name][:left_score]
-					loser_score = $games[room_name][:right_score]
+					winner_user = User.find_by(email: Redis.current.get("#{rmn}_l"))
+					loser_user = User.find_by(email: Redis.current.get("#{rmn}_r"))
+					winner_score = $games[rmn][:lsc]
+					loser_score = $games[rmn][:rsc]
 				end
 			end
 
-			War.update_if_needed($games[room_name][:game_type], winner_user, loser_user)
+			War.update_if_needed($games[rmn][:gmt], winner_user, loser_user)
 
 			if winner_user.guild
 				winner_user.guild.points += 1
 				winner_user.guild.save
 			end
 
-			if ($games[room_name][:game_type] == "ranked" || $games[room_name][:game_type] == "duel_ranked")
+			if ($games[rmn][:gmt] == "ranked" || $games[rmn][:gmt] == "duel_ranked")
 				match = EloRating::Match.new
 				match.add_player(rating: loser_user.elo)
 				match.add_player(rating: winner_user.elo, winner: true)
@@ -93,7 +93,7 @@ class Game < ApplicationRecord
 				winner_user.save
 			end
 
-			if ($games[room_name][:game_type] == "tournament")
+			if ($games[rmn][:gmt] == "tournament")
 				if winner_user.tournament
 					Thread.new do
 						sleep 3
@@ -103,8 +103,8 @@ class Game < ApplicationRecord
 			end
 
 			Match.create(winner: winner_user, loser: loser_user, winner_score: winner_score, loser_score: loser_score);
-			ActionCable.server.broadcast room_name, {action: 'quit'}
-			$games[room_name] = nil;
+			ActionCable.server.broadcast rmn, {action: 'quit'}
+			$games[rmn] = nil;
 		end
 	end
 
