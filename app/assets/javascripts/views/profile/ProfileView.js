@@ -11,6 +11,6 @@ AppClasses.Views.Profile = class extends Backbone.View {
 		return (this);
 	}
 	render() {
-		return (this);
+		return (this.updateRender());
 	}
 }

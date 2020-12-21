@@ -11,6 +11,13 @@ AppClasses.Views.ProfileEdit = class extends Backbone.View {
 	}
 	submit(e) {
 		e.preventDefault();
+		
+		const file = $('#user_image')[0].files[0];
+		if (file && file.size > 2100000) {
+			App.toast.alert("File size must be < 2 MB");
+			return false;
+		}
+		
 		App.utils.formAjax("/profile/edit.json", "#edit_user")
 		.done((jsonObject) => {
 			App.toast.success("success", { duration: 2000, style: App.toastStyle });
