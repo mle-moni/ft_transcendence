@@ -650,3 +650,12 @@ select.form-control:focus {
 	margin: auto;
 	margin-right: 10px;
 }
+
+.qr-container {
+	display: flex;
+	flex-direction: column;
+
+	p, .qrcode {
+		margin: auto;
+	}
+}
