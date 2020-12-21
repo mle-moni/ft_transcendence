@@ -79,15 +79,15 @@ function clear() {
 }
 
 class Game {
-  constructor(room_name, player_left, player_right, score_left, score_right, consumer) {
-    this.room_name = room_name;
+  constructor(rmn, player_left, player_right, score_left, score_right, consumer) {
+    this.rmn = rmn;
     this.player_left = player_left;
     this.player_right = player_right;
-    this.left_action = 'w';
-    this.right_action = 'w';
+    this.la = 'w';
+    this.ra = 'w';
     this.consumer = consumer;
     this.stop = false;
-    this.ball_speed = 0.55;
+    this.bs = 0.55;
     this.paddle_speed = 1.1;
     this.score_left = score_left;
     this.score_right = score_right;
@@ -101,7 +101,7 @@ class Game {
     if (this.has_ended == false && (this.score_right == score_max || this.score_left == score_max)) {
       this.has_ended = true;
       setTimeout(function (game) {
-        game.consumer.perform("end_the_game", {room_name: game.room_name})
+        game.consumer.perform("end_the_game", {rmn: game.rmn})
       }, 2000, this)
     }
   }
@@ -114,9 +114,9 @@ class Game {
       else
         action = "d";
     }
-    this.consumer.perform("take_turn", {input: action, room_name: this.room_name, player: this.consumer.role});
+    this.consumer.perform("take_turn", {input: action, rmn: this.rmn, player: this.consumer.role});
     if (this.consumer.role == 'r')
-      this.consumer.perform("new_state", {room_name: this.room_name, ball_x: ball.x, ball_y: ball.y, left_pos: this.player_left, right_pos: this.player_right, right_score: this.score_right, left_score: this.score_left, ball_dir_x: this.ball_dir[0], ball_dir_y: this.ball_dir[1], ball_speed: this.ball_speed});
+      this.consumer.perform("new_state", {rmn: this.rmn, ball_x: ball.x, ball_y: ball.y, lp: this.player_left, rp: this.player_right, rsc: this.score_right, lsc: this.score_left, bdx: this.ball_dir[0], bdy: this.ball_dir[1], bs: this.bs});
   }
 
   draw_datas() {
@@ -173,18 +173,18 @@ class Game {
 let inter;
 
 function update_datas(data) {
-    ball.x = data["ball_pos_x"];
-    ball.y = data["ball_pos_y"];
-    game.player_left = data["left_pos"];
-    game.player_right = data["right_pos"];
-    game.score_right = data["right_score"];
-    game.score_left = data["left_score"];
-    if (data["ball_dir_x"] != 0 || data["ball_dir_y"] != 0)
-      game.ball_dir = [data["ball_dir_x"], data["ball_dir_y"]]
-    if (data["ball_speed"] != 0)
-      game.ball_speed = data["ball_speed"];
-    game.left_action = data["left_action"];
-    game.right_action = data["right_action"];
+    ball.x = data["bpx"];
+    ball.y = data["bpy"];
+    game.player_left = data["lp"];
+    game.player_right = data["rp"];
+    game.score_right = data["rsc"];
+    game.score_left = data["lsc"];
+    if (data["bdx"] != 0 || data["bdy"] != 0)
+      game.ball_dir = [data["bdx"], data["bdy"]]
+    if (data["bs"] != 0)
+      game.bs = data["bs"];
+    game.la = data["la"];
+    game.ra = data["ra"];
     // console.log("request processed")
 }
 
@@ -200,33 +200,33 @@ function game_loop() {
   currentTime = now;
 
   if (game.consumer.role == 'r' && game.score_left != score_max && game.score_right != score_max) {
-    if (game.left_action == "u")
+    if (game.la == "u")
       game.player_left = Math.max(game.player_left - game.paddle_speed * delta, -0.9)
-    else if (game.left_action == "d")
+    else if (game.la == "d")
       game.player_left = Math.min(game.player_left + game.paddle_speed * delta, 0.9)
     
-    if (game.right_action == "u")
+    if (game.ra == "u")
       game.player_right = Math.max(game.player_right - game.paddle_speed * delta, -0.9)
-    else if (game.right_action == "d")
+    else if (game.ra == "d")
       game.player_right = Math.min(game.player_right + game.paddle_speed * delta, 0.9)
 
     let magn = magnitude(game.ball_dir);
 
     if (magn != 0) {
-      ball.x += (game.ball_dir[0] / magn) * game.ball_speed * delta
-      ball.y += (game.ball_dir[1] / magn) * game.ball_speed * delta
+      ball.x += (game.ball_dir[0] / magn) * game.bs * delta
+      ball.y += (game.ball_dir[1] / magn) * game.bs * delta
     }
 
     var act = game.ball_collision();
     if (act == 5) {
       game.score_left += 1;
-      game.ball_speed = 0.55;
+      game.bs = 0.55;
       ball.x = 0;
       ball.y = 0;
       game.ball_dir = [game.poss_dir[Math.round(Math.random())], getRandomBetween(-1, 1)];
     } else if (act == 4) {
       game.score_right += 1;
-      game.ball_speed = 0.55;
+      game.bs = 0.55;
       ball.x = 0;
       ball.y = 0;
       game.ball_dir = [game.poss_dir[Math.round(Math.random())], getRandomBetween(-1, 1)];
@@ -238,13 +238,13 @@ function game_loop() {
       game.ball_dir[1] = -1 * game.ball_dir[1];
     } else if (act == 1) { // * Bounce right
       game.ball_dir = [-1, getRandomBetween(-1.5, 1.5)];
-      game.ball_speed *= 1.08; 
+      game.bs *= 1.08; 
     } else if (act == 0) { // * Bounce left
       game.ball_dir = [1, getRandomBetween(-1.5, 1.5)];
-      game.ball_speed *= 1.08;
+      game.bs *= 1.08;
     }
 
-    game.ball_speed = Math.min(game.ball_speed, 1.4);
+    game.bs = Math.min(game.bs, 1.4);
   }
 
   if (game.consumer.role != 'v') {
@@ -258,7 +258,7 @@ function game_loop() {
   //console.log("1 frame");
   if (game.consumer.role == 'r') {
     setTimeout(function () {
-      game.consumer.perform("get_datas", {room_name: game.room_name})
+      game.consumer.perform("get_datas", {rmn: game.rmn})
     }, 1000 / game.fps)
   } 
 }
@@ -350,7 +350,7 @@ function subscription_loop() {
             }
           }, 50);
           game = new Game(this.room, 0, 0, 0, 0, this)
-          game.consumer.perform("get_user_infos", {room_name: this.room})
+          game.consumer.perform("get_user_infos", {rmn: this.room})
         },
 
         disconnected() {
@@ -367,9 +367,9 @@ function subscription_loop() {
             location.hash = "#";
           if (data_nest['action'] == "users_infos") {
             const UID = document.getElementById("UID");
-            UID.innerHTML = `${data_nest['left_user']} VS ${data_nest['right_user']}`
+            UID.innerHTML = `${data_nest['lu']} VS ${data_nest['ru']}`
           }
-          else if (data_nest['ball_speed'] != null) {
+          else if (data_nest['bs'] != null) {
             update_datas(data_nest)
             game_loop(game);
           }
@@ -426,15 +426,15 @@ function subscription_loop() {
                   game = new Game(this.room, 0, 0, 0, 0, this)
                   
                   document.addEventListener("visibilitychange", function(e) {
-                    game.consumer.perform("end_the_game", {room_name: game.room_name})
+                    game.consumer.perform("end_the_game", {rmn: game.rmn})
                   });
 
                   setTimeout(function() {
-                    game.consumer.perform("connect_to_game", { room_name: game.room_name, player: game.consumer.role });
+                    game.consumer.perform("connect_to_game", { rmn: game.rmn, player: game.consumer.role });
                   }, 500)
                   setTimeout(function() {
                     currentTime = Date.now();
-                    game.consumer.perform("check_users_connection", { room_name: game.room_name })
+                    game.consumer.perform("check_users_connection", { rmn: game.rmn })
                     game_loop(game);
                   }, 2000);
                 },
@@ -443,7 +443,7 @@ function subscription_loop() {
                   // Called when the subscription has been terminated by the server
                   ball.x = 0.0;
                   ball.y = 0.0;
-                  this.perform("quit", {room_name: game.room_name, player: this.role}); // default action
+                  this.perform("quit", {rmn: game.rmn, player: this.role}); // default action
                   canvas = null;
                 },
 
@@ -451,7 +451,7 @@ function subscription_loop() {
                   if (data_nest != null) {
                     if (data_nest['action'] == 'quit')
                       location.hash = "#";
-                    if (data_nest['action'] != "users_infos" && data_nest['ball_speed'] != null) {
+                    if (data_nest['action'] != "users_infos" && data_nest['bs'] != null) {
                       update_datas(data_nest)
                       game_loop(game);
                     }
