@@ -178,6 +178,9 @@ class RoomsController < ApplicationController
     if !filteredParams["name"] || filteredParams["name"].length == 0 || filteredParams["name"].blank?
       res_with_error("Empty Room Name", :bad_request)
       return (false)
+    elsif filteredParams["name"] && filteredParams["name"].length > 42
+      res_with_error("Room name too long", :bad_request)
+      return (false)
     end
 
     @room = Room.create(filteredParams)
