@@ -14,6 +14,8 @@ class WarsController < ApplicationController
 			end
 			return false
 		end
+		ActionCable.server.broadcast "player_#{@foe.owner.email}", action: "notif",
+		content: "#{current_user.nickname} declared war against your guild", link: "#guilds/#{@foe.id}/war"
 		success("War against #{@foe.name} created")
 	end
 
