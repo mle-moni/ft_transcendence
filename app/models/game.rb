@@ -32,14 +32,16 @@ class Game < ApplicationRecord
 				left_action: "w",
 				right_action: "w",
 				player_left_connected: false,
-				player_right_connected: false
+				player_right_connected: false,
+				left_user: left,
+				right_user: right
 			}
 			$games[room_name] = game
 	
 			Redis.current.set("game_#{room_name}_end?", "no");
 
-			ActionCable.server.broadcast "player_#{right}", { action: 'game_start', msg: 'r', match_room_id: current_match_id }
-			ActionCable.server.broadcast "player_#{left}", { action: 'game_start', msg: 'l', match_room_id: current_match_id }
+			ActionCable.server.broadcast "player_#{right}", { action: 'game_start', msg: 'r', match_room_id: current_match_id, adv: left }
+			ActionCable.server.broadcast "player_#{left}", { action: 'game_start', msg: 'l', match_room_id: current_match_id, adv: right }
 		end
 	end
 

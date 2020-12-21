@@ -39,6 +39,10 @@ class ChatMessagesController < ApplicationController
             res_with_error("Unknown DirectChat or User", :bad_request)
             return (false)
         end
+        if filteredParams["message"] && filteredParams["message"].length > 500
+            res_with_error("Message too long", :bad_request)
+            return (false)
+        end
         @chat_message = DirectMessage.create(message: filteredParams["message"], from: user, direct_chat: dc)
         respond_to do |format|
             if @chat_message.save

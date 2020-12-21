@@ -39,6 +39,9 @@ class RoomMessagesController < ApplicationController
     if !filteredParams["message"] || filteredParams["message"].length == 0 || filteredParams["message"].blank?
       res_with_error("Empty Message", :bad_request)
       return (false)
+    elsif filteredParams["message"] && filteredParams["message"].length > 500
+      res_with_error("Message too long", :bad_request)
+      return (false)
     end
 
     @room_message = RoomMessage.create(filteredParams)
