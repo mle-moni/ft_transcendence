@@ -1,17 +1,11 @@
-<h1 id="notifsTitle" class="user-name fifties blk-text text-maxwidth-lg">Notifications</h1>
+<p id="notifsTitle" class="fifties blk-text sized-text-lg text-center"> <u> <strong> Notifications </strong></u> </p>
 
-<div class="notifsContainer">
+<div class="notifsContainer list-group">
 {{#each notifs}}
-
-	<div class="notif">
-		<p class="content">
-			{{content}}
-			
-			<a class="link" href="{{link}}">link</a>
-		</p>
+	<div class="notif list-group-item atari-back">
+		<p class="atari">{{content}}</p>
+		<a class="link atari" href="{{link}}" style="color: rgb(39, 101, 236);">Go</a>
 	</div>
-
 	<hr>
-
 {{/each}}
 </div>
