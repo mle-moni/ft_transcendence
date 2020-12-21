@@ -723,6 +723,7 @@ function subscription_loop() {
             }
           }, 50);
           game = new Game(this.room, 0, 0, 0, 0, this)
+          game.consumer.perform("get_user_infos", {room_name: this.room})
         },
 
         disconnected() {
@@ -737,7 +738,11 @@ function subscription_loop() {
           // console.log(data_nest);
           if (data_nest['action'] == 'quit')
             location.hash = "#";
-          if (data_nest['ball_speed'] != null) {
+          if (data_nest['action'] == "users_infos") {
+            const UID = document.getElementById("UID");
+            UID.innerHTML = `${data_nest['left_user']} VS ${data_nest['right_user']}`
+          }
+          else if (data_nest['ball_speed'] != null) {
             update_datas(data_nest)
             game_loop(game);
           }
@@ -786,7 +791,11 @@ function subscription_loop() {
                     }
                   }, 80);
                   const UID = document.getElementById("UID");
-                  UID.innerHTML = `You have the ${this.role} paddle`
+                  if (this.role == "l") {
+                    UID.innerHTML = `${window.App.models.user.toJSON().email} VS ${data.adv}`
+                  } else {
+                    UID.innerHTML = `${data.adv} VS ${window.App.models.user.toJSON().email}`
+                  }
                   game = new Game(this.room, 0, 0, 0, 0, this)
                   
                   document.addEventListener("visibilitychange", function(e) {
@@ -815,7 +824,7 @@ function subscription_loop() {
                   if (data_nest != null) {
                     if (data_nest['action'] == 'quit')
                       location.hash = "#";
-                    if (data_nest['ball_speed'] != null) {
+                    if (data_nest['action'] != "users_infos" && data_nest['ball_speed'] != null) {
                       update_datas(data_nest)
                       game_loop(game);
                     }

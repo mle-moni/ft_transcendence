@@ -75,6 +75,10 @@ class PlayChannel < ApplicationCable::Channel
     end
   end
 
+  def get_user_infos(data)
+    ActionCable.server.broadcast data['room_name'], {action: "users_infos", left_user: $games[data['room_name']][:left_user], right_user: $games[data['room_name']][:right_user]}
+  end
+
   def get_datas(data)
     ActionCable.server.broadcast data['room_name'], $games[data['room_name']];
   end
