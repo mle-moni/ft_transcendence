@@ -16,6 +16,8 @@ class GuildsController < ApplicationController
     @user.g_invitation = current_user.id
     @user.guild = current_user.guild
     @user.save
+    ActionCable.server.broadcast "player_#{@user.email}", action: "notif",
+    content: "#{current_user.nickname} sent a guild invite", link: "#profiles/#{@user.id}"
     ActionCable.server.broadcast "update_channel", action: "update", target: "guilds"
     ActionCable.server.broadcast "update_channel", action: "update", target: "users"
     success("Invitation sent")

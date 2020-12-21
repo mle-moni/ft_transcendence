@@ -105,6 +105,14 @@ class WarsController < ApplicationController
 		war.match_request_usr = current_user.id
 		war.match_request_guild = guild.id
 		war.save
+		
+		g_to_notif = (war.guild1.id == guild.id) ? war.guild2 : war.guild1
+		if g_to_notif
+			g_to_notif.users.each do |usr|
+				ActionCable.server.broadcast "player_#{usr.email}", action: "notif",
+				content: "#{current_user.nickname} requested a war fight", link: "#guilds/#{g_to_notif.id}"
+			end
+		end
 
 		Thread.new do
 			war_id = war.id
