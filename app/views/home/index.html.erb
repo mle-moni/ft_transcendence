@@ -55,7 +55,7 @@
 			signout: `<%= signoutLink %>`,
 			enable2fa: `<%= profile_enable_otp_path %>`,
 			disable2fa: `<%= profile_disable_otp_path %>`,
-			authenticator: `<%= current_user.otp_provisioning_uri(current_user.email, issuer: "ft_transcendence") %>`
+			authenticator: `<%= current_user.otp_provisioning_uri("ft_transcendence: #{current_user.email}", issuer: "ft_transcendence") %>`
 		};
 		App.errorLogs = [];
 		App.guildPopstate = {
