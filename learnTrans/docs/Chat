@@ -1,0 +1,6 @@
+o = User.last.id
+r = Room.create!(name: "chat1", owner_id: o)
+
+Room.last.members.uniq.count
+
+-----------

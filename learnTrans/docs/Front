@@ -1,0 +1,50 @@
+
+https://backbonejs.org/#Getting-started
+
+• BackBone :
+
+    > https://www.synbioz.com/blog/tech/debuter-avec-backbonejs
+    > https://github.com/thoughtbot/backbone-js-on-rails/blob/master/book/rails_integration/connecting_rails_and_backbone.md
+    > https://thoughtbot.com/upcase/hands-on-backbone-js-on-rails
+    > AJAX : https://www.youtube.com/watch?v=cpRimNEWlKw&list=PLsk5Jy2ZkiLUP6KbXNDwNSZ1-MXsnt4An&index=6
+    > https://www.youtube.com/watch?v=FBxVN7U1Qsk
+    > https://fr.slideshare.net/timtyrrell/intro-to-backbonejs-with-rails
+                https://www.youtube.com/watch?v=lRuBxG7rTX4
+                https://thoughtbot.com/upcase/videos/creating-the-rails-api
+
+    > jbuilder:   https://github.com/rails/jbuilder
+
+    
+    > BB & jQuery : 
+
+
+TODO Vidéo :
+
+https://blog.carbonfive.com/exploring-client-side-mvc-with-backbonejs/
+
+https://www.youtube.com/watch?v=vJwgIth1I_w
+https://www.tutorialspoint.com/backbonejs/backbonejs_applications.htm
+
+> https://www.youtube.com/watch?v=lRuBxG7rTX4&t=335s (très bonne vidéo) (P1)
+> https://www.youtube.com/watch?v=98oUGEz_y4g (très bonne vidéo) (P2)
+
+
+
+
+----------------------------------------------------------------------------------------------------
+
+• Notes 
+
+
+https://stackoverflow.com/questions/16646526/what-is-the-difference-between-el-and-el-in-backbone-js-views
+var myel = this.el; // here what you have is the html element, 
+                    //you will be able to access(read/modify) the html 
+                    //properties of this element,
+
+var my$el = this.$el; // you will have the element but 
+                      //with all of the functions that jQuery provides like,
+                      //hide,show  etc, its the equivalent of $('#myel').show();
+                      //$('#myel').hide(); so this.$el keeps a reference to your 
+                      //element so you don't need to traverse the DOM to find the
+                      // element every time you use it. with the performance benefits 
+                      //that this implies.
