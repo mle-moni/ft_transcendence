@@ -1,5 +1,14 @@
 # ft_transcendence
 
+## Here are some visual of the website :
+
+![capture1](capture1.png)
+![capture2](capture2.png)
+![capture3](capture3.png)
+![capture4](capture4.png)
+![capture5](capture5.png)
+
+
 ## HOW TO GET THE APPLICATION RUNNING ON LINUX:
 
 ### install docker-compose:
